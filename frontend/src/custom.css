@@ -1,0 +1,68 @@
+body {
+    font-family: "PT Sans", sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-family: 'PT Sans', sans-serif;
+}
+
+p {
+    font-size: 18px !important;
+    font-family: 'PT Sans', sans-serif;
+}
+
+.features-padding{
+    padding: 6rem;
+}
+
+.link-style {   
+    color: #176087; 
+    text-decoration: none; 
+  }
+  
+.link-style:hover {
+    text-decoration: underline;
+}
+
+.link-button {
+    margin-top: 35px;
+    display: inline-block;
+    border-radius: 20px;
+    background-color: #176087;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 30px;
+    text-align: center;
+    color: white;
+}
+
+.link-button:hover{
+    opacity: 0.8;
+}
+
+
+.main-nav-dropdown .dropdown-toggle{
+    color: white;
+    font-weight: bold;
+}
+
+.main-nav-dropdown .dropdown-toggle.show{
+    color: white;
+    font-weight: bold;
+}
+
+.side-nav-link{
+    color: white;
+    text-decoration: none
+}
+
+.offcanvas .btn-close {
+    filter: invert(1);
+  }
+
+
+
+
+
+
+
