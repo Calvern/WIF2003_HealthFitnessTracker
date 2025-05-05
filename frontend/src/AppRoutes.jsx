@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import CreateProfilePage from "./pages/CreateProfilePage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import FoodDiaryPage from "./pages/FoodDiaryPage";
+import SearchMealPage from "./pages/SearchMealPage";
 
 const AppRoutes = () => {
   return (
@@ -74,6 +75,14 @@ const AppRoutes = () => {
         element={
           <Layout>
             <FoodDiaryPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="search-meal"
+        element={
+          <Layout>
+            <SearchMealPage />
           </Layout>
         }
       />
