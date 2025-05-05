@@ -7,6 +7,8 @@ import HomePage from "./pages/HomePage";
 import CreateProfilePage from "./pages/CreateProfilePage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import FoodDiaryPage from "./pages/FoodDiaryPage";
+import NotificationsPage from "./pages/NotificationsPage";
+import RemindersPage from "./pages/RemindersPage";
 
 const AppRoutes = () => {
   return (
@@ -77,7 +79,23 @@ const AppRoutes = () => {
           </Layout>
         }
       />
+      <Route
+      path="/notifications"
+      element={
+        <Layout>
+          <NotificationsPage />
+        </Layout>
+      }
+      />
+      <Route
+      path="/reminders"
+      element={
+        <Layout>
+          <RemindersPage />
+        </Layout>
+      }/>
     </Routes>
+
   );
 };
 
