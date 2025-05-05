@@ -8,6 +8,7 @@ import CreateProfilePage from "./pages/CreateProfilePage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import FoodDiaryPage from "./pages/FoodDiaryPage";
 import SearchMealPage from "./pages/SearchMealPage";
+import FavouriteMealPage from "./pages/FavouriteMealPage";
 
 const AppRoutes = () => {
   return (
@@ -83,6 +84,15 @@ const AppRoutes = () => {
         element={
           <Layout>
             <SearchMealPage />
+          </Layout>
+        }
+      />
+
+<Route
+        path="meal-favourites"
+        element={
+          <Layout>
+            <FavouriteMealPage />
           </Layout>
         }
       />

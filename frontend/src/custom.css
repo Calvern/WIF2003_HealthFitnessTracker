@@ -64,6 +64,11 @@ p {
     background-color: #507DBC;
 }
 
+.page-item.active .page-link {
+    background-color: #DAE3E5;
+    border: none;
+  }
+
 
 
 
