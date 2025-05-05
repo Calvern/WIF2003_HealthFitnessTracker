@@ -1,0 +1,35 @@
+import { useState } from "react";
+import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
+import { Search, X } from "react-bootstrap-icons";
+
+const SearchBar = () => {
+  const [searchValue, setsearchValue] = useState("");
+  return (
+    <Form className="mt-5">
+      <InputGroup className="w-75 ">
+        <FormControl
+          className="border-0 border-bottom border-dark border-2 rounded-0 shadow-none"
+          placeholder="Search"
+          value={searchValue}
+          onChange={(e) => setsearchValue(e.target.value)}
+        />
+        <Button
+          className="border-0 border-bottom border-dark border-2 rounded-0"
+          style={{ backgroundColor: "transparent", color: "black" }}
+          type="submit"
+        >
+          <Search size={20} />
+        </Button>
+        <Button
+          className="border-0 border-bottom border-dark border-2 rounded-0"
+          style={{ backgroundColor: "transparent", color: "black" }}
+          onClick={() => setsearchValue("")}
+        >
+          <X size={20} />
+        </Button>
+      </InputGroup>
+    </Form>
+  );
+};
+
+export default SearchBar;
