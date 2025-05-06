@@ -64,6 +64,11 @@ p {
     background-color: #507DBC;
 }
 
+.radio-background {
+    background-color: #DAE3E5;
+    flex: 1;               /* Make both radio options equally wide */
+    height: 50px;    
+}
 
 
 
