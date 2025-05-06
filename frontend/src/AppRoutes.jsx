@@ -7,6 +7,10 @@ import HomePage from "./pages/HomePage";
 import CreateProfilePage from "./pages/CreateProfilePage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import FoodDiaryPage from "./pages/FoodDiaryPage";
+import NotificationsPage from "./pages/NotificationsPage";
+import RemindersPage from "./pages/RemindersPage";
+import SettingsPage from "./pages/SettingsPage";
+import CreateReminderPage from "./pages/CreateReminderPage";
 import SearchMealPage from "./pages/SearchMealPage";
 import FavouriteMealPage from "./pages/FavouriteMealPage";
 
@@ -80,7 +84,39 @@ const AppRoutes = () => {
         }
       />
       <Route
-        path="search-meal"
+        path="/notifications"
+        element={
+          <Layout>
+            <NotificationsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/reminders"
+        element={
+          <Layout>
+            <RemindersPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <Layout>
+            <SettingsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/create-reminder"
+        element={
+          <Layout>
+            <CreateReminderPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/search-meal"
         element={
           <Layout>
             <SearchMealPage />
@@ -88,7 +124,7 @@ const AppRoutes = () => {
         }
       />
 
-<Route
+      <Route
         path="meal-favourites"
         element={
           <Layout>
