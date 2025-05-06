@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col, FormGroup, FormControl, FormLabel, Container } from 'react-bootstrap';
 import { ChevronLeft, ChevronDown } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 
 const CreateReminderPage = () => {
   const [reminder, setReminder] = useState({
@@ -24,7 +25,9 @@ const CreateReminderPage = () => {
   return (
     <>
       <div className="d-flex align-items-center ml-5 mt-3 mb-2" style={{ fontWeight: "bold", fontSize: "30px",  marginLeft: '40px'}}>
-        <ChevronLeft style={{ marginRight: "4px"}}/>
+        <Link to={"/reminders"}>
+            <ChevronLeft style={{ marginRight: "4px"}}/>
+        </Link>
         Create New Reminder
       </div>
       <Container className="d-flex flex-column vh-100">
