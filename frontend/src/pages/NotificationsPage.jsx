@@ -37,7 +37,7 @@ const NotificationsPage = () => {
   const renderEmptyMessage = () => {
     return (
       <Container className="d-flex flex-column align-items-center justify-content-center vh-100">
-        <Card className="mb-3">
+        <Card border="0" className="mb-3">
           <CardTitle style={{height:"100px", width:"100px", backgroundColor:"#DAE3E5", borderRadius:"50%", display:"flex", justifyContent:"center", alignItems:"center"}}>
            <Bell size={64} style={{backgroundColor:"#DAE3E5" }} />
           </CardTitle>
