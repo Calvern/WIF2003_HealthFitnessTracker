@@ -1,7 +1,9 @@
 import { Button, Col, Row } from "react-bootstrap";
 import FoodImage from "../../assets/FoodImage.png";
+import { useNavigate } from "react-router-dom";
 
 const MealCard = () => {
+    const navigate = useNavigate();
   return (
     <Row className="border-bottom border-2 py-5">
       <Col className="pb-2" md={3}>
@@ -24,6 +26,7 @@ const MealCard = () => {
             </Col>
             <Col className="d-flex justify-content-center  pb-2" md={4}>
               <Button
+              onClick={() => navigate("/meal-favourites/5931")}
                 className="w-100 py-2 px-5 rounded-4 border-0"
                 style={{ backgroundColor: "#507DBC" }}
               >
