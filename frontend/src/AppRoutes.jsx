@@ -12,6 +12,7 @@ import RemindersPage from "./pages/RemindersPage";
 import SettingsPage from "./pages/SettingsPage";
 import CreateReminderPage from "./pages/CreateReminderPage";
 import SearchMealPage from "./pages/SearchMealPage";
+import FavouriteMealPage from "./pages/FavouriteMealPage";
 
 const AppRoutes = () => {
   return (
@@ -89,7 +90,7 @@ const AppRoutes = () => {
             <NotificationsPage />
           </Layout>
         }
-        />
+      />
       <Route
         path="/reminders"
         element={
@@ -97,7 +98,7 @@ const AppRoutes = () => {
             <RemindersPage />
           </Layout>
         }
-        />
+      />
       <Route
         path="/settings"
         element={
@@ -105,7 +106,7 @@ const AppRoutes = () => {
             <SettingsPage />
           </Layout>
         }
-        />
+      />
       <Route
         path="/create-reminder"
         element={
@@ -113,7 +114,7 @@ const AppRoutes = () => {
             <CreateReminderPage />
           </Layout>
         }
-        />
+      />
       <Route
         path="/search-meal"
         element={
@@ -121,9 +122,17 @@ const AppRoutes = () => {
             <SearchMealPage />
           </Layout>
         }
-        />
-    </Routes>
+      />
 
+      <Route
+        path="meal-favourites"
+        element={
+          <Layout>
+            <FavouriteMealPage />
+          </Layout>
+        }
+      />
+    </Routes>
   );
 };
 
