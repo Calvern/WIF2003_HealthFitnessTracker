@@ -82,6 +82,46 @@ const AppRoutes = () => {
           </Layout>
         }
       />
+      <Route
+        path="/notifications"
+        element={
+          <Layout>
+            <NotificationsPage />
+          </Layout>
+        }
+        />
+      <Route
+        path="/reminders"
+        element={
+          <Layout>
+            <RemindersPage />
+          </Layout>
+        }
+        />
+      <Route
+        path="/settings"
+        element={
+          <Layout>
+            <SettingsPage />
+          </Layout>
+        }
+        />
+      <Route
+        path="/create-reminder"
+        element={
+          <Layout>
+            <CreateReminderPage />
+          </Layout>
+        }
+        />
+      <Route
+        path="/search-meal"
+        element={
+          <Layout>
+            <SearchMealPage />
+          </Layout>
+        }
+        />
     </Routes>
 
   );
