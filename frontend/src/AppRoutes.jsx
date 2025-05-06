@@ -11,6 +11,7 @@ import NotificationsPage from "./pages/NotificationsPage";
 import RemindersPage from "./pages/RemindersPage";
 import SettingsPage from "./pages/SettingsPage";
 import CreateReminderPage from "./pages/CreateReminderPage";
+import SearchMealPage from "./pages/SearchMealPage";
 
 const AppRoutes = () => {
   return (
@@ -81,36 +82,6 @@ const AppRoutes = () => {
           </Layout>
         }
       />
-      <Route
-      path="/notifications"
-      element={
-        <Layout>
-          <NotificationsPage />
-        </Layout>
-      }
-      />
-      <Route
-      path="/reminders"
-      element={
-        <Layout>
-          <RemindersPage />
-        </Layout>
-      }/>
-      <Route
-      path="/settings"
-      element={
-        <Layout>
-          <SettingsPage />
-        </Layout>
-      }/>
-      <Route
-      path="/create-reminder"
-      element={
-        <Layout>
-          <CreateReminderPage />
-        </Layout>
-      }/>
-      
     </Routes>
 
   );

@@ -30,7 +30,7 @@ const DesktopNavLinks = () => {
         <NavDropdown.Item as={Link} to="/food-diary">
           Food Diary
         </NavDropdown.Item>
-        <NavDropdown.Item as={Link} to="/meal-search">
+        <NavDropdown.Item as={Link} to="/search-meal">
           Search for meals
         </NavDropdown.Item>
       </NavDropdown>
