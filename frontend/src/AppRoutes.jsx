@@ -13,6 +13,7 @@ import SettingsPage from "./pages/SettingsPage";
 import CreateReminderPage from "./pages/CreateReminderPage";
 import SearchMealPage from "./pages/SearchMealPage";
 import FavouriteMealPage from "./pages/FavouriteMealPage";
+import FoodDetailsPage from "./pages/FoodDetailsPage";
 
 const AppRoutes = () => {
   return (
@@ -132,7 +133,18 @@ const AppRoutes = () => {
           </Layout>
         }
       />
+      
+      <Route
+        path="meal-favourites/:foodId"
+        element={
+          <Layout>
+            <FoodDetailsPage />
+          </Layout>
+        }
+      />
     </Routes>
+
+    
   );
 };
 
