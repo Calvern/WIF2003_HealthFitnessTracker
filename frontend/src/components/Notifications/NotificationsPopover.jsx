@@ -46,7 +46,7 @@ const NotificationsPopover = () => {
             <Nav.Link eventKey="reminders">Reminders</Nav.Link>
           </Nav.Item>
         </Nav>
-          {activeTab === "notifications" ? <Link to={"/settings"}><GearFill /></Link> : <Link to={"/create-reminder"}><Plus /></Link> }
+          {activeTab === "notifications" ? <Link to={"/settings"}><GearFill /></Link> : <Link to={"/create-reminder"}><Plus size={32}/></Link> }
       </Popover.Header>
       <Popover.Body>{renderContent()}</Popover.Body>
         <div className="popover-footer-link d-flex justify-content-center align-items-center py-2">

@@ -9,6 +9,8 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import FoodDiaryPage from "./pages/FoodDiaryPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import RemindersPage from "./pages/RemindersPage";
+import SettingsPage from "./pages/SettingsPage";
+import CreateReminderPage from "./pages/CreateReminderPage";
 
 const AppRoutes = () => {
   return (
