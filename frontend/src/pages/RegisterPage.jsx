@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 const RegisterPage = () => {
   const navigate = useNavigate();
   return (
-    <Container className="mt-5 d-flex flex-column justify-content-center align-items-center flex-fill">
+    <Container className="py-5 d-flex flex-column justify-content-center align-items-center flex-fill">
       <div
         className="border p-5 rounded-4 w-100 shadow "
         style={{ maxWidth: "450px" }}

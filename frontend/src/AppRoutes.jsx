@@ -14,6 +14,7 @@ import CreateReminderPage from "./pages/CreateReminderPage";
 import SearchMealPage from "./pages/SearchMealPage";
 import FavouriteMealPage from "./pages/FavouriteMealPage";
 import FoodDetailsPage from "./pages/FoodDetailsPage";
+import CalorieCalculatorPage from "./pages/CalorieCalculatorPage";
 
 const AppRoutes = () => {
   return (
@@ -56,6 +57,15 @@ const AppRoutes = () => {
         element={
           <Layout>
             <CreateProfilePage />
+          </Layout>
+        }
+      />
+
+      <Route
+        path="/calorie-calculator"
+        element={
+          <Layout>
+            <CalorieCalculatorPage />
           </Layout>
         }
       />
@@ -133,7 +143,7 @@ const AppRoutes = () => {
           </Layout>
         }
       />
-      
+
       <Route
         path="meal-favourites/:foodId"
         element={
@@ -143,8 +153,6 @@ const AppRoutes = () => {
         }
       />
     </Routes>
-
-    
   );
 };
 
