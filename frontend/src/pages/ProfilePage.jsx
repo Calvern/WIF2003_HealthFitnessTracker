@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Button, Container, Form, Row, Col, InputGroup } from "react-bootstrap";
 import ProfileCard from "../components/Profile/ProfileCard";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     profileImage:
@@ -90,7 +92,7 @@ const ProfilePage = () => {
         <Col md={6}>
           <Form.Label htmlFor="gender">Gender</Form.Label>
           <Form.Select
-            className="mb-3 shadow-none"
+            className="shadow-none"
             id="gender"
             value={formData.gender}
             onChange={handleChange("gender")}
@@ -102,7 +104,7 @@ const ProfilePage = () => {
         </Col>
         <Col md={3}>
           <Form.Label htmlFor="weight">Weight</Form.Label>
-          <InputGroup className="mb-3">
+          <InputGroup>
             <Form.Control
               value={formData.weight}
               onChange={handleChange("weight")}
@@ -116,7 +118,7 @@ const ProfilePage = () => {
         </Col>
         <Col md={3}>
           <Form.Label htmlFor="height">Height</Form.Label>
-          <InputGroup className="mb-3">
+          <InputGroup>
             <Form.Control
               value={formData.height}
               onChange={handleChange("height")}
@@ -165,18 +167,21 @@ const ProfilePage = () => {
       <div className="d-flex gap-5 justify-content-center">
         <Button
           className="w-60 py-2 px-5 rounded-4 border-0"
+          onClick={() => navigate("/change-password")}
           style={{ backgroundColor: "#507DBC" }}
         >
           Change Password
         </Button>
         <Button
           className="w-60 py-2 px-5 rounded-4 border-0"
+          onClick={() => navigate("/deactivate-account")}
           style={{ backgroundColor: "#507DBC" }}
         >
           Deactivate Account
         </Button>
         <Button
           className="w-60 py-2 px-5 rounded-4 border-0"
+          onClick={() => navigate("/delete-account")}
           style={{ backgroundColor: "#FF0000" }}
         >
           Delete Account
