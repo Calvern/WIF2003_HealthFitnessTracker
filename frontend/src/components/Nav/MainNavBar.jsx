@@ -9,7 +9,7 @@ import SideNav from "./SideNav";
 import progress from "../../assets/Progress.png";
 import { Link } from "react-router-dom";
 const MainNavBar = () => {
-  var isAuthenticated = true;
+  var isAuthenticated = false;
 
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
