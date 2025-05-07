@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Form, Button, Row, Col, FormGroup, FormControl, FormLabel, Container } from 'react-bootstrap';
 import { ChevronLeft, ChevronDown } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 
 const CreateReminderPage = () => {
-  const [reminder, setReminder] = useState({
+    
+    const [reminder, setReminder] = useState({
     title: '',
     date: '',
     time: '',
@@ -24,9 +25,9 @@ const CreateReminderPage = () => {
 
   return (
     <Container className="py-5">
-      <div className="d-flex align-items-center ml-5 mt-3 mb-2" style={{ fontWeight: "bold", fontSize: "30px",  marginLeft: '40px'}}>
+      <div className="d-flex align-items-center ml-5 mt-3 mb-2" style={{ fontWeight: "bold", fontSize: "20px"}}>
         <Link to={"/reminders"}>
-            <ChevronLeft style={{ marginRight: "4px"}}/>
+            <ChevronLeft size={40} style={{ marginRight: "4px"}}/>
         </Link>
         Create New Reminder
       </div>
@@ -124,31 +125,46 @@ const CreateReminderPage = () => {
               </Form.Group>
             </Col>
             <Col md="6">
-            <Form.Group controlId="formNotificationMethod">
-                <FormLabel>Notification Method</FormLabel>
-                <div className='d-flex gap-5 justify-content-between'>
-                    <div className="radio-background d-flex align-items-center px-3 rounded">
+                <Form.Group controlId="formNotificationMethod">
+                    <Form.Label>Notification Method</Form.Label>
+                    <div className="d-flex gap-4 justify-content-between">
+                    {/* Email Radio */}
+                    <label
+                        htmlFor="email-radio"
+                        className="radio-label d-flex align-items-center gap-2 px-3 py-2 rounded flex-grow-1 text-center"
+                        style={{ height: "40px", cursor: "pointer", backgroundColor:"#DAE3E5"}}
+                    >
                         <Form.Check
+                        id="email-radio"
                         type="radio"
-                        label="Email"
                         name="notificationMethod"
                         value="email"
                         checked={reminder.notificationMethod === 'email'}
-                        onChange={(e) => setReminder({ ...reminder, notificationMethod: e.target.value })} />
-                    </div>
-                    <div className="radio-background d-flex align-items-center px-3 rounded">
+                        onChange={(e) => setReminder({ ...reminder, notificationMethod: e.target.value })}
+                        className="custom-radio"
+                        />
+                        <span className="radio-text">Email</span>
+                    </label>
+
+                    {/* Browser Notification Radio */}
+                    <label
+                        htmlFor="browser-radio"
+                        className="radio-label d-flex align-items-center gap-2 px-3 py-2 rounded flex-grow-1 text-center"
+                        style={{ height: "40px", cursor: "pointer", backgroundColor:"#DAE3E5"}}
+                    >
                         <Form.Check
+                        id="browser-radio"
                         type="radio"
-                        label="Browser Notification"
                         name="notificationMethod"
                         value="browser"
                         checked={reminder.notificationMethod === 'browser'}
-                        onChange={(e) => setReminder({ ...reminder, notificationMethod: e.target.value })} />  
+                        onChange={(e) => setReminder({ ...reminder, notificationMethod: e.target.value })}
+                        className="custom-radio"
+                        />
+                        <span className="radio-text">Browser</span>
+                    </label>
                     </div>
-                    
-                </div>
                 </Form.Group>
-
             </Col>
         </Row>
         
