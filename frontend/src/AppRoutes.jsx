@@ -7,6 +7,10 @@ import HomePage from "./pages/HomePage";
 import CreateProfilePage from "./pages/CreateProfilePage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import FoodDiaryPage from "./pages/FoodDiaryPage";
+import ExerciseDiaryPage from "./pages/ExerciseDiaryPage";
+import LogCardioPage from "./pages/LogCardioPage";
+import LogStepsPage from "./pages/LogStepsPage";
+import LogWorkoutPage from "./pages/LogWorkoutPage";
 import SearchMealPage from "./pages/SearchMealPage";
 
 const AppRoutes = () => {
@@ -75,6 +79,38 @@ const AppRoutes = () => {
         element={
           <Layout>
             <FoodDiaryPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="fitness-exercise-diary"
+        element={
+          <Layout>
+            <ExerciseDiaryPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="fitness-log-steps"
+        element={
+          <Layout>
+            <LogStepsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="fitness-log-workout"
+        element={
+          <Layout>
+            <LogWorkoutPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="fitness-log-cardio"
+        element={
+          <Layout>
+            <LogCardioPage />
           </Layout>
         }
       />

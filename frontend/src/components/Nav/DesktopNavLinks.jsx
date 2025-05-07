@@ -15,11 +15,17 @@ const DesktopNavLinks = () => {
         title="Fitness"
         id="nav-fitness"
       >
-        <NavDropdown.Item as={Link} to="/fitness-workouts">
-          Workouts
+        <NavDropdown.Item as={Link} to="/fitness-exercise-diary">
+          Exercise Diary
         </NavDropdown.Item>
-        <NavDropdown.Item as={Link} to="/fitness-goals">
-          Goals
+        <NavDropdown.Item as={Link} to="/fitness-log-steps">
+          Log Steps
+        </NavDropdown.Item>
+        <NavDropdown.Item as={Link} to="/fitness-log-workout">
+          Log Workout
+        </NavDropdown.Item>
+        <NavDropdown.Item as={Link} to="/fitness-log-cardio">
+          Log Cardio
         </NavDropdown.Item>
       </NavDropdown>
       <NavDropdown
