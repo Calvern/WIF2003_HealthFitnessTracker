@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
 import { Search, X } from "react-bootstrap-icons";
 
-const SearchBar = () => {
+const SearchBar = ({ width = "75%" }) => {
   const [searchValue, setsearchValue] = useState("");
   return (
     <Form className="mt-5">
-      <InputGroup className="w-75 ">
+      <InputGroup style={{width}}>
         <FormControl
           className="border-0 border-bottom border-dark border-2 rounded-0 shadow-none"
           placeholder="Search"

@@ -1,15 +1,17 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-;
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./custom.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import AppRoutes from "./AppRoutes.jsx";
+import { AppContextProvider } from "./contexts/AppContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Router>
-      <AppRoutes />
-    </Router>
+    <AppContextProvider>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </AppContextProvider>
   </StrictMode>
 );

@@ -1,3 +1,4 @@
+
 import {
   Container,
   CardTitle,
@@ -123,6 +124,7 @@ const NotificationsPage = () => {
     setFilter(value);
   };
 
+
   const filteredNotifications = notifications.filter((notification) => {
     return (
       filter === "all" ||
@@ -159,6 +161,7 @@ const NotificationsPage = () => {
           Notifications about your activity will show up here.
         </div>
       </Container>
+
     );
   };
 

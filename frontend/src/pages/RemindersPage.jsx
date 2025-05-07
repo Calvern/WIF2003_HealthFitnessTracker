@@ -132,8 +132,7 @@ const RemindersPage = () => {
       </div>
     )
   }
-
-
+  
 
   return (
     <Container className='py-5'>
@@ -148,6 +147,7 @@ const RemindersPage = () => {
           </Link>
         </div>
       </div>
+
 
       {reminders.length > 0 ? 
       renderReminders()
