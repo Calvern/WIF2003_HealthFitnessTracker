@@ -23,16 +23,16 @@ const CreateReminderPage = () => {
   };
 
   return (
-    <>
+    <Container className="py-5">
       <div className="d-flex align-items-center ml-5 mt-3 mb-2" style={{ fontWeight: "bold", fontSize: "30px",  marginLeft: '40px'}}>
         <Link to={"/reminders"}>
             <ChevronLeft style={{ marginRight: "4px"}}/>
         </Link>
         Create New Reminder
       </div>
-      <Container className="d-flex flex-column vh-100">
+      <div className="d-flex flex-column vh-100" style={{ marginLeft: '70px', marginRight: '70px' }}>
       <Form onSubmit={handleSubmit} >
-        <Row className="mb-3">
+        <Row className="mb-2">
           <Col>
             <Form.Group controlId="formTitle">
               <FormLabel>Reminder Title</FormLabel>
@@ -46,7 +46,7 @@ const CreateReminderPage = () => {
           </Col>
         </Row>
 
-        <Row className="mb-3">
+        <Row className="mb-2">
             <Col md="6">
               <Form.Group controlId="formDate">
                 <FormLabel>Date</FormLabel>
@@ -69,7 +69,7 @@ const CreateReminderPage = () => {
             </Col>
         </Row>
 
-        <Row className="mb-3">
+        <Row className="mb-2">
             <Col md="6">
               <Form.Group controlId="formCategory">
                 <FormLabel>Category</FormLabel>
@@ -101,7 +101,7 @@ const CreateReminderPage = () => {
               </Col>
         </Row>
 
-        <Row className="mb-3">
+        <Row className="mb-2">
             <Col md="6">
               <Form.Group controlId="formRecurring">
                 <FormLabel>Recurring</FormLabel>
@@ -152,7 +152,7 @@ const CreateReminderPage = () => {
             </Col>
         </Row>
         
-        <Row className="mb-3">
+        <Row className="mb-2">
           <Col xs="12">
             <Form.Group controlId="formNotes">
               <FormLabel>Notes</FormLabel>
@@ -196,8 +196,8 @@ const CreateReminderPage = () => {
 </Row>
 
       </Form>
-      </Container>
-    </>
+      </div>
+    </Container>
   );
 };
 
