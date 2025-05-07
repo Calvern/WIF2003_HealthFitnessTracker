@@ -4,6 +4,7 @@ import LandingPage from "./pages/LandingPage";
 import SignInPage from "./pages/SignInPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
 import CreateProfilePage from "./pages/CreateProfilePage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import FoodDiaryPage from "./pages/FoodDiaryPage";
@@ -89,7 +90,7 @@ const AppRoutes = () => {
         path="profile"
         element={
           <Layout>
-            <div>profile</div>
+            <ProfilePage />
           </Layout>
         }
       />
