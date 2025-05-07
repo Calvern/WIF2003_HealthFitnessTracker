@@ -18,6 +18,8 @@ import LogWorkoutPage from "./pages/LogWorkoutPage";
 import SearchMealPage from "./pages/SearchMealPage";
 import FavouriteMealPage from "./pages/FavouriteMealPage";
 import FoodDetailsPage from "./pages/FoodDetailsPage";
+import CalorieCalculatorPage from "./pages/CalorieCalculatorPage";
+import ProtectedRoute from "./ProtectedRoutes";
 
 const AppRoutes = () => {
   return (
@@ -55,14 +57,25 @@ const AppRoutes = () => {
           </Layout>
         }
       />
-      <Route
-        path="/create-profile"
-        element={
-          <Layout>
-            <CreateProfilePage />
-          </Layout>
-        }
-      />
+
+      <Route element={<ProtectedRoute />}>
+        <Route
+          path="/create-profile"
+          element={
+            <Layout>
+              <CreateProfilePage />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/calorie-calculator"
+          element={
+            <Layout>
+              <CalorieCalculatorPage />
+            </Layout>
+          }
+        />
 
       <Route
         path="home"
@@ -85,70 +98,6 @@ const AppRoutes = () => {
         element={
           <Layout>
             <FoodDiaryPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="fitness-exercise-diary"
-        element={
-          <Layout>
-            <ExerciseDiaryPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="fitness-log-steps"
-        element={
-          <Layout>
-            <LogStepsPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="fitness-log-workout"
-        element={
-          <Layout>
-            <LogWorkoutPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="fitness-log-cardio"
-        element={
-          <Layout>
-            <LogCardioPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="fitness-exercise-diary"
-        element={
-          <Layout>
-            <ExerciseDiaryPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="fitness-log-steps"
-        element={
-          <Layout>
-            <LogStepsPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="fitness-log-workout"
-        element={
-          <Layout>
-            <LogWorkoutPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="fitness-log-cardio"
-        element={
-          <Layout>
-            <LogCardioPage />
           </Layout>
         }
       />
@@ -193,26 +142,57 @@ const AppRoutes = () => {
         }
       />
 
-      <Route
-        path="meal-favourites"
-        element={
-          <Layout>
-            <FavouriteMealPage />
-          </Layout>
-        }
-      />
-      
-      <Route
-        path="meal-favourites/:foodId"
-        element={
-          <Layout>
-            <FoodDetailsPage />
-          </Layout>
-        }
-      />
-    </Routes>
+        <Route
+          path="meal-favourites"
+          element={
+            <Layout>
+              <FavouriteMealPage />
+            </Layout>
+          }
+        />
 
-    
+        <Route
+          path="meal-favourites/:foodId"
+          element={
+            <Layout>
+              <FoodDetailsPage />
+            </Layout>
+          }
+        />
+              <Route
+        path="fitness-exercise-diary"
+        element={
+          <Layout>
+            <ExerciseDiaryPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="fitness-log-steps"
+        element={
+          <Layout>
+            <LogStepsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="fitness-log-workout"
+        element={
+          <Layout>
+            <LogWorkoutPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="fitness-log-cardio"
+        element={
+          <Layout>
+            <LogCardioPage />
+          </Layout>
+        }
+      />
+      </Route>
+    </Routes>
   );
 };
 

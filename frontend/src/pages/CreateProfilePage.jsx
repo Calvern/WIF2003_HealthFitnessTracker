@@ -1,16 +1,24 @@
 import { Button, Container, Form } from "react-bootstrap";
 import { CameraFill } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const CreateProfilePage = () => {
+  const navigate = useNavigate();
   return (
-    <Container className="mt-5 d-flex flex-column justify-content-center align-items-center">
+    <Container className="py-5 d-flex flex-column justify-content-center align-items-center">
       <div
         className="border p-5 rounded-4 w-100 shadow "
         style={{ maxWidth: "450px" }}
       >
         <h1 className="fw-bold text-center mb-3">Create your profile</h1>
-        <Form className="w-100" style={{ maxWidth: "450px" }}>
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            navigate("/calorie-calculator");
+          }}
+          className="w-100"
+          style={{ maxWidth: "450px" }}
+        >
           <Form.Group controlId="formFile" className="mb-4 text-center">
             <div
               className="rounded-circle border d-flex justify-content-center align-items-center mx-auto"
@@ -61,9 +69,6 @@ const CreateProfilePage = () => {
             style={{ backgroundColor: "#507DBC" }}
             className="w-100 mt-3 rounded-3 mb-2"
             type="submit"
-            onClick={() => {
-              navigate("/home");
-            }}
           >
             Create
           </Button>
