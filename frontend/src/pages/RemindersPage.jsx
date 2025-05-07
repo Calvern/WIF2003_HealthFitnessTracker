@@ -1,5 +1,6 @@
 import React from 'react';
-import { Plus } from "react-bootstrap-icons";
+import { Container } from 'react-bootstrap';
+import {Plus } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 
 const RemindersPage = () => {
@@ -16,7 +17,7 @@ const RemindersPage = () => {
   }
 
   return (
-    <>
+    <Container className="py-5">
       <div className="d-flex align-items-between ml-5 mt-3" style={{ fontWeight: "bold", fontSize: "30px", marginLeft: '40px'}}>
         <div>Upcoming Reminders</div>
         <div className="d-flex align-items-center rounded" style={{ height: "40px", width: "40px", backgroundColor: "#507DBC", marginLeft: "15px"}}>
@@ -25,7 +26,7 @@ const RemindersPage = () => {
           </Link>
         </div>
       </div>
-    </>
+    </Container>
   );
 };
 
