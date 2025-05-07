@@ -6,43 +6,17 @@ import CardioEntry from "../components/Fitness/CardioEntry";
 import WorkoutEntry from "../components/Fitness/WorkoutEntry";
 import DateNavigator from "../components/Fitness/DateNavigator";
 import { Pencil } from "react-bootstrap-icons";
+import CalendarForm from "../components/Nutrition/CalendarForm";
 
 import "react-datepicker/dist/react-datepicker.css";
 
 const ExerciseDiaryPage = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [steps, setSteps] = useState(29000); // Placeholder for steps
-  const formRef = useRef(null);
-
+  const [steps, setSteps] = useState(29000); // setSteps function to update steps
   const brandColor = "#176087";
-
-  const formatDate = (date) => date.toISOString().split("T")[0];
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    setTimeout(() => {
-      formRef.current?.requestSubmit();
-    }, 0);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted");
-  };
-
-  const CalendarButton = forwardRef(({ onClick }, ref) => (
-    <Button onClick={onClick} ref={ref}>
-      <Calendar size={25} />
-    </Button>
-  ));
 
   return (
     <Container className="py-5">
-      <DateNavigator
-        selectedDate={selectedDate}
-        setSelectedDate={handleDateChange}
-      />
-
+     <CalendarForm/>
       <div className="d-flex align-items-center justify-content-left gap-2 mt-5">
         <h2 className="fw-bold m-0" style={{ color: brandColor }}>
           Total Steps: {steps}
@@ -133,7 +107,7 @@ const ExerciseDiaryPage = () => {
       <h3 className="fw-bold mt-5" style={{ color: brandColor }}>
         Notes:
       </h3>
-      <Form.Group className="mb-3">
+      <Form.Group className="mb-3 border-1 border-black">
         <Form.Control
           as="textarea"
           rows={5}
