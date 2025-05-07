@@ -64,6 +64,14 @@ p {
     background-color: #507DBC;
 }
 
+.workout-list.active {
+    background-color: #507DBC;
+}
+
+.cardio-list.active {
+    background-color: #507DBC;
+}
+
 
 .radio-background {
     background-color: #DAE3E5;
