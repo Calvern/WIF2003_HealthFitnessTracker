@@ -1,18 +1,26 @@
-import { forwardRef, useRef, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { Calendar } from "react-bootstrap-icons";
-import DatePicker from "react-datepicker";
+import { useState } from "react";
+import {
+  Button,
+  Col,
+  Container,
+  Row,
+  Toast,
+  ToastContainer,
+} from "react-bootstrap";
 import "react-datepicker/dist/react-datepicker.css";
 import MealEntries from "../components/Nutrition/MealEntries";
 import { Link } from "react-router-dom";
 import RecommendModal from "../components/Nutrition/RecommendModal";
 import CalendarForm from "../components/Nutrition/CalendarForm";
+import { useAppContext } from "../contexts/AppContext";
 
 const FoodDiaryPage = () => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const { showToast } = useAppContext();
 
   return (
     <Container className="py-5">
@@ -74,6 +82,7 @@ const FoodDiaryPage = () => {
         carbs="506"
         fat={78}
         protein={88}
+        onFavouriteClick={() => showToast("Added to favourites!")}
       />
       <Row className="mt-2">
         <Col xs={6}>
@@ -112,6 +121,7 @@ const FoodDiaryPage = () => {
         carbs="506"
         fat={78}
         protein={88}
+        onFavouriteClick={() => showToast("Added to favourites!")}
       />
       <Row className="mt-2">
         <Col xs={6}>
@@ -147,6 +157,7 @@ const FoodDiaryPage = () => {
         carbs="506"
         fat={78}
         protein={88}
+        onFavouriteClick={() => showToast("Added to favourites!")}
       />
       <Row className="mt-2">
         <Col xs={6}>

@@ -1,7 +1,14 @@
 import { Button, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const MealEntries = ({ foodName, calories, carbs, fat, protein }) => {
+const MealEntries = ({
+  foodName,
+  calories,
+  carbs,
+  fat,
+  protein,
+  onFavouriteClick,
+}) => {
   return (
     <Row style={{ backgroundColor: "#DAE3E5" }}>
       <Col
@@ -13,7 +20,10 @@ const MealEntries = ({ foodName, calories, carbs, fat, protein }) => {
           <Link className="food-entry-details-link" to="/meal-favourites/5931">
             View Details
           </Link>
-          <Button className="food-entry-favourites-button">
+          <Button
+            onClick={onFavouriteClick}
+            className="food-entry-favourites-button"
+          >
             Add to favourites
           </Button>
 

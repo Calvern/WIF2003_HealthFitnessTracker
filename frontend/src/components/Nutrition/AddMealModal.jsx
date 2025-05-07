@@ -1,7 +1,6 @@
-import { Button, Form, FormControl, InputGroup, Modal } from "react-bootstrap";
-import InputGroupText from "react-bootstrap/esm/InputGroupText";
+import { Button, Form, Modal } from "react-bootstrap";
 
-const RecommendModal = ({ show, handleClose }) => {
+const AddMealModal = ({ show, handleClose }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     handleClose();
@@ -16,20 +15,17 @@ const RecommendModal = ({ show, handleClose }) => {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title>Suggest meals</Modal.Title>
+        <Modal.Title>Add to Diary</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Please tell us how much calorie you want for your today's meal!
+        Which meal would you like this to add to?
         <Form onSubmit={handleSubmit} className="mt-3">
-          <InputGroup>
-            <FormControl
-              className="shadow-none "
-              type="number"
-              step="any"
-              placeholder="Calories in kCal"
-            ></FormControl>
-            <InputGroup.Text>kCal</InputGroup.Text>
-          </InputGroup>
+          <Form.Label htmlFor="meal-type">Meal Type</Form.Label>
+          <Form.Select className="mb-3 shadow-none" id="meal-type">
+            <option>Breakfast</option>
+            <option>Lunch</option>
+            <option>Dinner</option>
+          </Form.Select>
           <div className="mt-4 d-flex justify-content-end gap-3">
             <Button
               variant="secondary"
@@ -52,4 +48,4 @@ const RecommendModal = ({ show, handleClose }) => {
   );
 };
 
-export default RecommendModal;
+export default AddMealModal;
