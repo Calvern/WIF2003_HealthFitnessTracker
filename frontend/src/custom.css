@@ -71,6 +71,48 @@ p {
 
 
 
+.food-entry-details-link{
+    padding: 0;
+    color: #176087;
+    background-color: transparent;
+    border: none;
+    text-decoration: underline;
+}
+
+.food-entry-details-link:hover{
+    background-color: transparent;
+    color: rgb(23, 96, 135, 0.6);
+}
+
+
+.food-entry-favourites-button{
+    padding: 0;
+    color: #176087;
+    background-color: transparent;
+    border: none;
+    text-decoration: underline;
+}
+
+.food-entry-favourites-button:hover{
+    background-color: transparent;
+    color: rgb(23, 96, 135, 0.6);
+}
+
+.food-entry-remove-button{
+    padding: 0;
+    color: red;
+    background-color: transparent;
+    border: none;
+    text-decoration: underline;
+  }
+
+.food-entry-remove-button:hover{
+    background-color: transparent;
+    color: rgb(255, 0, 0, 0.6);
+  }
+
+
+
 
 
 
