@@ -39,6 +39,9 @@ const DesktopNavLinks = () => {
         <NavDropdown.Item as={Link} to="/search-meal">
           Search for meals
         </NavDropdown.Item>
+        <NavDropdown.Item as={Link} to="/meal-favourites">
+          Favourites
+        </NavDropdown.Item>
       </NavDropdown>
       <NavDropdown
         className="main-nav-dropdown"

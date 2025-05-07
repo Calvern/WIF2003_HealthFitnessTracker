@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Button, Nav, OverlayTrigger, Popover } from "react-bootstrap";
-import { Bell, GearFill } from "react-bootstrap-icons";
+import { Bell, GearFill, Plus } from "react-bootstrap-icons";
+import { Link } from "react-router-dom";
 
 const NotificationsPopover = () => {
   const [activeTab, setActiveTab] = useState("notifications");
+
   const renderContent = () => {
     if (activeTab === "notifications") {
       return (
@@ -44,9 +46,14 @@ const NotificationsPopover = () => {
             <Nav.Link eventKey="reminders">Reminders</Nav.Link>
           </Nav.Item>
         </Nav>
-        <GearFill />
+          {activeTab === "notifications" ? <Link to={"/settings"}><GearFill /></Link> : <Link to={"/create-reminder"}><Plus size={32}/></Link> }
       </Popover.Header>
       <Popover.Body>{renderContent()}</Popover.Body>
+        <div className="popover-footer-link d-flex justify-content-center align-items-center py-2">
+          <Link to={activeTab === "notifications" ? "/notifications" : "/reminders"}>
+          See All
+          </Link>
+        </div>      
     </Popover>
   );
   return (

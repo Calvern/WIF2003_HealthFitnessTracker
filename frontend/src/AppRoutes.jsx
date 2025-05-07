@@ -7,11 +7,17 @@ import HomePage from "./pages/HomePage";
 import CreateProfilePage from "./pages/CreateProfilePage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import FoodDiaryPage from "./pages/FoodDiaryPage";
+import NotificationsPage from "./pages/NotificationsPage";
+import RemindersPage from "./pages/RemindersPage";
+import SettingsPage from "./pages/SettingsPage";
+import CreateReminderPage from "./pages/CreateReminderPage";
 import ExerciseDiaryPage from "./pages/ExerciseDiaryPage";
 import LogCardioPage from "./pages/LogCardioPage";
 import LogStepsPage from "./pages/LogStepsPage";
 import LogWorkoutPage from "./pages/LogWorkoutPage";
 import SearchMealPage from "./pages/SearchMealPage";
+import FavouriteMealPage from "./pages/FavouriteMealPage";
+import FoodDetailsPage from "./pages/FoodDetailsPage";
 
 const AppRoutes = () => {
   return (
@@ -115,14 +121,98 @@ const AppRoutes = () => {
         }
       />
       <Route
-        path="search-meal"
+        path="fitness-exercise-diary"
+        element={
+          <Layout>
+            <ExerciseDiaryPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="fitness-log-steps"
+        element={
+          <Layout>
+            <LogStepsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="fitness-log-workout"
+        element={
+          <Layout>
+            <LogWorkoutPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="fitness-log-cardio"
+        element={
+          <Layout>
+            <LogCardioPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <Layout>
+            <NotificationsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/reminders"
+        element={
+          <Layout>
+            <RemindersPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <Layout>
+            <SettingsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/create-reminder"
+        element={
+          <Layout>
+            <CreateReminderPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/search-meal"
         element={
           <Layout>
             <SearchMealPage />
           </Layout>
         }
       />
+
+      <Route
+        path="meal-favourites"
+        element={
+          <Layout>
+            <FavouriteMealPage />
+          </Layout>
+        }
+      />
+      
+      <Route
+        path="meal-favourites/:foodId"
+        element={
+          <Layout>
+            <FoodDetailsPage />
+          </Layout>
+        }
+      />
     </Routes>
+
+    
   );
 };
 
