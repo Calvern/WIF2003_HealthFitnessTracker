@@ -26,6 +26,7 @@ const CreateReminderPage = () => {
   return (
     <Container className="py-5">
       <div className="d-flex align-items-center ml-5 mt-3 mb-2" style={{ fontWeight: "bold", fontSize: "20px"}}>
+
         <Link to={"/reminders"}>
             <ChevronLeft size={40} style={{ marginRight: "4px"}}/>
         </Link>
