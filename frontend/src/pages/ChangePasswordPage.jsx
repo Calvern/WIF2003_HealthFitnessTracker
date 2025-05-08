@@ -4,6 +4,7 @@ import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 
 const ChangePasswordPage = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
@@ -59,6 +60,7 @@ const ChangePasswordPage = () => {
 
         <Button
           style={{ backgroundColor: "#507DBC" }}
+          onClick={() => navigate("/profile")}
           className="w-100 mt-3 rounded-3 mb-2"
           type="submit"
         >
