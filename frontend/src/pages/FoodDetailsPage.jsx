@@ -1,4 +1,11 @@
-import { Button, Col, Container, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Row,
+  Toast,
+  ToastContainer,
+} from "react-bootstrap";
 import { ChevronLeft } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import RecipeInfo from "../assets/RecipeInfo.png";
@@ -13,7 +20,7 @@ const FoodDetailsPage = () => {
         <Button
           className="border border-0"
           style={{ backgroundColor: "transparent", color: "black" }}
-          onClick={() => navigate("/meal-favourites")}
+          onClick={() => navigate(-1)}
         >
           <ChevronLeft size={30}></ChevronLeft>
         </Button>

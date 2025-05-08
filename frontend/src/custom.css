@@ -7,7 +7,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 p {
-    font-size: 18px !important;
+    font-size: 16px !important;
     font-family: 'PT Sans', sans-serif;
 }
 
@@ -51,6 +51,14 @@ p {
     font-weight: bold;
 }
 
+.main-nav-dropdown-link:focus,
+.main-nav-dropdown-link:active {
+    background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: black !important;
+}
+
 .side-nav-link{
     color: white;
     text-decoration: none
@@ -61,6 +69,14 @@ p {
   }
 
 .meal-list.active {
+    background-color: #507DBC;
+}
+
+.workout-list.active {
+    background-color: #507DBC;
+}
+
+.cardio-list.active {
     background-color: #507DBC;
 }
 
@@ -106,6 +122,16 @@ p {
     color: rgb(23, 96, 135, 0.6);
 }
 
+.food-entry-favourites-button:focus,
+.food-entry-favourites-button:active {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: #176087 !important;
+}
+
+
+
 .food-entry-remove-button{
     padding: 0;
     color: red;
@@ -118,6 +144,15 @@ p {
     background-color: transparent;
     color: rgb(255, 0, 0, 0.6);
   }
+
+.food-entry-remove-button:focus,
+.food-entry-remove-button:active {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: red !important;
+}
+
 
 
 

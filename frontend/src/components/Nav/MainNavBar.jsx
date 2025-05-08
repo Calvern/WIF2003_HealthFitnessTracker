@@ -8,8 +8,10 @@ import UserProfileDropdown from "./UserProfileDropdown";
 import SideNav from "./SideNav";
 import progress from "../../assets/Progress.png";
 import { Link } from "react-router-dom";
+import { useAppContext } from "../../contexts/AppContext";
+
 const MainNavBar = () => {
-  var isAuthenticated = false;
+  const { isLoggedIn } = useAppContext();
 
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -32,7 +34,7 @@ const MainNavBar = () => {
         style={{ backgroundColor: "#0A2239" }}
       >
         <Container>
-          {!isAuthenticated ? (
+          {!isLoggedIn ? (
             <UnauthenticatedNav />
           ) : isMobile ? (
             <SideBarButton onClick={() => setShowOffcanvas(true)} />
@@ -40,7 +42,7 @@ const MainNavBar = () => {
             <DesktopNavLinks />
           )}
 
-          {isAuthenticated ? (
+          {isLoggedIn ? (
             <div className="d-flex align-items-center gap-3">
               <NotificationsPopover />
               <UserProfileDropdown progress={progress} />
@@ -69,7 +71,7 @@ const MainNavBar = () => {
       <SideNav
         showOffcanvas={showOffcanvas}
         setShowOffcanvas={setShowOffcanvas}
-        isAuthenticated={isAuthenticated}
+        isLoggedIn={isLoggedIn}
       />
     </>
   );
