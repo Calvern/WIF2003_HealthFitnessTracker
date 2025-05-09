@@ -8,7 +8,7 @@ import {
   Button,
 } from "react-bootstrap";
 import { useEffect, useState, Fragment } from "react";
-import { Bell, ChevronLeft, ChevronDown } from "react-bootstrap-icons";
+import { Bell, ChevronLeft, ChevronRight } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 
 const NotificationsPage = () => {
@@ -209,11 +209,16 @@ const NotificationsPage = () => {
               >
                 {notification.title}
               </small>
-              <ChevronDown
-                size={10}
-                style={{ cursor: "pointer" }}
-                onClick={() => handleEdit(notification.id)}
-              />
+              <small onClick={()=> handleEdit(notification.id)} 
+              style={{
+                cursor:"pointer", 
+                fontStyle:"italic", 
+                textDecoration:"underline", 
+                color: 
+                  notification.reminderStatus === "Active"
+                    ? "#507DBC": "#B3B3B3"}}>
+                See more
+              </small>
             </div>
             {index < filteredNotifications.length - 1 && (
               <hr
