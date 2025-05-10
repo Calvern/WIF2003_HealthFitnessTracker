@@ -252,18 +252,17 @@ const NotificationsPopover = () => {
   );
   return (
     <OverlayTrigger
-  trigger="click"
-  placement="bottom-end"
-  overlay={popover}
-  show={showPopover}
-  onToggle={(nextShow) => {
-    setShowPopover(nextShow);
-    if (!nextShow) {
-      console.log("Popover closed. Do something here.");
-      setActiveTab("notifications");
-    }
-  }}
-  rootClose
+      trigger="click"
+      placement="bottom-end"
+      overlay={popover}
+      show={showPopover}
+      onToggle={(nextShow) => {
+        setShowPopover(nextShow);
+        if (!nextShow) {
+          setActiveTab("notifications");
+        }
+      }}
+      rootClose
 >
   <Button
     style={{ backgroundColor: "transparent", border: "none" }}
