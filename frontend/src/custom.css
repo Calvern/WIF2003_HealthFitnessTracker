@@ -158,7 +158,13 @@ p {
     background-color: #A1C6EA;
 }
 
-
+.notification-popover-item:hover {
+    background-color: #f0f0f0; /* or any hover color you want */
+    font-weight: bold; /* optional: text color on hover */
+    border-radius: 5px;
+    transform: scale(1.1);
+  }
+  
 
 
 
