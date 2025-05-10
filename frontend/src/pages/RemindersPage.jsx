@@ -1,28 +1,29 @@
 import { useEffect, useState, Fragment } from 'react';
 import { Container } from 'react-bootstrap';
 import { Plus, ChevronLeft, Pencil } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const RemindersPage = () => {
 
   const [reminders, setReminders] = useState([]);
+  const navigate = useNavigate();
   
   const mockReminders = [
     {
       id: 1,
-      title: "Notification 1",
+      title: "Gym Day",
       date: "2023-10-01",
       time: "10:00 AM",
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
-      notificationMethod: "Email",
+      notificationMethod: "Browser",
       notes: "This is the first notification.",
       reminderStatus: "Active",
     },
     {
       id: 2,
-      title: "Notification 2",
+      title: "PushUp x 10 reps",
       date: "2023-4-01",
       time: "12:00 AM",
       category: "General",
@@ -34,9 +35,9 @@ const RemindersPage = () => {
     },
     {
       id: 3,
-      title: "Notification 3",
+      title: "PushUp x 200 reps",
       date: "2023-10-01",
-      time: "10:00 AM",
+      time: "11:00 AM",
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
@@ -46,13 +47,13 @@ const RemindersPage = () => {
     },
     {
       id: 4,
-      title: "Notification 4",
+      title: "Swimming Day",
       date: "2023-10-01",
-      time: "10:00 AM",
+      time: "08:00 AM",
       category: "General",
-      leadTime: "5 minutes",
+      leadTime: "10 minutes",
       recurring: "Every Monday",
-      notificationMethod: "Email",
+      notificationMethod: "Browser",
       notes: "This is the first notification.",
       reminderStatus: "Not Active",
     },
@@ -62,12 +63,48 @@ const RemindersPage = () => {
       date: "2023-10-01",
       time: "10:00 AM",
       category: "General",
+      leadTime: "15 minutes",
+      recurring: "Every Monday",
+      notificationMethod: "Email",
+      notes: "This is the first notification.",
+      reminderStatus: "Active",
+    },
+    {
+      id: 6,
+      title: "Notification 6",
+      date: "2023-10-01",
+      time: "06:00 AM",
+      category: "General",
+      leadTime: "5 minutes",
+      recurring: "Every Monday",
+      notificationMethod: "Email",
+      notes: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
+      reminderStatus: "Active",
+    },
+    {
+      id: 7,
+      title: "Notification 7",
+      date: "2023-9-01",
+      time: "10:00 AM",
+      category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
       notificationMethod: "Email",
       notes: "This is the first notification.",
       reminderStatus: "Active",
     },
+    {
+      id: 8,
+      title: "Notification 8",
+      date: "2023-9-01",
+      time: "10:00 AM",
+      category: "General",
+      leadTime: "10 minutes",
+      recurring: "Every Monday",
+      notificationMethod: "Email",
+      notes: "This is the first notification.",
+      reminderStatus: "Not Active",
+    }
   ]
 
   useEffect(() => {
@@ -75,11 +112,13 @@ const RemindersPage = () => {
   }, []);
 
 
-  const handleEdit = (id)=>{
-    const reminder = reminders.find((n) => n.id === id)
-    alert(`Reminder with id ${reminder.id} is choose for edit`)
-    console.log(`Reminder with id ${reminder.id} is choose for edit`);
-  }
+  const handleEdit = (reminder) => {
+  navigate(`/reminders/edit-reminder/${reminder.id}`, 
+    {
+      state: { reminder }
+    }
+  );
+};
 
 
   const renderReminders = () => {
@@ -103,9 +142,9 @@ const RemindersPage = () => {
                 {reminder.title}
               </small>
               <Pencil
-                  size={10}
+                  size={15}
                   style={{ cursor: "pointer" }}
-                  onClick={() => handleEdit(reminder.id)}
+                  onClick={() => handleEdit(reminder)}
                />
             </div>
             {index < reminders.length - 1 && (
@@ -126,7 +165,7 @@ const RemindersPage = () => {
                 border: "1px solid #ccc",
               }}
             />
-        <div className='d-flex justify-content-center align-items-center mt-5' style={{fontWeight:"bold", fontSize:"30px"}}>
+        <div className='d-flex justify-content-center align-items-center mt-3' style={{fontWeight:"bold", fontSize:"30px"}}>
           No More
         </div>
       </div>

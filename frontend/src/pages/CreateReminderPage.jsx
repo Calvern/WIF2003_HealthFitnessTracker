@@ -1,11 +1,12 @@
-import React, { useState, useRef } from 'react';
-import { Form, Button, Row, Col, FormGroup, FormControl, FormLabel, Container } from 'react-bootstrap';
-import { ChevronLeft, ChevronDown } from 'react-bootstrap-icons';
+import { useState } from 'react';
+import { Container } from 'react-bootstrap';
+import { ChevronLeft } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
+import ReminderForm from '../components/Notifications/ReminderForm';
 
 const CreateReminderPage = () => {
-    
-    const [reminder, setReminder] = useState({
+  
+  const [reminder, setReminder] = useState({
     title: '',
     date: '',
     time: '',
@@ -26,194 +27,17 @@ const CreateReminderPage = () => {
   return (
     <Container className="py-5">
       <div className="d-flex align-items-center ml-5 mt-3 mb-2" style={{ fontWeight: "bold", fontSize: "20px"}}>
-
         <Link to={"/reminders"}>
             <ChevronLeft size={40} style={{ marginRight: "4px"}}/>
         </Link>
         Create New Reminder
       </div>
-      <div className="d-flex flex-column vh-100" style={{ marginLeft: '70px', marginRight: '70px' }}>
-      <Form onSubmit={handleSubmit} >
-        <Row className="mb-2">
-          <Col>
-            <Form.Group controlId="formTitle">
-              <FormLabel>Reminder Title</FormLabel>
-              <FormControl
-                type="text"
-                placeholder="Enter title"
-                value={reminder.title}
-                onChange={(e) => setReminder({ ...reminder, title: e.target.value })}
-                required />
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Row className="mb-2">
-            <Col md="6">
-              <Form.Group controlId="formDate">
-                <FormLabel>Date</FormLabel>
-                <FormControl
-                  type="date"
-                  value={reminder.date}
-                  onChange={(e) => setReminder({ ...reminder, date: e.target.value })}
-                  required />
-              </Form.Group>
-            </Col>
-            <Col md="6">
-              <Form.Group controlId="formTime">
-                <FormLabel>Time</FormLabel>
-                <FormControl
-                  type="time"
-                  value={reminder.time}
-                  onChange={(e) => setReminder({ ...reminder, time: e.target.value })}
-                  required />
-              </Form.Group>
-            </Col>
-        </Row>
-
-        <Row className="mb-2">
-            <Col md="6">
-              <Form.Group controlId="formCategory">
-                <FormLabel>Category</FormLabel>
-                <FormControl
-                  type="text"
-                  placeholder="Enter category"
-                  value={reminder.category}
-                  onChange={(e) => setReminder({ ...reminder, category: e.target.value })}
-                  required />
-              </Form.Group>
-              </Col>
-              <Col md="6">
-                <Form.Group controlId="formLeadTime">
-              <FormLabel>Lead Time</FormLabel>
-              <FormControl as="select"
-                type="select"
-                value={reminder.leadTime}
-                onChange={(e) => setReminder({ ...reminder, leadTime: e.target.value })}
-                required>
-                <option value="" disabled>
-                    Select lead time 
-                </option>
-                <option value="5">5 minutes before</option>
-                <option value="10">10 minutes before</option>
-                <option value="15">15 minutes before</option>
-                <option value="20">20 minutes before</option>
-              </FormControl>
-            </Form.Group>
-              </Col>
-        </Row>
-
-        <Row className="mb-2">
-            <Col md="6">
-              <Form.Group controlId="formRecurring">
-                <FormLabel>Recurring</FormLabel>
-                <FormControl as="select"
-                  type="select"
-                  value={reminder.recurring}
-                  onChange={(e) => setReminder({ ...reminder, recurring: e.target.value })}
-                  required >
-                  <option value="" disabled>
-                    Select one 
-                </option>
-                <option value="Monday">Every Monday</option>
-                <option value="Tuesday">Every Tuesday</option>
-                <option value="Wednesday">Every Wednesday</option>
-                <option value="Thursday">Every Thursday</option>
-                <option value="Friday">Every Friday</option>
-                <option value="Saturday">Every Saturday</option>
-                <option value="Sunday">Every Sunday</option>
-                </FormControl>
-              </Form.Group>
-            </Col>
-            <Col md="6">
-                <Form.Group controlId="formNotificationMethod">
-                    <Form.Label>Notification Method</Form.Label>
-                    <div className="d-flex gap-4 justify-content-between">
-                    {/* Email Radio */}
-                    <label
-                        htmlFor="email-radio"
-                        className="radio-label d-flex align-items-center gap-2 px-3 py-2 rounded flex-grow-1 text-center"
-                        style={{ height: "40px", cursor: "pointer", backgroundColor:"#DAE3E5"}}
-                    >
-                        <Form.Check
-                        id="email-radio"
-                        type="radio"
-                        name="notificationMethod"
-                        value="email"
-                        checked={reminder.notificationMethod === 'email'}
-                        onChange={(e) => setReminder({ ...reminder, notificationMethod: e.target.value })}
-                        className="custom-radio"
-                        />
-                        <span className="radio-text">Email</span>
-                    </label>
-
-                    {/* Browser Notification Radio */}
-                    <label
-                        htmlFor="browser-radio"
-                        className="radio-label d-flex align-items-center gap-2 px-3 py-2 rounded flex-grow-1 text-center"
-                        style={{ height: "40px", cursor: "pointer", backgroundColor:"#DAE3E5"}}
-                    >
-                        <Form.Check
-                        id="browser-radio"
-                        type="radio"
-                        name="notificationMethod"
-                        value="browser"
-                        checked={reminder.notificationMethod === 'browser'}
-                        onChange={(e) => setReminder({ ...reminder, notificationMethod: e.target.value })}
-                        className="custom-radio"
-                        />
-                        <span className="radio-text">Browser</span>
-                    </label>
-                    </div>
-                </Form.Group>
-            </Col>
-        </Row>
-        
-        <Row className="mb-2">
-          <Col xs="12">
-            <Form.Group controlId="formNotes">
-              <FormLabel>Notes</FormLabel>
-              <FormControl
-                as="textarea"
-                rows={3}
-                placeholder="Enter message"
-                value={reminder.message}
-                onChange={(e) => setReminder({ ...reminder, notes: e.target.value })}
-                required />
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Row className="justify-content-center">
-  <Col xs="auto">
-    <div className="d-flex gap-5">
-      <Button
-        variant="primary"
-        type="button"
-        onClick={() =>
-          setReminder({
-            title: '',
-            date: '',
-            time: '',
-            category: '',
-            leadTime: '',
-            recurring: '',
-            notificationMethod: '',
-            notes: ''
-          })
-        }
-    style={{ width: "150px", height: "50px", fontSize: "16px" }}>
-        Save Reminder
-      </Button>
-      <Button variant="danger" type="submit" style={{ width: "150px", height: "50px", fontSize: "16px" }}>
-        Cancel
-      </Button>
-    </div>
-  </Col>
-</Row>
-
-      </Form>
-      </div>
+      <ReminderForm
+        reminder={reminder}
+        setReminder={setReminder}
+        handleSubmit={handleSubmit}
+        mode = "create"
+      />
     </Container>
   );
 };
