@@ -3,8 +3,8 @@ import { GenderMale, GenderFemale } from "react-bootstrap-icons";
 import { CameraFill } from "react-bootstrap-icons";
 import EditableProfileImage from "./EditableProfileImage";
 
-const ProfileCard = ({ formData, isEditing, toggleEdit }) => {
-  const { profileImage, firstName, lastName, gender, dob } = formData;
+const ProfileCard = ({ formData, isEditing, setFormData }) => {
+  const { firstName, lastName, gender, dob } = formData;
 
   // Calculate age (if dateOfBirth is a valid date string)
   const calculateAge = (dob) => {
@@ -20,7 +20,7 @@ const ProfileCard = ({ formData, isEditing, toggleEdit }) => {
 
   return (
     <Row className="my-4">
-      <Col xs={2}>
+      <Col lg={2}>
         {/* <Image
           src="https://media.istockphoto.com/id/1682296067/photo/happy-studio-portrait-or-professional-man-real-estate-agent-or-asian-businessman-smile-for.jpg?s=612x612&w=0&k=20&c=9zbG2-9fl741fbTWw5fNgcEEe4ll-JegrGlQQ6m54rg="
           roundedCircle
@@ -88,7 +88,7 @@ const ProfileCard = ({ formData, isEditing, toggleEdit }) => {
         </Form.Group>
       </Col>
 
-      <Col xs={6}>
+      <Col lg={6}>
         <div className="d-flex flex-column">
           <div className="d-flex align-items-center gap-2">
             <h2 className="fw-bold">
@@ -107,11 +107,11 @@ const ProfileCard = ({ formData, isEditing, toggleEdit }) => {
         </div>
       </Col>
 
-      <Col xs={4} className="position-relative">
+      <Col lg={4} className="position-relative">
         <Button
+          type="submit"
           className="position-absolute bottom-0 end-0 py-2 px-5 rounded-4 border-0"
           style={{ backgroundColor: "#507DBC" }}
-          onClick={toggleEdit}
         >
           {isEditing ? "Save Changes" : "Edit Profile"}
         </Button>
