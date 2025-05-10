@@ -1,4 +1,5 @@
 import { createRoot } from "react-dom/client";
+import { StrictMode } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./custom.css";
 import 'react-circular-progressbar/dist/styles.css';
