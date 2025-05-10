@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { ChevronLeft } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
-import CreateReminderForm from '../components/Notifications/CreateReminderForm';
+import ReminderForm from '../components/Notifications/ReminderForm';
 
 const CreateReminderPage = () => {
   
@@ -32,10 +32,11 @@ const CreateReminderPage = () => {
         </Link>
         Create New Reminder
       </div>
-      <CreateReminderForm
+      <ReminderForm
         reminder={reminder}
         setReminder={setReminder}
         handleSubmit={handleSubmit}
+        mode = "create"
       />
     </Container>
   );

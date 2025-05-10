@@ -9,13 +9,12 @@ import {
 } from "react-bootstrap";
 import { useEffect, useState, Fragment } from "react";
 import { Bell, ChevronLeft, ChevronRight } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
   const [filter, setFilter] = useState("all");
-  const [showModal, setShowModal] = useState(false);
-  const [selectedNotification, setSelectedNotification] = useState(null);
+  const navigate = useNavigate();
 
   const mockNotifications = [
     {
@@ -26,7 +25,7 @@ const NotificationsPage = () => {
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
-      notificationMethod: "Email",
+      notificationMethod: "Browser",
       notes: "This is the first notification.",
       reminderStatus: "Active",
     },
@@ -46,7 +45,7 @@ const NotificationsPage = () => {
       id: 3,
       title: "Notification 3",
       date: "2023-10-01",
-      time: "10:00 AM",
+      time: "11:00 AM",
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
@@ -58,11 +57,11 @@ const NotificationsPage = () => {
       id: 4,
       title: "Notification 4",
       date: "2023-10-01",
-      time: "10:00 AM",
+      time: "08:00 AM",
       category: "General",
-      leadTime: "5 minutes",
+      leadTime: "10 minutes",
       recurring: "Every Monday",
-      notificationMethod: "Email",
+      notificationMethod: "Browser",
       notes: "This is the first notification.",
       reminderStatus: "Not Active",
     },
@@ -72,7 +71,7 @@ const NotificationsPage = () => {
       date: "2023-10-01",
       time: "10:00 AM",
       category: "General",
-      leadTime: "5 minutes",
+      leadTime: "15 minutes",
       recurring: "Every Monday",
       notificationMethod: "Email",
       notes: "This is the first notification.",
@@ -82,7 +81,7 @@ const NotificationsPage = () => {
       id: 6,
       title: "Notification 6",
       date: "2023-10-01",
-      time: "10:00 AM",
+      time: "06:00 AM",
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
@@ -93,7 +92,7 @@ const NotificationsPage = () => {
     {
       id: 7,
       title: "Notification 7",
-      date: "2023-10-01",
+      date: "2023-9-01",
       time: "10:00 AM",
       category: "General",
       leadTime: "5 minutes",
@@ -105,10 +104,10 @@ const NotificationsPage = () => {
     {
       id: 8,
       title: "Notification 8",
-      date: "2023-10-01",
+      date: "2023-9-01",
       time: "10:00 AM",
       category: "General",
-      leadTime: "5 minutes",
+      leadTime: "10 minutes",
       recurring: "Every Monday",
       notificationMethod: "Email",
       notes: "This is the first notification.",
@@ -132,16 +131,13 @@ const NotificationsPage = () => {
     );
   });
 
-  const handleEdit = (id) => {
-    const notification = notifications.find((n) => n.id === id);
-    setSelectedNotification(notification);
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedNotification(null);
-  };
+  const handleShowNotifications = (notification) => {
+    navigate(`/notifications/show-notification/${notification.id}`,
+      {
+        state: { notification }
+      }
+    )
+  }
 
   const renderEmptyMessage = () => {
     return (
@@ -209,7 +205,7 @@ const NotificationsPage = () => {
               >
                 {notification.title}
               </small>
-              <small onClick={()=> handleEdit(notification.id)} 
+              <small onClick={()=> handleShowNotifications(notification)} 
               style={{
                 cursor:"pointer", 
                 fontStyle:"italic", 
@@ -242,9 +238,14 @@ const NotificationsPage = () => {
         style={{ marginLeft: "40px" }}
       >
         <Link to={"/home"}>
-          <ChevronLeft size={40} style={{ marginRight: "4px" }} />
+          <ChevronLeft 
+          size={40} 
+          style={{ marginRight: "4px" }} 
+          //onClick={() => navigate(-1)}
+          />
         </Link>
-        <span style={{ fontWeight: "bold", fontSize: "20px" }}>
+        <span style={{ fontWeight: "bold", 
+        fontSize: "20px" }}>
           Notifications
         </span>
 
@@ -317,33 +318,7 @@ const NotificationsPage = () => {
       ) : (
         renderNotifications()
       )}
-
-      {/* MODAL */}
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Notification Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedNotification && (
-            <>
-              <p><strong>Title:</strong> {selectedNotification.title}</p>
-              <p><strong>Date:</strong> {selectedNotification.date}</p>
-              <p><strong>Time:</strong> {selectedNotification.time}</p>
-              <p><strong>Category:</strong> {selectedNotification.category}</p>
-              <p><strong>Lead Time:</strong> {selectedNotification.leadTime}</p>
-              <p><strong>Recurring:</strong> {selectedNotification.recurring}</p>
-              <p><strong>Notification Method:</strong> {selectedNotification.notificationMethod}</p>
-              <p><strong>Notes:</strong> {selectedNotification.notes}</p>
-              {/* <p><strong>Status:</strong> {selectedNotification.reminderStatus}</p> */}
-            </>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      
     </Container>
   );
 };

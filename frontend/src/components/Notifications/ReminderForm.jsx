@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Form,
     Button,
@@ -7,8 +7,16 @@ import {
     FormControl,
     FormLabel,
   } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
 
-const CreateReminderForm = ({ reminder, setReminder, handleSubmit }) => {
+const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
+
+  const navigate = useNavigate();
+
+  const handleNavigateToReminders =() =>{
+   navigate("/reminders");
+  }
+
   return (
     <Form onSubmit={handleSubmit}>
       <Row className="mb-2">
@@ -97,7 +105,7 @@ const CreateReminderForm = ({ reminder, setReminder, handleSubmit }) => {
               <option value="" disabled>
                 Select One 
               </option>
-              <option value="Monday">Everyday</option>
+              <option value="Everyday">Everyday</option>
               <option value="Monday">Every Monday</option>
               <option value="Tuesday">Every Tuesday</option>
               <option value="Wednesday">Every Wednesday</option>
@@ -123,7 +131,7 @@ const CreateReminderForm = ({ reminder, setReminder, handleSubmit }) => {
                   type="radio"
                   name="notificationMethod"
                   value="email"
-                  checked={reminder.notificationMethod === 'email'}
+                  checked={reminder.notificationMethod === 'Email'}
                   onChange={(e) => setReminder({ ...reminder, notificationMethod: e.target.value })}
                   className="custom-radio"
                   />
@@ -141,7 +149,7 @@ const CreateReminderForm = ({ reminder, setReminder, handleSubmit }) => {
                   type="radio"
                   name="notificationMethod"
                   value="browser"
-                  checked={reminder.notificationMethod === 'browser'}
+                  checked={reminder.notificationMethod === 'Browser'}
                   onChange={(e) => setReminder({ ...reminder, notificationMethod: e.target.value })}
                   className="custom-radio"
                   />
@@ -167,35 +175,31 @@ const CreateReminderForm = ({ reminder, setReminder, handleSubmit }) => {
         </Col>
       </Row>
 
-      <Row className="justify-content-center">
-        <Col xs="auto">
-          <div className="d-flex gap-5">
-            <Button
-              variant="primary"
-              type="button"
-              onClick={() =>
-                setReminder({
-                  title: '',
-                  date: '',
-                  time: '',
-                  category: '',
-                  leadTime: '',
-                  recurring: '',
-                  notificationMethod: '',
-                  notes: ''
-                })
-              }
-              style={{ width: "150px", height: "50px", fontSize: "16px" }}>
-              Save Reminder
-            </Button>
-            <Button variant="danger" type="submit" style={{ width: "150px", height: "50px", fontSize: "16px" }}>
-              Cancel
-            </Button>
-          </div>
-        </Col>
-      </Row>
+    <Row className="justify-content-center">
+      <Col xs="auto">
+        <div className="d-flex gap-5">
+          <Button
+            variant="primary"
+            type="submit"
+            onClick={handleNavigateToReminders}
+            style={{ width: "150px", height: "50px", fontSize: "16px" }}
+          >
+            {mode === "edit" ? "Save Changes" : "Create Reminder"}
+          </Button>
+
+          <Button
+            variant="danger"
+            type="button"
+            onClick={handleNavigateToReminders}
+            style={{ width: "150px", height: "50px", fontSize: "16px" }}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Col>
+    </Row>
     </Form>
   );
 }
 
-export default CreateReminderForm;
+export default ReminderForm;
