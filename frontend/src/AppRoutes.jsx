@@ -189,6 +189,7 @@ const AppRoutes = () => {
             </Layout>
           }
         />
+
               <Route
         path="fitness-exercise-diary"
         element={
@@ -237,6 +238,7 @@ const AppRoutes = () => {
           </Layout>
         }
       />
+
       </Route>
     </Routes>
   );
