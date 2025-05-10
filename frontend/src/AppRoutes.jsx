@@ -23,6 +23,10 @@ import CalorieCalculatorPage from "./pages/CalorieCalculatorPage";
 import EditReminderPage from "./pages/EditReminderPage";
 import ProtectedRoute from "./ProtectedRoutes";
 import ShowNotificationPage from "./pages/ShowNotificationPage";
+import ChangePasswordPage from "./pages/ChangePasswordPage";
+import DeleteAccountPage from "./pages/DeleteAccountPage";
+import DeactivateAccountPage from "./pages/DeactivateAccountPage";
+
 
 const AppRoutes = () => {
   return (
@@ -80,70 +84,94 @@ const AppRoutes = () => {
           }
         />
 
-      <Route
-        path="home"
-        element={
-          <Layout>
-            <HomePage />
-          </Layout>
-        }
-      />
-      <Route
-        path="profile"
-        element={
-          <Layout>
-            <ProfilePage />
-          </Layout>
-        }
-      />
-      <Route
-        path="food-diary"
-        element={
-          <Layout>
-            <FoodDiaryPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/notifications"
-        element={
-          <Layout>
-            <NotificationsPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/reminders"
-        element={
-          <Layout>
-            <RemindersPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <Layout>
-            <SettingsPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/create-reminder"
-        element={
-          <Layout>
-            <CreateReminderPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/search-meal"
-        element={
-          <Layout>
-            <SearchMealPage />
-          </Layout>
-        }
-      />
+        <Route
+          path="home"
+          element={
+            <Layout>
+              <HomePage />
+            </Layout>
+          }
+        />
+        <Route
+          path="profile"
+          element={
+            <Layout>
+              <ProfilePage />
+            </Layout>
+          }
+        />
+        <Route
+          path="change-password"
+          element={
+            <Layout>
+              <ChangePasswordPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="deactivate-account"
+          element={
+            <Layout>
+              <DeactivateAccountPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="delete-account"
+          element={
+            <Layout>
+              <DeleteAccountPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="food-diary"
+          element={
+            <Layout>
+              <FoodDiaryPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <Layout>
+              <NotificationsPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/reminders"
+          element={
+            <Layout>
+              <RemindersPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <Layout>
+              <SettingsPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/create-reminder"
+          element={
+            <Layout>
+              <CreateReminderPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/search-meal"
+          element={
+            <Layout>
+              <SearchMealPage />
+            </Layout>
+          }
+        />
 
         <Route
           path="meal-favourites"
@@ -162,6 +190,7 @@ const AppRoutes = () => {
             </Layout>
           }
         />
+
               <Route
         path="fitness-exercise-diary"
         element={
@@ -210,6 +239,7 @@ const AppRoutes = () => {
           </Layout>
         }
       />
+
       </Route>
     </Routes>
   );
