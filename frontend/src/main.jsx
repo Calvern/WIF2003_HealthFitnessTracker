@@ -14,5 +14,8 @@ createRoot(document.getElementById("root")).render(
         <AppRoutes />
       </Router>
     </AppContextProvider>
+    <Router>
+      <AppRoutes />
+    </Router>
   </StrictMode>
 );
