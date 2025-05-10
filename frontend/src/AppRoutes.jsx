@@ -20,13 +20,12 @@ import SearchMealPage from "./pages/SearchMealPage";
 import FavouriteMealPage from "./pages/FavouriteMealPage";
 import FoodDetailsPage from "./pages/FoodDetailsPage";
 import CalorieCalculatorPage from "./pages/CalorieCalculatorPage";
-import EditReminderPage from "./pages/EditReminderPage";
 import ProtectedRoute from "./ProtectedRoutes";
 import ShowNotificationPage from "./pages/ShowNotificationPage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 import DeleteAccountPage from "./pages/DeleteAccountPage";
 import DeactivateAccountPage from "./pages/DeactivateAccountPage";
-
+import EditReminderPage from "./pages/EditReminderPage";
 
 const AppRoutes = () => {
   return (
