@@ -25,6 +25,8 @@ import ChangePasswordPage from "./pages/ChangePasswordPage";
 import DeleteAccountPage from "./pages/DeleteAccountPage";
 import DeactivateAccountPage from "./pages/DeactivateAccountPage";
 import EditReminderPage from "./pages/EditReminderPage";
+import StepsPage from "./pages/StepsPage";
+import CaloriePage from "./pages/CaloriePage";
 
 const AppRoutes = () => {
   return (
@@ -227,6 +229,22 @@ const AppRoutes = () => {
         element={
           <Layout>
             <ShowNotificationPage />
+          </Layout>
+        }
+      />
+      <Route 
+        path="/steps"
+        element={
+          <Layout>
+            <StepsPage />
+          </Layout>
+        }
+      />
+      <Route 
+        path="/calorie-burned"
+        element={
+          <Layout>
+            <CaloriePage />
           </Layout>
         }
       />
