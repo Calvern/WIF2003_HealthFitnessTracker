@@ -14,7 +14,6 @@ import SettingsPage from "./pages/SettingsPage";
 import CreateReminderPage from "./pages/CreateReminderPage";
 import ExerciseDiaryPage from "./pages/ExerciseDiaryPage";
 import LogCardioPage from "./pages/LogCardioPage";
-import LogStepsPage from "./pages/LogStepsPage";
 import LogWorkoutPage from "./pages/LogWorkoutPage";
 import SearchMealPage from "./pages/SearchMealPage";
 import FavouriteMealPage from "./pages/FavouriteMealPage";
@@ -26,6 +25,8 @@ import ChangePasswordPage from "./pages/ChangePasswordPage";
 import DeleteAccountPage from "./pages/DeleteAccountPage";
 import DeactivateAccountPage from "./pages/DeactivateAccountPage";
 import EditReminderPage from "./pages/EditReminderPage";
+import StepsPage from "./pages/StepsPage";
+import CaloriePage from "./pages/CaloriePage";
 
 const AppRoutes = () => {
   return (
@@ -198,14 +199,7 @@ const AppRoutes = () => {
           </Layout>
         }
       />
-      <Route
-        path="fitness-log-steps"
-        element={
-          <Layout>
-            <LogStepsPage />
-          </Layout>
-        }
-      />
+     
       <Route
         path="fitness-log-workout"
         element={
@@ -235,6 +229,22 @@ const AppRoutes = () => {
         element={
           <Layout>
             <ShowNotificationPage />
+          </Layout>
+        }
+      />
+      <Route 
+        path="/steps"
+        element={
+          <Layout>
+            <StepsPage />
+          </Layout>
+        }
+      />
+      <Route 
+        path="/calorie-burned"
+        element={
+          <Layout>
+            <CaloriePage />
           </Layout>
         }
       />
