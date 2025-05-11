@@ -2,15 +2,20 @@ import React, { useState } from "react";
 import { Container, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const CalorieProgress = () => {
-  const [caloriesBurned] = useState(500);
+  const [caloriesBurned] = useState(2400);
   const [caloriesConsumed] = useState(2500);
 
   const radius = 180;
   const strokeWidth = 50;
   const circumference = 2 * Math.PI * radius;
-  const burnedPercentage = caloriesBurned / caloriesConsumed;
-  const burnedLength = circumference * burnedPercentage;
-  const centerText = caloriesBurned > caloriesConsumed / 2 ? "Great!" : "Keep it up!";
+  const total = caloriesBurned + caloriesConsumed;
+
+  const burnedRatio = caloriesBurned / total;
+  const consumedRatio = caloriesConsumed / total;
+
+  const burnedLength = circumference * burnedRatio;
+  const consumedLength = circumference * consumedRatio;
+  const centerText = caloriesBurned > caloriesConsumed ? "Great!" : "Keep it up!";
 
   return (
     <div style={{ backgroundColor: "#fff", minHeight: "100vh" }}>
@@ -19,7 +24,7 @@ const CalorieProgress = () => {
           className="bg-white p-4 rounded-3 d-flex flex-column align-items-center"
           style={{ width: "440px" }}
         >
-          {/* Circular Chart */}
+          {/* Donut Chart */}
           <svg
             width="440"
             height="440"
@@ -27,17 +32,7 @@ const CalorieProgress = () => {
             style={{ transform: "rotate(-90deg)" }}
           >
             <g transform="translate(220,220)">
-              {/* Background track (consumed) */}
-              <circle
-                r={radius}
-                fill="transparent"
-                stroke="#C9D6DF"
-                strokeWidth={strokeWidth}
-                strokeDasharray={circumference}
-                strokeDashoffset="0"
-              />
-
-              {/* Foreground track (burned) */}
+              {/* Burned Segment */}
               <circle
                 r={radius}
                 fill="transparent"
@@ -45,6 +40,16 @@ const CalorieProgress = () => {
                 strokeWidth={strokeWidth}
                 strokeDasharray={`${burnedLength} ${circumference}`}
                 strokeDashoffset="0"
+              />
+
+              {/* Consumed Segment */}
+              <circle
+                r={radius}
+                fill="transparent"
+                stroke="#DAE3E5"
+                strokeWidth={strokeWidth}
+                strokeDasharray={`${consumedLength} ${circumference}`}
+                strokeDashoffset={-burnedLength}
               />
             </g>
 
@@ -56,7 +61,7 @@ const CalorieProgress = () => {
               alignmentBaseline="middle"
               fontSize="40"
               fontWeight="bold"
-              fill="#333"
+              fill="#000000"
               style={{
                 transform: "rotate(90deg)",
                 transformOrigin: "center",
@@ -68,28 +73,7 @@ const CalorieProgress = () => {
 
           {/* Legend with Tooltips */}
           <div className="d-flex justify-content-center gap-4 mt-4">
-            {/* Calorie Consumed */}
-            <OverlayTrigger
-              placement="top"
-              overlay={
-                <Tooltip id="tooltip-consumed">
-                  You have consumed: {caloriesConsumed} calorie
-                </Tooltip>
-              }
-            >
-              <div className="d-flex align-items-center gap-2" style={{ cursor: "pointer" }}>
-                <div
-                  style={{
-                    width: "12px",
-                    height: "12px",
-                    backgroundColor: "#C9D6DF",
-                  }}
-                ></div>
-                <span className="text-dark fw-medium">Calorie consumed</span>
-              </div>
-            </OverlayTrigger>
-
-            {/* Calorie Burned */}
+            {/* Burned */}
             <OverlayTrigger
               placement="top"
               overlay={
@@ -99,14 +83,23 @@ const CalorieProgress = () => {
               }
             >
               <div className="d-flex align-items-center gap-2" style={{ cursor: "pointer" }}>
-                <div
-                  style={{
-                    width: "12px",
-                    height: "12px",
-                    backgroundColor: "#507DBC",
-                  }}
-                ></div>
-                <span className="text-dark fw-medium">Calorie burned</span>
+                <div style={{ width: "12px", height: "12px", backgroundColor: "#507DBC" }}></div>
+                <span className="text-dark fw-medium">Calorie Burned</span>
+              </div>
+            </OverlayTrigger>
+
+            {/* Consumed */}
+            <OverlayTrigger
+              placement="top"
+              overlay={
+                <Tooltip id="tooltip-consumed">
+                  You have consumed: {caloriesConsumed} calorie
+                </Tooltip>
+              }
+            >
+              <div className="d-flex align-items-center gap-2" style={{ cursor: "pointer" }}>
+                <div style={{ width: "12px", height: "12px", backgroundColor: "#DAE3E5" }}></div>
+                <span className="text-dark fw-medium">Calorie Consumed</span>
               </div>
             </OverlayTrigger>
           </div>
