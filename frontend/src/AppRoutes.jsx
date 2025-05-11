@@ -27,6 +27,7 @@ import DeactivateAccountPage from "./pages/DeactivateAccountPage";
 import EditReminderPage from "./pages/EditReminderPage";
 import StepsPage from "./pages/StepsPage";
 import CaloriePage from "./pages/CaloriePage";
+import CardiovsWorkoutPage from "./pages/CardiovsWorkoutPage";
 
 const AppRoutes = () => {
   return (
@@ -245,6 +246,14 @@ const AppRoutes = () => {
         element={
           <Layout>
             <CaloriePage />
+          </Layout>
+        }
+      />
+      <Route 
+        path="/cardio-vs-workout"
+        element={
+          <Layout>
+            <CardiovsWorkoutPage />
           </Layout>
         }
       />

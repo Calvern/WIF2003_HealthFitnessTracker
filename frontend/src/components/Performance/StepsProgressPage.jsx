@@ -34,7 +34,7 @@ const StepsProgressPage = () => {
           <CircularProgressbarWithChildren
             value={percentage}
             strokeWidth={10}
-            styles={buildStyles({ pathColor: "#507DBC", trailColor: "#eee" })}
+            styles={buildStyles({ pathColor: "#507DBC", trailColor: "#DAE3E5" })}
           >
             <span className="fw-bold text-dark fs-3">{steps}</span>
             <span className="fw-bold text-dark">Steps</span>
