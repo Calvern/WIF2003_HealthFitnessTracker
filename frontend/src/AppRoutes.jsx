@@ -14,7 +14,6 @@ import SettingsPage from "./pages/SettingsPage";
 import CreateReminderPage from "./pages/CreateReminderPage";
 import ExerciseDiaryPage from "./pages/ExerciseDiaryPage";
 import LogCardioPage from "./pages/LogCardioPage";
-import LogStepsPage from "./pages/LogStepsPage";
 import LogWorkoutPage from "./pages/LogWorkoutPage";
 import SearchMealPage from "./pages/SearchMealPage";
 import FavouriteMealPage from "./pages/FavouriteMealPage";
@@ -198,14 +197,7 @@ const AppRoutes = () => {
           </Layout>
         }
       />
-      <Route
-        path="fitness-log-steps"
-        element={
-          <Layout>
-            <LogStepsPage />
-          </Layout>
-        }
-      />
+     
       <Route
         path="fitness-log-workout"
         element={

@@ -18,9 +18,6 @@ const DesktopNavLinks = () => {
         <NavDropdown.Item as={Link} to="/fitness-exercise-diary">
           Exercise Diary
         </NavDropdown.Item>
-        <NavDropdown.Item as={Link} to="/fitness-log-steps">
-          Log Steps
-        </NavDropdown.Item>
         <NavDropdown.Item as={Link} to="/fitness-log-workout">
           Log Workout
         </NavDropdown.Item>

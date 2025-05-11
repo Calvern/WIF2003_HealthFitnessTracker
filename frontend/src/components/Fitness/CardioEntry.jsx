@@ -1,9 +1,24 @@
 import { Col, Row } from "react-bootstrap";
 
-const CardioEntry = ({ cardioType, minutes, calories }) => {
+const CardioEntry = ({ date, cardioType, minutes, calories, onClick }) => {
+  const handleClick = () => {
+    onClick({
+      date,
+      cardioType,
+      minutes,
+      calories,
+    });
+  };
+
   return (
-    <Row style={{ backgroundColor: "#DAE3E5" }}>
-      <Col className="py-2 d-flex align-items-center" xs={6}>
+    <Row
+      style={{ backgroundColor: "#DAE3E5", cursor: "pointer" }}
+      onClick={handleClick}
+    >
+      <Col
+        className="py-2 d-flex align-items-center border border-1 border-white"
+        xs={6}
+      >
         <span>{cardioType}</span>
       </Col>
       <Col xs={6}>
