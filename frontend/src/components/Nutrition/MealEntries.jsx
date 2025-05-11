@@ -11,24 +11,30 @@ const MealEntries = ({ foodName, calories, carbs, fat, protein }) => {
     >
       <Col
         className="py-2 d-flex align-items-center justify-content-between"
-        xs={6}
+        xs={4}
+        md={6}
       >
         <span>{foodName}</span>
-        <div className="d-flex gap-3">
-          <Link className="food-entry-details-link" to="/meal-favourites/5931">
+        <div className="d-flex flex-column flex-md-row gap-3 align-items-center">
+          <Link
+            className="text-center food-entry-details-link"
+            to="/meal-favourites/5931"
+          >
             View Details
           </Link>
           <Button
             onClick={() => showToast("Added to favourites!")}
-            className="food-entry-favourites-button"
+            className="text-center food-entry-favourites-button"
           >
             Add to favourites
           </Button>
 
-          <Button className="food-entry-remove-button">Remove</Button>
+          <Button className="text-center food-entry-remove-button">
+            Remove
+          </Button>
         </div>
       </Col>
-      <Col xs={6}>
+      <Col xs={8} md={6}>
         <Row className="h-100">
           <Col
             xs={3}
