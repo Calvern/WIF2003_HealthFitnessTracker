@@ -165,6 +165,17 @@ p {
     border-radius: 5px;
     transform: scale(1.1);
   }
+
+  .custom-tabs .nav-link {
+    color: #507DBC; /* Brand color */
+    font-weight: 500;
+  }
+  
+  .custom-tabs .nav-link.active {
+    color: #507DBC;           /* Black when active */
+    font-weight: bold;     /* Bold text when active */
+  }
+  
   
 
 
