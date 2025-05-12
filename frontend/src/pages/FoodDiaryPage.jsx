@@ -162,7 +162,7 @@ const FoodDiaryPage = () => {
             Target
           </h3>
         </Col>
-        <Col xs={8}>
+        <Col xs={8} md={6}>
           <Row>
             <Col
               xs={3}

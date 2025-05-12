@@ -1,7 +1,9 @@
-import { Dropdown, Image } from "react-bootstrap";
+import { Button, Dropdown, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useAppContext } from "../../contexts/AppContext";
 
 const UserProfileDropdown = ({ progress }) => {
+  const { setIsLoggedIn } = useAppContext();
   return (
     <Dropdown drop="down-centered" align="end">
       <Dropdown.Toggle
@@ -25,10 +27,7 @@ const UserProfileDropdown = ({ progress }) => {
         <Dropdown.Item as={Link} to="/profile">
           My Profile
         </Dropdown.Item>
-        <Dropdown.Item as={Link} to="/settings">
-          Settings
-        </Dropdown.Item>
-        <Dropdown.Item as={Link} to="/logout">
+        <Dropdown.Item as={Button} onClick={() => setIsLoggedIn(false)}>
           Logout
         </Dropdown.Item>
       </Dropdown.Menu>

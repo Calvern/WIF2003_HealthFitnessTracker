@@ -1,5 +1,13 @@
 import { useState, Fragment, use } from "react";
-import { Button, Nav, OverlayTrigger, Popover, Container, Row, Col } from "react-bootstrap";
+import {
+  Button,
+  Nav,
+  OverlayTrigger,
+  Popover,
+  Container,
+  Row,
+  Col,
+} from "react-bootstrap";
 import { Bell, GearFill, Plus, Book } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -7,7 +15,6 @@ const NotificationsPopover = () => {
   const [activeTab, setActiveTab] = useState("notifications");
   const [showPopover, setShowPopover] = useState(false);
   const navigate = useNavigate();
-
 
   const notifications = [
     {
@@ -31,7 +38,8 @@ const NotificationsPopover = () => {
       leadTime: "10 minutes",
       recurring: "Every Monday",
       notificationMethod: "Email",
-      notes: "lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
+      notes:
+        "lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
       reminderStatus: "Not Active",
     },
     {
@@ -58,18 +66,17 @@ const NotificationsPopover = () => {
       notes: "This is the first notification.",
       reminderStatus: "Not Active",
     },
-  ]
-
-  const reminderssss = [
-    { id: 1, title: 'Gym Day', time:"10:00 am" ,unread: true },
-    { id: 2, title: 'PushUp x 10 reps', time:"7:00 am", unread: false },
-    { id: 3, title: 'PushUp x 200 reps', time:"3:00 am", unread: false },
-    { id: 4, title: 'Swimming Day', time:"2:00 am", unread: true },
-    { id: 5, title: 'Gym Day', time:"1:00 am", unread: true },
-    { id: 6, title: 'PullUp', time:"8:00 am", unread: true },
-    // Add more notifications as needed
   ];
 
+  const reminderssss = [
+    { id: 1, title: "Gym Day", time: "10:00 am", unread: true },
+    { id: 2, title: "PushUp x 10 reps", time: "7:00 am", unread: false },
+    { id: 3, title: "PushUp x 200 reps", time: "3:00 am", unread: false },
+    { id: 4, title: "Swimming Day", time: "2:00 am", unread: true },
+    { id: 5, title: "Gym Day", time: "1:00 am", unread: true },
+    { id: 6, title: "PullUp", time: "8:00 am", unread: true },
+    // Add more notifications as needed
+  ];
 
   const reminders = [
     {
@@ -93,7 +100,8 @@ const NotificationsPopover = () => {
       leadTime: "10 minutes",
       recurring: "Every Monday",
       notificationMethod: "Email",
-      notes: "lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
+      notes:
+        "lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
       reminderStatus: "Not Active",
     },
     {
@@ -120,27 +128,27 @@ const NotificationsPopover = () => {
       notes: "This is the first notification.",
       reminderStatus: "Not Active",
     },
-  ]
-
+  ];
 
   const handleShowNotifications = (notification) => {
-    console.log(notification)
-    navigate(`/notifications/show-notification/${notification.id}`, 
-      {
-        state: { notification }
-      }
-    )
-  }
-
+    console.log(notification);
+    navigate(`/notifications/show-notification/${notification.id}`, {
+      state: { notification },
+    });
+  };
 
   const renderContent = () => {
-    if (activeTab === 'notifications') {
+    if (activeTab === "notifications") {
       return (
         <Container>
           <div className="d-flex flex-column">
-            {notifications.slice(0, 3).map((notification, index) => (  //--> Edit length here
-              <Fragment key={notification.id}>
-                <div
+            {notifications.slice(0, 3).map(
+              (
+                notification,
+                index //--> Edit length here
+              ) => (
+                <Fragment key={notification.id}>
+                  <div
                     className="notification-popover-item d-flex align-items-center  mb-2 position-relative"
                     onClick={() => handleShowNotifications(notification)}
                     style={{ cursor: "pointer" }}
@@ -154,40 +162,43 @@ const NotificationsPopover = () => {
                     {notification.reminderStatus === "Active" && (
                       <span
                         style={{
-                          backgroundColor: 'red',
-                          color: 'white',
-                          borderRadius: '50%',
-                          width: '10px',
-                          height: '10px',
-                          display: 'inline-block',
-                          marginLeft: '8px',
+                          backgroundColor: "red",
+                          color: "white",
+                          borderRadius: "50%",
+                          width: "10px",
+                          height: "10px",
+                          display: "inline-block",
+                          marginLeft: "8px",
                         }}
                       ></span>
                     )}
                   </div>
-                {index < notifications.length - 1 && (
-                  <hr
-                    style={{
-                      width: '100%',
-                      margin: '10px auto',
-                      border: '1px solid #ccc',
-                    }}
-                  />
-                )}
-              </Fragment>
-            ))}
+                  {index < notifications.length - 1 && (
+                    <hr
+                      style={{
+                        width: "100%",
+                        margin: "10px auto",
+                        border: "1px solid #ccc",
+                      }}
+                    />
+                  )}
+                </Fragment>
+              )
+            )}
           </div>
         </Container>
       );
-
-
-    } else if (activeTab === 'reminders') {
+    } else if (activeTab === "reminders") {
       return (
         <Container>
           <div className="d-flex flex-column">
-            {reminders.slice(0, 3).map((reminder, index) => (  //--> Edit length here
-              <Fragment key={reminder.id}>
-                <div
+            {reminders.slice(0, 3).map(
+              (
+                reminder,
+                index //--> Edit length here
+              ) => (
+                <Fragment key={reminder.id}>
+                  <div
                     className="d-flex align-items-center  mb-2 position-relative"
                     // onClick={() => handleShowNotifications(reminder)}
                     // style={{ cursor: "pointer" }}
@@ -198,31 +209,34 @@ const NotificationsPopover = () => {
                         ? `${reminder.title.slice(0, 10)}...`
                         : reminder.title}
                     </p>
-                    <div style={{
-                      position: 'absolute',
-                      top: 10,
-                      right: 0,
-                      fontSize: "10px"
-                    }}>{reminder.time}
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 10,
+                        right: 0,
+                        fontSize: "10px",
+                      }}
+                    >
+                      {reminder.time}
                     </div>
                   </div>
-                {index < reminders.length - 1 && (
-                  <hr
-                    style={{
-                      width: '100%',
-                      margin: '10px auto',
-                      border: '1px solid #ccc',
-                    }}
-                  />
-                )}
-              </Fragment>
-            ))}
+                  {index < reminders.length - 1 && (
+                    <hr
+                      style={{
+                        width: "100%",
+                        margin: "10px auto",
+                        border: "1px solid #ccc",
+                      }}
+                    />
+                  )}
+                </Fragment>
+              )
+            )}
           </div>
         </Container>
       );
     }
   };
-
 
   const popover = (
     <Popover id="popover-basic" style={{ minWidth: "300px" }}>
@@ -240,14 +254,21 @@ const NotificationsPopover = () => {
             <Nav.Link eventKey="reminders">Reminders</Nav.Link>
           </Nav.Item>
         </Nav>
-          {activeTab === "notifications" ? <Link to={"/settings"}><GearFill /></Link> : <Link to={"/create-reminder"}><Plus size={32}/></Link> }
+        {activeTab === "reminders" && (
+          <Link to={"/create-reminder"}>
+            <Plus color="black" size={32} />
+          </Link>
+        )}
       </Popover.Header>
       <Popover.Body>{renderContent()}</Popover.Body>
-        <div className="popover-footer-link d-flex justify-content-center align-items-center py-2">
-          <Link to={activeTab === "notifications" ? "/notifications" : "/reminders"}>
+      <div className="popover-footer-link d-flex justify-content-center align-items-center py-2">
+        <Link
+          to={activeTab === "notifications" ? "/notifications" : "/reminders"}
+          style={{ textDecoration: "none", color: "#176087" }}
+        >
           See All
-          </Link>
-        </div>      
+        </Link>
+      </div>
     </Popover>
   );
   return (
@@ -263,15 +284,14 @@ const NotificationsPopover = () => {
         }
       }}
       rootClose
->
-  <Button
-    style={{ backgroundColor: "transparent", border: "none" }}
-    onClick={() => setShowPopover(!showPopover)}
-  >
-    <Bell color="white" size={30} />
-  </Button>
-</OverlayTrigger>
-
+    >
+      <Button
+        style={{ backgroundColor: "transparent", border: "none" }}
+        onClick={() => setShowPopover(!showPopover)}
+      >
+        <Bell color="white" size={30} />
+      </Button>
+    </OverlayTrigger>
   );
 };
 

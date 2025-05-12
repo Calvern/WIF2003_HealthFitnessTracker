@@ -1,21 +1,20 @@
-import React from 'react';
+import React from "react";
 import {
-    Form,
-    Button,
-    Row,
-    Col,
-    FormControl,
-    FormLabel,
-  } from "react-bootstrap";
-import { useNavigate } from 'react-router-dom';
+  Form,
+  Button,
+  Row,
+  Col,
+  FormControl,
+  FormLabel,
+} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
-
   const navigate = useNavigate();
 
-  const handleNavigateToReminders =() =>{
-   navigate("/reminders");
-  }
+  const handleNavigateToReminders = () => {
+    navigate("/reminders");
+  };
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -27,8 +26,11 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
               type="text"
               placeholder="Enter title"
               value={reminder.title}
-              onChange={(e) => setReminder({ ...reminder, title: e.target.value })}
-              required />
+              onChange={(e) =>
+                setReminder({ ...reminder, title: e.target.value })
+              }
+              required
+            />
           </Form.Group>
         </Col>
       </Row>
@@ -40,8 +42,11 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
             <FormControl
               type="date"
               value={reminder.date}
-              onChange={(e) => setReminder({ ...reminder, date: e.target.value })}
-              required />
+              onChange={(e) =>
+                setReminder({ ...reminder, date: e.target.value })
+              }
+              required
+            />
           </Form.Group>
         </Col>
         <Col md="6">
@@ -50,8 +55,11 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
             <FormControl
               type="time"
               value={reminder.time}
-              onChange={(e) => setReminder({ ...reminder, time: e.target.value })}
-              required />
+              onChange={(e) =>
+                setReminder({ ...reminder, time: e.target.value })
+              }
+              required
+            />
           </Form.Group>
         </Col>
       </Row>
@@ -62,10 +70,13 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
             <FormLabel>Category</FormLabel>
             <Form.Select
               value={reminder.category}
-              onChange={(e) => setReminder({ ...reminder, category: e.target.value })}
-              required>
+              onChange={(e) =>
+                setReminder({ ...reminder, category: e.target.value })
+              }
+              required
+            >
               <option value="" disabled>
-                Select Category 
+                Select Category
               </option>
               <option value="General">General</option>
               <option value="Work">Work</option>
@@ -78,12 +89,15 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
         <Col md="6">
           <Form.Group controlId="formLeadTime">
             <FormLabel>Lead Time</FormLabel>
-            <Form.Select 
+            <Form.Select
               value={reminder.leadTime}
-              onChange={(e) => setReminder({ ...reminder, leadTime: e.target.value })}
-              required>
+              onChange={(e) =>
+                setReminder({ ...reminder, leadTime: e.target.value })
+              }
+              required
+            >
               <option value="" disabled>
-                Select Lead Time 
+                Select Lead Time
               </option>
               <option value="5">5 minutes before</option>
               <option value="10">10 minutes before</option>
@@ -100,10 +114,13 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
             <FormLabel>Recurring</FormLabel>
             <Form.Select
               value={reminder.recurring}
-              onChange={(e) => setReminder({ ...reminder, recurring: e.target.value })}
-              required >
+              onChange={(e) =>
+                setReminder({ ...reminder, recurring: e.target.value })
+              }
+              required
+            >
               <option value="" disabled>
-                Select One 
+                Select One
               </option>
               <option value="Everyday">Everyday</option>
               <option value="Monday">Every Monday</option>
@@ -124,17 +141,26 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
               <label
                 htmlFor="email-radio"
                 className="radio-label d-flex align-items-center gap-2 px-3 py-2 rounded flex-grow-1 text-center"
-                style={{ height: "40px", cursor: "pointer", backgroundColor:"#DAE3E5"}}
+                style={{
+                  height: "40px",
+                  cursor: "pointer",
+                  backgroundColor: "#DAE3E5",
+                }}
               >
                 <Form.Check
                   id="email-radio"
                   type="radio"
                   name="notificationMethod"
                   value="email"
-                  checked={reminder.notificationMethod === 'Email'}
-                  onChange={(e) => setReminder({ ...reminder, notificationMethod: e.target.value })}
+                  checked={reminder.notificationMethod === "email"}
+                  onChange={(e) =>
+                    setReminder({
+                      ...reminder,
+                      notificationMethod: e.target.value,
+                    })
+                  }
                   className="custom-radio"
-                  />
+                />
                 <span className="radio-text">Email</span>
               </label>
 
@@ -142,24 +168,33 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
               <label
                 htmlFor="browser-radio"
                 className="radio-label d-flex align-items-center gap-2 px-3 py-2 rounded flex-grow-1 text-center"
-                style={{ height: "40px", cursor: "pointer", backgroundColor:"#DAE3E5"}}
+                style={{
+                  height: "40px",
+                  cursor: "pointer",
+                  backgroundColor: "#DAE3E5",
+                }}
               >
                 <Form.Check
                   id="browser-radio"
                   type="radio"
                   name="notificationMethod"
                   value="browser"
-                  checked={reminder.notificationMethod === 'Browser'}
-                  onChange={(e) => setReminder({ ...reminder, notificationMethod: e.target.value })}
+                  checked={reminder.notificationMethod === "browser"}
+                  onChange={(e) =>
+                    setReminder({
+                      ...reminder,
+                      notificationMethod: e.target.value,
+                    })
+                  }
                   className="custom-radio"
-                  />
+                />
                 <span className="radio-text">Browser</span>
               </label>
             </div>
           </Form.Group>
         </Col>
       </Row>
-      
+
       <Row className="mb-2">
         <Col xs="12">
           <Form.Group controlId="formNotes">
@@ -169,37 +204,45 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
               rows={3}
               placeholder="Enter message"
               value={reminder.notes}
-              onChange={(e) => setReminder({ ...reminder, notes: e.target.value })}
-              required />
+              onChange={(e) =>
+                setReminder({ ...reminder, notes: e.target.value })
+              }
+              required
+            />
           </Form.Group>
         </Col>
       </Row>
 
-    <Row className="justify-content-center">
-      <Col xs="auto">
-        <div className="d-flex gap-5">
-          <Button
-            variant="primary"
-            type="submit"
-            onClick={handleNavigateToReminders}
-            style={{ width: "150px", height: "50px", fontSize: "16px" }}
-          >
-            {mode === "edit" ? "Save Changes" : "Create Reminder"}
-          </Button>
+      <Row className="justify-content-center">
+        <Col xs="auto">
+          <div className="d-flex gap-5">
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={handleNavigateToReminders}
+              style={{
+                width: "150px",
+                height: "50px",
+                fontSize: "16px",
+                backgroundColor: "#507DBC",
+              }}
+            >
+              {mode === "edit" ? "Save Changes" : "Create Reminder"}
+            </Button>
 
-          <Button
-            variant="danger"
-            type="button"
-            onClick={handleNavigateToReminders}
-            style={{ width: "150px", height: "50px", fontSize: "16px" }}
-          >
-            Cancel
-          </Button>
-        </div>
-      </Col>
-    </Row>
+            <Button
+              variant="danger"
+              type="button"
+              onClick={handleNavigateToReminders}
+              style={{ width: "150px", height: "50px", fontSize: "16px" }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </Col>
+      </Row>
     </Form>
   );
-}
+};
 
 export default ReminderForm;

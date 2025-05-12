@@ -1,13 +1,12 @@
-import { useEffect, useState, Fragment } from 'react';
-import { Container } from 'react-bootstrap';
+import { useEffect, useState, Fragment } from "react";
+import { Button, Container } from "react-bootstrap";
 import { Plus, ChevronLeft, Pencil } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 
 const RemindersPage = () => {
-
   const [reminders, setReminders] = useState([]);
   const navigate = useNavigate();
-  
+
   const mockReminders = [
     {
       id: 1,
@@ -30,7 +29,8 @@ const RemindersPage = () => {
       leadTime: "10 minutes",
       recurring: "Every Monday",
       notificationMethod: "Email",
-      notes: "lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
+      notes:
+        "lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
       reminderStatus: "Not Active",
     },
     {
@@ -78,7 +78,8 @@ const RemindersPage = () => {
       leadTime: "5 minutes",
       recurring: "Every Monday",
       notificationMethod: "Email",
-      notes: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
+      notes:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
       reminderStatus: "Active",
     },
     {
@@ -104,32 +105,31 @@ const RemindersPage = () => {
       notificationMethod: "Email",
       notes: "This is the first notification.",
       reminderStatus: "Not Active",
-    }
-  ]
+    },
+  ];
 
   useEffect(() => {
     setReminders(mockReminders);
   }, []);
 
-
   const handleEdit = (reminder) => {
-  navigate(`/reminders/edit-reminder/${reminder.id}`, 
-    {
-      state: { reminder }
-    }
-  );
-};
-
+    navigate(`/reminders/edit-reminder/${reminder.id}`, {
+      state: { reminder },
+    });
+  };
 
   const renderReminders = () => {
-    return(
-      <div className='d-flex flex-column align-items-center mt-5 vh-100'>
-        {reminders.map((reminder, index)=>
+    return (
+      <div className="d-flex flex-column align-items-center mt-5 vh-100">
+        {reminders.map((reminder, index) => (
           <Fragment key={reminder.id}>
-            <div className='d-flex justify-content-between align-items-center mb-1' style={{ width: "80%" }}>
-            <small
+            <div
+              className="d-flex justify-content-between align-items-center mb-1"
+              style={{ width: "80%" }}
+            >
+              <small
                 style={{
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
               >
                 {reminder.time}
@@ -142,56 +142,69 @@ const RemindersPage = () => {
                 {reminder.title}
               </small>
               <Pencil
-                  size={15}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => handleEdit(reminder)}
-               />
+                size={15}
+                style={{ cursor: "pointer" }}
+                onClick={() => handleEdit(reminder)}
+              />
             </div>
             {index < reminders.length - 1 && (
               <hr
-              style={{
-                width: "80%",
-                margin: "10px auto",
-                border: "1px solid #ccc",
-              }}
-            />
+                style={{
+                  width: "80%",
+                  margin: "10px auto",
+                  border: "1px solid #ccc",
+                }}
+              />
             )}
           </Fragment>
-        )}
+        ))}
         <hr
-              style={{
-                width: "80%",
-                margin: "10px auto",
-                border: "1px solid #ccc",
-              }}
-            />
-        <div className='d-flex justify-content-center align-items-center mt-3' style={{fontWeight:"bold", fontSize:"30px"}}>
+          style={{
+            width: "80%",
+            margin: "10px auto",
+            border: "1px solid #ccc",
+          }}
+        />
+        <div
+          className="d-flex justify-content-center align-items-center mt-3"
+          style={{ fontWeight: "bold", fontSize: "30px" }}
+        >
           No More
         </div>
       </div>
-    )
-  }
-  
+    );
+  };
 
   return (
-    <Container className='py-5'>
-      <div className="d-flex align-items-between ml-5 mt-3" style={{ fontWeight: "bold", fontSize: "20px"}}>
-        <Link to={"/home"}>
-                  <ChevronLeft size={40} style={{ marginRight: "4px" }} />
-                </Link>
+    <Container className="py-5">
+      <div
+        className="d-flex align-items-center ml-5 mt-3"
+        style={{ fontWeight: "bold", fontSize: "20px" }}
+      >
+        <Button
+          className="border border-0"
+          style={{ backgroundColor: "transparent", color: "black" }}
+          onClick={() => navigate(-1)}
+        >
+          <ChevronLeft size={30}></ChevronLeft>
+        </Button>
         <div>Upcoming Reminders</div>
-        <div className="d-flex align-items-center rounded" style={{ height: "40px", width: "40px", backgroundColor: "#507DBC", marginLeft: "15px"}}>
+        <div
+          className="d-flex align-items-center rounded"
+          style={{
+            height: "40px",
+            width: "40px",
+            backgroundColor: "#507DBC",
+            marginLeft: "15px",
+          }}
+        >
           <Link to={"/create-reminder"} aria-label="Create New Reminder">
             <Plus size={40} style={{ color: "white" }} />
           </Link>
         </div>
       </div>
 
-
-      {reminders.length > 0 ? 
-      renderReminders()
-      : ""}
-
+      {reminders.length > 0 ? renderReminders() : ""}
     </Container>
   );
 };
