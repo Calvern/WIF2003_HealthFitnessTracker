@@ -10,8 +10,8 @@ const EditReminderPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(state)
-    console.log(state.reminder)
+    console.log(state);
+    console.log(state.reminder);
     if (state && state.reminder) {
       setEditReminder(state.reminder);
     }
@@ -25,29 +25,32 @@ const EditReminderPage = () => {
 
   if (!editReminder) {
     return (
-      <Container className="py-5">
-        {/* Loading or fallback UI */}
-      </Container>
+      <Container className="py-5">{/* Loading or fallback UI */}</Container>
     );
   }
 
-
   return (
     <Container className="py-5">
-        <div className="d-flex align-items-center ml-5 mt-3 mb-2" style={{ fontWeight: "bold", fontSize: "20px"}}>
-            <Link to={"/reminders"}>
-                <ChevronLeft size={40} 
-                style={{ marginRight: "4px"}}
-                onClick={() => navigate(-1)}/>
-            </Link>
-            Edit Reminder
-          </div>
-          {console.log(editReminder)}
+      <div
+        className="d-flex align-items-center ml-5 mt-3 mb-2"
+        style={{ fontWeight: "bold", fontSize: "20px" }}
+      >
+        <Link to={"/reminders"}>
+          <ChevronLeft
+            size={30}
+            color="black"
+            style={{ marginRight: "4px" }}
+            onClick={() => navigate(-1)}
+          />
+        </Link>
+        Edit Reminder
+      </div>
+      {console.log(editReminder)}
       <ReminderForm
-        reminder={editReminder} 
+        reminder={editReminder}
         setReminder={setEditReminder}
         handleSubmit={handleSubmit}
-        mode = "edit"
+        mode="edit"
       />
     </Container>
   );

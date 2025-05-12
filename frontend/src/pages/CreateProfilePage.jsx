@@ -43,12 +43,12 @@ const CreateProfilePage = () => {
           <div className="d-flex gap-3">
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>First Name</Form.Label>
-              <Form.Control placeholder="First Name" />
+              <Form.Control required placeholder="First Name" />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label>Last Name</Form.Label>
-              <Form.Control placeholder="Last Name" />
+              <Form.Control required placeholder="Last Name" />
             </Form.Group>
           </div>
 
@@ -62,7 +62,7 @@ const CreateProfilePage = () => {
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Date of birth</Form.Label>
-            <Form.Control type="date" placeholder="Password" />
+            <Form.Control required type="date" placeholder="Password" />
           </Form.Group>
 
           <Button

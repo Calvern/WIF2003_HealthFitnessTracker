@@ -150,14 +150,6 @@ const AppRoutes = () => {
           }
         />
         <Route
-          path="/settings"
-          element={
-            <Layout>
-              <SettingsPage />
-            </Layout>
-          }
-        />
-        <Route
           path="/create-reminder"
           element={
             <Layout>
@@ -192,72 +184,71 @@ const AppRoutes = () => {
           }
         />
 
-              <Route
-        path="fitness-exercise-diary"
-        element={
-          <Layout>
-            <ExerciseDiaryPage />
-          </Layout>
-        }
-      />
-     
-      <Route
-        path="fitness-log-workout"
-        element={
-          <Layout>
-            <LogWorkoutPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="fitness-log-cardio"
-        element={
-          <Layout>
-            <LogCardioPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="reminders/edit-reminder/:id"
-        element={
-          <Layout>
-            <EditReminderPage />
-          </Layout>
-        }
-      />
-      <Route 
-        path="notifications/show-notification/:id"
-        element={
-          <Layout>
-            <ShowNotificationPage />
-          </Layout>
-        }
-      />
-      <Route 
-        path="/steps"
-        element={
-          <Layout>
-            <StepsPage />
-          </Layout>
-        }
-      />
-      <Route 
-        path="/calorie-burned"
-        element={
-          <Layout>
-            <CaloriePage />
-          </Layout>
-        }
-      />
-      <Route 
-        path="/cardio-vs-workout"
-        element={
-          <Layout>
-            <CardiovsWorkoutPage />
-          </Layout>
-        }
-      />
+        <Route
+          path="fitness-exercise-diary"
+          element={
+            <Layout>
+              <ExerciseDiaryPage />
+            </Layout>
+          }
+        />
 
+        <Route
+          path="fitness-log-workout"
+          element={
+            <Layout>
+              <LogWorkoutPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="fitness-log-cardio"
+          element={
+            <Layout>
+              <LogCardioPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="reminders/edit-reminder/:id"
+          element={
+            <Layout>
+              <EditReminderPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="notifications/show-notification/:id"
+          element={
+            <Layout>
+              <ShowNotificationPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/steps"
+          element={
+            <Layout>
+              <StepsPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/calorie-burned"
+          element={
+            <Layout>
+              <CaloriePage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/cardio-vs-workout"
+          element={
+            <Layout>
+              <CardiovsWorkoutPage />
+            </Layout>
+          }
+        />
       </Route>
     </Routes>
   );

@@ -19,7 +19,7 @@ const TargetCalorieCard = () => {
             pathColor: "#A1C6EA",
           })}
         >
-          <span className="fw-bold text-white">2700</span>
+          <span className="fw-bold text-white">2700 kCal</span>
           <span className="fw-bold text-white">Remaining</span>
         </CircularProgressbarWithChildren>
       </div>

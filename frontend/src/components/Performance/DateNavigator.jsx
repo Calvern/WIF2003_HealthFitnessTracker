@@ -1,4 +1,9 @@
 import React from "react";
+import {
+  ChevronCompactLeft,
+  ChevronLeft,
+  ChevronRight,
+} from "react-bootstrap-icons";
 
 const DateNavigator = ({ date, setDate }) => {
   const formatDate = (d) =>
@@ -16,21 +21,27 @@ const DateNavigator = ({ date, setDate }) => {
 
   return (
     <div className="d-flex align-items-center gap-4">
-      <span
-        role="button"
+      {/*<span
+        
         onClick={() => changeDate(-1)}
         style={{ fontSize: "3rem", cursor: "pointer", userSelect: "none" }}
       >
         &#8249;
-      </span>
+      </span>*/}
+      <ChevronLeft
+        size={35}
+        strokeWidth={4}
+        onClick={() => changeDate(-1)}
+        style={{ cursor: "pointer" }}
+      />
+
       <h3 className="fw-bold mb-0">{formatDate(date)}</h3>
-      <span
-        role="button"
+      <ChevronRight
+        size={35}
+        strokeWidth={4}
         onClick={() => changeDate(1)}
-        style={{ fontSize: "3rem", cursor: "pointer", userSelect: "none" }}
-      >
-        &#8250;
-      </span>
+        style={{ cursor: "pointer" }}
+      />
     </div>
   );
 };

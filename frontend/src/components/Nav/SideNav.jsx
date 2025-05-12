@@ -3,7 +3,7 @@ import { Button, Collapse, Nav, Offcanvas } from "react-bootstrap";
 import { CaretDownFill, CaretRightFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 
-const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
+const SideNav = ({ showOffcanvas, setShowOffcanvas, isLoggedIn }) => {
   const [openFitness, setOpenFitness] = useState(false);
   const [openNutrition, setOpenNutrition] = useState(false);
   const [openPerformance, setOpenPerformance] = useState(false);
@@ -20,7 +20,7 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        {isAuthenticated && (
+        {isLoggedIn && (
           <Nav className="flex-column gap-3">
             <Nav.Link as={Link} className="text-white" to="/home">
               Home
@@ -42,17 +42,22 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
                     <Nav.Link
                       as={Link}
                       className="side-nav-link"
-                      to="/workouts"
+                      to="/fitness-exercise-diary"
                     >
                       Exercise Diary
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
-                      Log Steps
-                    </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/fitness-log-workout"
+                    >
                       Log Workout
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/fitness-log-cardio"
+                    >
                       Log Cardio
                     </Nav.Link>
                   </Nav>
@@ -77,14 +82,22 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
                     <Nav.Link
                       as={Link}
                       className="side-nav-link"
-                      to="/workouts"
+                      to="/food-diary"
                     >
                       Food Diary
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/search-meal"
+                    >
                       Search for Meals
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="meal-favourites"
+                    >
                       Favourites
                     </Nav.Link>
                   </Nav>
@@ -106,17 +119,21 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
               <Collapse in={openPerformance}>
                 <div>
                   <Nav className="flex-column px-2">
+                    <Nav.Link as={Link} className="side-nav-link" to="/steps">
+                      Steps
+                    </Nav.Link>
                     <Nav.Link
                       as={Link}
                       className="side-nav-link"
-                      to="/workouts"
+                      to="/cardio-vs-workout"
                     >
-                      Steps
-                    </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
                       Cardio vs Workout
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/calorie-burned"
+                    >
                       Calories Burned
                     </Nav.Link>
                   </Nav>
