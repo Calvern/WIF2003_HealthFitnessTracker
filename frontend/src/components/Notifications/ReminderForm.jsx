@@ -151,8 +151,8 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
                   id="email-radio"
                   type="radio"
                   name="notificationMethod"
-                  value="email"
-                  checked={reminder.notificationMethod === "email"}
+                  value="Email"
+                  checked={reminder.notificationMethod === "Email"}
                   onChange={(e) =>
                     setReminder({
                       ...reminder,
@@ -178,8 +178,8 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
                   id="browser-radio"
                   type="radio"
                   name="notificationMethod"
-                  value="browser"
-                  checked={reminder.notificationMethod === "browser"}
+                  value="Browser"
+                  checked={reminder.notificationMethod === "Browser"}
                   onChange={(e) =>
                     setReminder({
                       ...reminder,
@@ -219,7 +219,6 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
             <Button
               variant="primary"
               type="submit"
-              onClick={handleNavigateToReminders}
               style={{
                 width: "150px",
                 height: "50px",

@@ -12,7 +12,7 @@ const RemindersPage = () => {
       id: 1,
       title: "Gym Day",
       date: "2023-10-01",
-      time: "10:00 AM",
+      time: "10:00",
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
@@ -23,8 +23,8 @@ const RemindersPage = () => {
     {
       id: 2,
       title: "PushUp x 10 reps",
-      date: "2023-4-01",
-      time: "12:00 AM",
+      date: "2023-04-01",
+      time: "15:00",
       category: "General",
       leadTime: "10 minutes",
       recurring: "Every Monday",
@@ -37,7 +37,7 @@ const RemindersPage = () => {
       id: 3,
       title: "PushUp x 200 reps",
       date: "2023-10-01",
-      time: "11:00 AM",
+      time: "11:00",
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
@@ -49,7 +49,7 @@ const RemindersPage = () => {
       id: 4,
       title: "Swimming Day",
       date: "2023-10-01",
-      time: "08:00 AM",
+      time: "08:00",
       category: "General",
       leadTime: "10 minutes",
       recurring: "Every Monday",
@@ -61,7 +61,7 @@ const RemindersPage = () => {
       id: 5,
       title: "Notification 5",
       date: "2023-10-01",
-      time: "10:00 AM",
+      time: "10:00",
       category: "General",
       leadTime: "15 minutes",
       recurring: "Every Monday",
@@ -73,7 +73,7 @@ const RemindersPage = () => {
       id: 6,
       title: "Notification 6",
       date: "2023-10-01",
-      time: "06:00 AM",
+      time: "06:00",
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
@@ -86,7 +86,7 @@ const RemindersPage = () => {
       id: 7,
       title: "Notification 7",
       date: "2023-9-01",
-      time: "10:00 AM",
+      time: "10:00",
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
@@ -98,7 +98,7 @@ const RemindersPage = () => {
       id: 8,
       title: "Notification 8",
       date: "2023-9-01",
-      time: "10:00 AM",
+      time: "10:00",
       category: "General",
       leadTime: "10 minutes",
       recurring: "Every Monday",
@@ -107,6 +107,19 @@ const RemindersPage = () => {
       reminderStatus: "Not Active",
     },
   ];
+
+  const formatTime12Hour = (timeStr) => {
+    if (!timeStr) return "";
+
+    const [hourStr, minute] = timeStr.split(":");
+    let hour = parseInt(hourStr);
+    const ampm = hour >= 12 ? "PM" : "AM";
+
+    hour = hour % 12;
+    hour = hour ? hour : 12; // Convert "0" to "12"
+
+    return `${hour}:${minute} ${ampm}`;
+  };
 
   useEffect(() => {
     setReminders(mockReminders);
@@ -132,7 +145,7 @@ const RemindersPage = () => {
                   cursor: "pointer",
                 }}
               >
-                {reminder.time}
+                {formatTime12Hour(reminder.time)}
               </small>
               <small
                 style={{

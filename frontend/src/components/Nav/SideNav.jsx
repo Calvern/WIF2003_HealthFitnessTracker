@@ -18,7 +18,7 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isLoggedIn }) => {
     >
       <Offcanvas.Header closeButton>
         <Offcanvas.Title className="text-white">
-          React-Bootstrap
+          FitPal
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>

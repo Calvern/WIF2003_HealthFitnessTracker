@@ -5,7 +5,7 @@ const DesktopNavLinks = () => {
   return (
     <Nav className="gap-3">
       <Navbar.Brand as={Link} className="text-white" to="/home">
-        React-Bootstrap
+        FitPal
       </Navbar.Brand>{" "}
       <Nav.Link as={Link} className="text-white fw-bold" to="/home">
         Home
