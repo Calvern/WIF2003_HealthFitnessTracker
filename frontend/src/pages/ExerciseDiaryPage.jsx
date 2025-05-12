@@ -238,7 +238,7 @@ const ExerciseDiaryPage = () => {
           </Row>
         </Col>
       </Row>
-      {/* Target */}
+      {/* Target
       <Row className="mt-0 align-items-center text-center justify-content-end">
         <Col xs={6}>
           <Row>
@@ -271,9 +271,9 @@ const ExerciseDiaryPage = () => {
             </Col>
           </Row>
         </Col>
-      </Row>
+      </Row> */}
       {/* Remaining */}
-      <Row className="mt-0 align-items-center text-center justify-content-end">
+      {/* <Row className="mt-0 align-items-center text-center justify-content-end">
         <Col xs={6}>
           <Row>
             <h3 className="text-end fw-bold m-0" style={{ color: brandColor }}>
@@ -305,7 +305,7 @@ const ExerciseDiaryPage = () => {
             </Col>
           </Row>
         </Col>
-      </Row>
+      </Row> */}
     </Container>
   );
 };
