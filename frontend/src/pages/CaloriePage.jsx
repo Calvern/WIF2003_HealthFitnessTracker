@@ -10,7 +10,7 @@ const CaloriePage = () => {
   const [mode, setMode] = useState("daily");
 
   return (
-    <Container className="py-5">
+    <Container className="py-3">
       <TopMoodToggle mode={mode} setMode={setMode} />
       <CalorieBarChart mode={mode}/>
     </Container>
