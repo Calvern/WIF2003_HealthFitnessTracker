@@ -176,6 +176,27 @@ p {
     color: #507DBC;           /* Black when active */
     font-weight: bold;     /* Bold text when active */
   }
+
+  .responsive-grid {
+    display: grid;
+    gap: 4rem;
+    grid-template-columns: 1fr; /* default: 1 column */
+    place-items: center;
+  }
+  
+  @media (min-width: 768px) {
+    .responsive-grid {
+      grid-template-columns: 1fr 1fr; /* md: 2 columns */
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .responsive-grid {
+      grid-template-columns: 1fr 1fr 1fr; /* lg: 3 columns */
+    }
+  }
+
+ 
   
   
 
