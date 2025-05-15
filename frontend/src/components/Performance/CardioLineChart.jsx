@@ -69,7 +69,10 @@ const CardioLineChart = ({ mode }) => {
   };
 
   return (
-    <div style={{ width: "100%" }}>
+    <div
+      className="d-flex flex-column align-items-center w-100  p-5"
+      style={{ maxHeight: "500px"}}
+    >
       <Line ref={chartRef} data={data} options={options} />
     </div>
   );

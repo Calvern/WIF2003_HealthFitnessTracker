@@ -10,7 +10,7 @@ const CardiovsWorkoutPage = () => {
   const [type, setType] = useState("cardio");
 
   return (
-    <div className="container py-5">
+    <div className="container-sm py-3">
       <TopMoodToggle mode={mode} setMode={setMode} />
 
       <div className="chart-area">
