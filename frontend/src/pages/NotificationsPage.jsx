@@ -13,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
+  const [isEnabled, setIsEnabled] = useState(false);
   const [filter, setFilter] = useState("all");
   const navigate = useNavigate();
 
@@ -25,7 +26,6 @@ const NotificationsPage = () => {
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
-      notificationMethod: "Browser",
       notes: "This is the first notification.",
       reminderStatus: "Active",
     },
@@ -37,7 +37,6 @@ const NotificationsPage = () => {
       category: "General",
       leadTime: "10 minutes",
       recurring: "Every Monday",
-      notificationMethod: "Email",
       notes: "lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
       reminderStatus: "Not Active",
     },
@@ -49,7 +48,6 @@ const NotificationsPage = () => {
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
-      notificationMethod: "Email",
       notes: "This is the first notification.",
       reminderStatus: "Not Active",
     },
@@ -61,7 +59,6 @@ const NotificationsPage = () => {
       category: "General",
       leadTime: "10 minutes",
       recurring: "Every Monday",
-      notificationMethod: "Browser",
       notes: "This is the first notification.",
       reminderStatus: "Not Active",
     },
@@ -73,7 +70,6 @@ const NotificationsPage = () => {
       category: "General",
       leadTime: "15 minutes",
       recurring: "Every Monday",
-      notificationMethod: "Email",
       notes: "This is the first notification.",
       reminderStatus: "Active",
     },
@@ -85,7 +81,6 @@ const NotificationsPage = () => {
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
-      notificationMethod: "Email",
       notes: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
       reminderStatus: "Active",
     },
@@ -97,7 +92,6 @@ const NotificationsPage = () => {
       category: "General",
       leadTime: "5 minutes",
       recurring: "Every Monday",
-      notificationMethod: "Email",
       notes: "This is the first notification.",
       reminderStatus: "Active",
     },
@@ -109,11 +103,31 @@ const NotificationsPage = () => {
       category: "General",
       leadTime: "10 minutes",
       recurring: "Every Monday",
-      notificationMethod: "Email",
       notes: "This is the first notification.",
       reminderStatus: "Not Active",
     }
   ];
+
+      const handleToggle = () => {
+      if (!isEnabled) {
+        // Ask for browser notification permission
+        if (Notification && Notification.permission !== "granted") {
+          Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+              setIsEnabled(true);
+              new Notification("Notifications Enabled", {
+                body: "You will now receive notifications.",
+              });
+            }
+          });
+        } else {
+          setIsEnabled(true);
+        }
+      } else {
+        setIsEnabled(false);
+      }
+    };
+
 
   useEffect(() => {
     setNotifications(mockNotifications);
@@ -264,21 +278,47 @@ const NotificationsPage = () => {
               fontWeight: "bold",
             }}
           >
-            {notifications.length}
+            {notifications.filter(
+              (notification) => notification.reminderStatus == "Not Active"
+            ).length}
+            
           </span>
         )}
       </div>
 
-      <div className="d-flex justify-content-end align-items-center gap-3 px-5">
-        <div
+      <div className="d-flex justify-content-between align-items-center px-5">
+        <div className="d-flex justify-content-start align-items-center px-5">
+          <Form className="d-flex align-items-center gap-3 bg-light px-3 py-2 rounded-pill shadow-sm">
+            <Form.Check 
+              type="switch"
+              id="notification-switch"
+              label=""
+              checked={isEnabled}
+              onChange={handleToggle}
+              className="m-0"
+              style={{ transform: "scale(1.2)" }}
+            />
+            <span style={{
+              fontWeight: "bold",
+              fontSize: "16px",
+              color: isEnabled ? "#28a745" : "#6c757d", // Green if enabled, grey if not
+            }}>
+              {isEnabled ? "Notifications Enabled" : "Enable Notifications"}
+            </span>
+          </Form>
+        </div>
+
+
+        <div className="d-flex justify-content-end align-items-center gap-3 px5">
+      <div
           className={`d-flex align-items-center px-4 py-1 rounded-pill border ${
-            filter === "all"
-              ? "bg-success-subtle text-success fw-bold border-success"
-              : "bg-success-subtle border-success"
-          }`}
+          filter === "all"
+          ? "bg-success-subtle text-success fw-bold border-success"
+          : "bg-success-subtle border-success"
+           }`}
           style={{ cursor: "pointer" }}
           onClick={() => handleFilterChange("all")}
-        >
+           >
           <Form.Check
             inline
             type="radio"
@@ -288,30 +328,32 @@ const NotificationsPage = () => {
             checked={filter === "all"}
             onChange={() => handleFilterChange("all")}
             style={{ pointerEvents: "none" }}
-          />
+            />
         </div>
 
-        <div
-          className={`d-flex align-items-center px-4 py-1 rounded-pill border ${
-            filter === "unread"
-              ? "bg-danger-subtle text-danger fw-bold border-danger"
-              : "bg-danger-subtle border-danger"
-          }`}
-          style={{ cursor: "pointer" }}
-          onClick={() => handleFilterChange("unread")}
-        >
-          <Form.Check
-            inline
-            type="radio"
-            label="Unread"
-            name="notificationMethod"
-            value="unread"
-            checked={filter === "unread"}
-            onChange={() => handleFilterChange("unread")}
-            style={{ pointerEvents: "none" }}
-          />
+            <div
+              className={`d-flex align-items-center px-4 py-1 rounded-pill border ${
+                filter === "unread"
+                  ? "bg-danger-subtle text-danger fw-bold border-danger"
+                  : "bg-danger-subtle border-danger"
+              }`}
+              style={{ cursor: "pointer" }}
+              onClick={() => handleFilterChange("unread")}
+            >
+              <Form.Check
+                inline
+                type="radio"
+                label="Unread"
+                name="notificationMethod"
+                value="unread"
+                checked={filter === "unread"}
+                onChange={() => handleFilterChange("unread")}
+                style={{ pointerEvents: "none" }}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+        
 
       {notifications.length === 0 ? (
         renderEmptyMessage()

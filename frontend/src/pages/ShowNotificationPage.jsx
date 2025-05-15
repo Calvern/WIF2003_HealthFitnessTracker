@@ -47,7 +47,6 @@ const ShowNotificationPage = () => {
         <p><strong>Category:</strong> {notification.category}</p>
         <p><strong>Lead Time:</strong> {notification.leadTime}</p>
         <p><strong>Recurring:</strong> {notification.recurring}</p>
-        <p><strong>Method:</strong> {notification.notificationMethod}</p>
         <p><strong>Status:</strong> {notification.reminderStatus}</p>
         <p><strong>Notes:</strong> {notification.notes}</p>
       </Card>
