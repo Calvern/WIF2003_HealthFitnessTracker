@@ -9,6 +9,7 @@ const SearchBar = ({ width = "75%" }) => {
       <InputGroup style={{ width }}>
         <FormControl
           className="border-0 border-bottom border-dark border-2 rounded-0 shadow-none"
+          style={{backgroundColor: "transparent"}}
           placeholder="Search"
           value={searchValue}
           onChange={(e) => setsearchValue(e.target.value)}

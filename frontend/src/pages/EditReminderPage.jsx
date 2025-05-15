@@ -21,6 +21,7 @@ const EditReminderPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("Submitted Reminder:", editReminder);
+    navigate(-1);
   };
 
   if (!editReminder) {

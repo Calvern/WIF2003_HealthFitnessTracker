@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Collapse, Nav, Offcanvas } from "react-bootstrap";
 import { CaretDownFill, CaretRightFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
+import Icon from "../../assets/Icon1.png";
 
 const SideNav = ({ showOffcanvas, setShowOffcanvas, isLoggedIn }) => {
   const [openFitness, setOpenFitness] = useState(false);
@@ -17,8 +18,11 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isLoggedIn }) => {
       style={{ backgroundColor: "#0A2239" }}
     >
       <Offcanvas.Header closeButton>
-        <Offcanvas.Title className="text-white">
-          React-Bootstrap
+        <Offcanvas.Title>
+          <img
+            src={Icon}
+            style={{ width: "100%", maxWidth: "120px", objectFit: "cover" }}
+          />
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>

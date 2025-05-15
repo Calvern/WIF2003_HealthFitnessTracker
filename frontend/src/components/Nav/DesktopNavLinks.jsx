@@ -1,11 +1,15 @@
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Icon from "../../assets/Icon1.png";
 
 const DesktopNavLinks = () => {
   return (
-    <Nav className="gap-3">
+    <Nav className="gap-3 align-items-center">
       <Navbar.Brand as={Link} className="text-white" to="/home">
-        React-Bootstrap
+        <img
+          src={Icon}
+          style={{ width: "100%", maxWidth: "120px", objectFit: "cover" }}
+        />
       </Navbar.Brand>{" "}
       <Nav.Link as={Link} className="text-white fw-bold" to="/home">
         Home

@@ -89,7 +89,7 @@ const HomePage = () => {
 
   return (
     <Container className="py-5">
-      <Row className="mb-5 justify-content-center">
+      <Row className="mb-5 gy-5 justify-content-center">
         {[
           {
             icon: <BsPersonWalking size={20} />,
@@ -137,7 +137,7 @@ const HomePage = () => {
         ))}
       </Row>
 
-      <Row className="justify-content-center">
+      <Row className="mb-5 gy-5 justify-content-center">
         <Col xs={12} md={6} lg={4}>
           <BarChartCard
             title="Steps This Week"
