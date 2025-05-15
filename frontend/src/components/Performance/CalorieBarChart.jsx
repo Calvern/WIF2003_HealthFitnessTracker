@@ -19,7 +19,7 @@ ChartJS.register(
   Legend
 );
 
-const BarChart = () => {
+const BarChart = ({ mode }) => {
   const chartRef = useRef(null);
 
   useEffect(() => {
@@ -30,8 +30,12 @@ const BarChart = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  const labels =
+    mode === "daily"
+      ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+      : ["Apr 1–7", "Apr 8–14", "Apr 15–21", "Apr 22–28"];
   const data = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], // X-axis labels
+    labels: labels, // X-axis labels
     datasets: [
       {
         label: "Calories In",
@@ -78,7 +82,7 @@ const BarChart = () => {
 
   return (
     <div
-      className="d-flex flex-column align-items-center w-100 border rounded-4 shadow p-5"
+      className="d-flex flex-column align-items-center w-100  p-5"
       style={{ maxHeight: "600px" }}
     >
       <h3 className="text-center fw-bold">

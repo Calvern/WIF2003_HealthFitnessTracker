@@ -20,7 +20,7 @@ const ProfileCard = ({ formData, isEditing, setFormData }) => {
 
   return (
     <Row className="my-4">
-      <Col lg={2}>
+      <Col xs={12} md={3} lg={2}>
         {/* <Image
           src="https://media.istockphoto.com/id/1682296067/photo/happy-studio-portrait-or-professional-man-real-estate-agent-or-asian-businessman-smile-for.jpg?s=612x612&w=0&k=20&c=9zbG2-9fl741fbTWw5fNgcEEe4ll-JegrGlQQ6m54rg="
           roundedCircle
@@ -29,7 +29,7 @@ const ProfileCard = ({ formData, isEditing, setFormData }) => {
         /> */}
         <Form.Group controlId="formFile" className="mb-4 text-center">
           <div
-            className="rounded-circle border d-flex justify-content-center align-items-center mx-auto position-relative"
+            className="rounded-circle border d-flex align-items-center position-relative"
             style={{
               width: "150px",
               height: "150px",
@@ -88,7 +88,7 @@ const ProfileCard = ({ formData, isEditing, setFormData }) => {
         </Form.Group>
       </Col>
 
-      <Col lg={6}>
+      <Col xs={12} md={5} lg={8}>
         <div className="d-flex flex-column">
           <div className="d-flex align-items-center gap-2">
             <h2 className="fw-bold">
@@ -107,10 +107,10 @@ const ProfileCard = ({ formData, isEditing, setFormData }) => {
         </div>
       </Col>
 
-      <Col lg={4} className="position-relative">
+      <Col className="d-flex flex-column" xs={12} md={4} lg={2}>
         <Button
           type="submit"
-          className="position-absolute bottom-0 end-0 py-2 px-5 rounded-4 border-0"
+          className="mt-auto py-2 px-5 rounded-4 border-0"
           style={{ backgroundColor: "#507DBC" }}
         >
           {isEditing ? "Save Changes" : "Edit Profile"}

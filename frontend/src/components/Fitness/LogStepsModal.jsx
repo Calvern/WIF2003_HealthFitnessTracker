@@ -1,14 +1,11 @@
 import { Modal, Button, Form } from "react-bootstrap";
-import { useAppContext } from "../../contexts/AppContext";
 
-const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
-  const { showToast } = useAppContext();
-
+const LogStepsModal = ({ show, onClose, steps, log, setLog, onSubmit }) => {
   return (
     <Modal show={show} onHide={onClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          <h1 className="fw-bold">{cardio}</h1>
+          <h1 className="fw-bold">Log Steps</h1>
         </Modal.Title>
       </Modal.Header>
       <Form onSubmit={onSubmit}>
@@ -25,21 +22,10 @@ const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Start Time</Form.Label>
-            <Form.Control
-              type="time"
-              placeholder="e.g., 14:30"
-              value={log.time}
-              onChange={(e) => setLog({ ...log, time: e.target.value })}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Duration (minutes)</Form.Label>
+            <Form.Label>Steps</Form.Label>
             <Form.Control
               type="number"
-              placeholder="e.g., 30"
+              placeholder="e.g., 300"
               min={0}
               value={log.sets}
               onChange={(e) => setLog({ ...log, sets: e.target.value })}
@@ -63,4 +49,4 @@ const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
   );
 };
 
-export default LogCardioModal;
+export default LogStepsModal;

@@ -1,4 +1,3 @@
-
 import {
   Container,
   CardTitle,
@@ -105,7 +104,7 @@ const NotificationsPage = () => {
       recurring: "Every Monday",
       notes: "This is the first notification.",
       reminderStatus: "Not Active",
-    }
+    },
   ];
 
       const handleToggle = () => {
@@ -137,7 +136,6 @@ const NotificationsPage = () => {
     setFilter(value);
   };
 
-
   const filteredNotifications = notifications.filter((notification) => {
     return (
       filter === "all" ||
@@ -146,35 +144,50 @@ const NotificationsPage = () => {
   });
 
   const handleShowNotifications = (notification) => {
-    navigate(`/notifications/show-notification/${notification.id}`,
-      {
-        state: { notification }
-      }
-    )
-  }
+    navigate(`/notifications/show-notification/${notification.id}`, {
+      state: { notification },
+    });
+  };
 
   const renderEmptyMessage = () => {
     return (
       <Container className="d-flex flex-column align-items-center py-5 mt-5 vh-100">
         <Card border="0" className="mb-3">
-          <CardTitle style={{ height: "100px", width: "100px", backgroundColor: "#DAE3E5", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <CardTitle
+            style={{
+              height: "100px",
+              width: "100px",
+              backgroundColor: "#DAE3E5",
+              borderRadius: "50%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <Bell size={64} style={{ backgroundColor: "#DAE3E5" }} />
           </CardTitle>
         </Card>
-        <div className="text-center" style={{ fontWeight: "bold", fontSize: "50px", color: "#9D9F9F" }}>
+        <div
+          className="text-center"
+          style={{ fontWeight: "bold", fontSize: "50px", color: "#9D9F9F" }}
+        >
           No Notifications Yet
         </div>
-        <div className="text-center" style={{ fontWeight: "bold", fontSize: "20px", color: "#B9BFC0" }}>
+        <div
+          className="text-center"
+          style={{ fontWeight: "bold", fontSize: "20px", color: "#B9BFC0" }}
+        >
           Stay Tuned!
         </div>
-        <div className="text-center" style={{ fontWeight: "bold", fontSize: "20px", color: "#B9BFC0" }}>
+        <div
+          className="text-center"
+          style={{ fontWeight: "bold", fontSize: "20px", color: "#B9BFC0" }}
+        >
           Notifications about your activity will show up here.
         </div>
       </Container>
-
     );
   };
-
 
   const renderNotifications = () => {
     return (
@@ -219,14 +232,18 @@ const NotificationsPage = () => {
               >
                 {notification.title}
               </small>
-              <small onClick={()=> handleShowNotifications(notification)} 
-              style={{
-                cursor:"pointer", 
-                fontStyle:"italic", 
-                textDecoration:"underline", 
-                color: 
-                  notification.reminderStatus === "Active"
-                    ? "#507DBC": "#B3B3B3"}}>
+              <small
+                onClick={() => handleShowNotifications(notification)}
+                style={{
+                  cursor: "pointer",
+                  fontStyle: "italic",
+                  textDecoration: "underline",
+                  color:
+                    notification.reminderStatus === "Active"
+                      ? "#507DBC"
+                      : "#B3B3B3",
+                }}
+              >
                 See more
               </small>
             </div>
@@ -251,15 +268,14 @@ const NotificationsPage = () => {
         className="d-flex align-items-center gap-2 mt-3 mb-2"
         style={{ marginLeft: "40px" }}
       >
-        <Link to={"/home"}>
-          <ChevronLeft 
-          size={40} 
-          style={{ marginRight: "4px" }} 
-          //onClick={() => navigate(-1)}
-          />
-        </Link>
-        <span style={{ fontWeight: "bold", 
-        fontSize: "20px" }}>
+        <Button
+          className="border border-0"
+          style={{ backgroundColor: "transparent", color: "black" }}
+          onClick={() => navigate(-1)}
+        >
+          <ChevronLeft size={30}></ChevronLeft>
+        </Button>
+        <span style={{ fontWeight: "bold", fontSize: "20px" }}>
           Notifications
         </span>
 
@@ -355,12 +371,9 @@ const NotificationsPage = () => {
         </div>
         
 
-      {notifications.length === 0 ? (
-        renderEmptyMessage()
-      ) : (
-        renderNotifications()
-      )}
-      
+      {notifications.length === 0
+        ? renderEmptyMessage()
+        : renderNotifications()}
     </Container>
   );
 };

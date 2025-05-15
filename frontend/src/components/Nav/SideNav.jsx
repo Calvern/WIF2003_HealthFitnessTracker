@@ -3,10 +3,12 @@ import { Button, Collapse, Nav, Offcanvas } from "react-bootstrap";
 import { CaretDownFill, CaretRightFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 
-const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
+const SideNav = ({ showOffcanvas, setShowOffcanvas, isLoggedIn }) => {
   const [openFitness, setOpenFitness] = useState(false);
   const [openNutrition, setOpenNutrition] = useState(false);
   const [openPerformance, setOpenPerformance] = useState(false);
+  const handleCloseSidebar = () => setShowOffcanvas(false);
+
   return (
     <Offcanvas
       show={showOffcanvas}
@@ -16,13 +18,18 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
     >
       <Offcanvas.Header closeButton>
         <Offcanvas.Title className="text-white">
-          React-Bootstrap
+          FitPal
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        {isAuthenticated && (
+        {isLoggedIn && (
           <Nav className="flex-column gap-3">
-            <Nav.Link as={Link} className="text-white" to="/home">
+            <Nav.Link
+              as={Link}
+              className="text-white"
+              to="/home"
+              onClick={handleCloseSidebar}
+            >
               Home
             </Nav.Link>
             <div>
@@ -42,17 +49,25 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
                     <Nav.Link
                       as={Link}
                       className="side-nav-link"
-                      to="/workouts"
+                      to="/fitness-exercise-diary"
+                      onClick={handleCloseSidebar}
                     >
                       Exercise Diary
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
-                      Log Steps
-                    </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/fitness-log-workout"
+                      onClick={handleCloseSidebar}
+                    >
                       Log Workout
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/fitness-log-cardio"
+                      onClick={handleCloseSidebar}
+                    >
                       Log Cardio
                     </Nav.Link>
                   </Nav>
@@ -77,14 +92,25 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
                     <Nav.Link
                       as={Link}
                       className="side-nav-link"
-                      to="/workouts"
+                      to="/food-diary"
+                      onClick={handleCloseSidebar}
                     >
                       Food Diary
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/search-meal"
+                      onClick={handleCloseSidebar}
+                    >
                       Search for Meals
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/meal-favourites"
+                      onClick={handleCloseSidebar}
+                    >
                       Favourites
                     </Nav.Link>
                   </Nav>
@@ -109,14 +135,25 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
                     <Nav.Link
                       as={Link}
                       className="side-nav-link"
-                      to="/workouts"
+                      to="/steps"
+                      onClick={handleCloseSidebar}
                     >
                       Steps
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/cardio-vs-workout"
+                      onClick={handleCloseSidebar}
+                    >
                       Cardio vs Workout
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/calorie-burned"
+                      onClick={handleCloseSidebar}
+                    >
                       Calories Burned
                     </Nav.Link>
                   </Nav>

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import AddMealModal from "./AddMealModal";
 
-const MealCard = ({handleShowAddDiary}) => {
+const MealCard = ({ handleShowAddDiary }) => {
   const navigate = useNavigate();
   return (
     <Row className="border-bottom border-2 py-5">
@@ -21,7 +21,7 @@ const MealCard = ({handleShowAddDiary}) => {
             <Col className="d-flex justify-content-center pb-2" md={4}>
               <Button
                 onClick={handleShowAddDiary}
-                className="w-100 py-2 px-5 rounded-4 border-0"
+                className="w-100 py-2 px-5 rounded-4 border-0 text-center"
                 style={{ backgroundColor: "#507DBC" }}
               >
                 Add to Diary
@@ -30,7 +30,7 @@ const MealCard = ({handleShowAddDiary}) => {
             <Col className="d-flex justify-content-center  pb-2" md={4}>
               <Button
                 onClick={() => navigate("/meal-favourites/5931")}
-                className="w-100 py-2 px-5 rounded-4 border-0"
+                className="w-100 py-2 px-5 rounded-4 border-0 text-center"
                 style={{ backgroundColor: "#507DBC" }}
               >
                 View Details
@@ -38,7 +38,7 @@ const MealCard = ({handleShowAddDiary}) => {
             </Col>
             <Col className="d-flex justify-content-center  pb-2" md={4}>
               <Button
-                className="w-100 py-2 px-5 rounded-4 text-black border-0"
+                className="w-100 py-2 px-5 rounded-4 text-black border-0 text-center"
                 style={{ backgroundColor: "#DAE3E5" }}
               >
                 Remove from favourites

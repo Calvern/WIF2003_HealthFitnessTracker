@@ -5,7 +5,7 @@ const DesktopNavLinks = () => {
   return (
     <Nav className="gap-3">
       <Navbar.Brand as={Link} className="text-white" to="/home">
-        React-Bootstrap
+        FitPal
       </Navbar.Brand>{" "}
       <Nav.Link as={Link} className="text-white fw-bold" to="/home">
         Home
@@ -17,9 +17,6 @@ const DesktopNavLinks = () => {
       >
         <NavDropdown.Item as={Link} to="/fitness-exercise-diary">
           Exercise Diary
-        </NavDropdown.Item>
-        <NavDropdown.Item as={Link} to="/fitness-log-steps">
-          Log Steps
         </NavDropdown.Item>
         <NavDropdown.Item as={Link} to="/fitness-log-workout">
           Log Workout
@@ -48,13 +45,13 @@ const DesktopNavLinks = () => {
         title="Performance"
         id="nav-performance"
       >
-        <NavDropdown.Item as={Link} to="/performance-steps">
+        <NavDropdown.Item as={Link} to="/steps">
           Steps
         </NavDropdown.Item>
-        <NavDropdown.Item as={Link} to="/performance-cardio-vs-workout">
+        <NavDropdown.Item as={Link} to="/cardio-vs-workout">
           Cardio vs Workout
         </NavDropdown.Item>
-        <NavDropdown.Item as={Link} to="/performance-calories-burned">
+        <NavDropdown.Item as={Link} to="/calorie-burned">
           Calories Burned
         </NavDropdown.Item>
       </NavDropdown>

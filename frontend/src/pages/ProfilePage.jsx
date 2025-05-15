@@ -177,23 +177,23 @@ const ProfilePage = () => {
         </Row>
       </Form>
 
-      <div className="d-flex gap-5 justify-content-center">
+      <div className="d-flex flex-column flex-md-row gap-5 justify-content-center">
         <Button
-          className="w-60 py-2 px-5 rounded-4 border-0"
+          className="py-2 px-5 rounded-4 border-0"
           onClick={() => navigate("/change-password")}
           style={{ backgroundColor: "#507DBC" }}
         >
           Change Password
         </Button>
         <Button
-          className="w-60 py-2 px-5 rounded-4 border-0"
+          className=" py-2 px-5 rounded-4 border-0"
           onClick={() => navigate("/deactivate-account")}
           style={{ backgroundColor: "#507DBC" }}
         >
           Deactivate Account
         </Button>
         <Button
-          className="w-60 py-2 px-5 rounded-4 border-0"
+          className=" py-2 px-5 rounded-4 border-0"
           onClick={() => navigate("/delete-account")}
           style={{ backgroundColor: "#FF0000" }}
         >

@@ -31,20 +31,20 @@ const SearchMeal = () => {
     <Container className="py-5">
       <h2 className="fw-bold">Search for your desired meals</h2>
       <SearchBar />
-      <Row className="mt-5">
-        <Col xs={4}>
+      <Row className="mt-5 gy-5">
+        <Col xs={12} md={4}>
           <FoodList />
         </Col>
-        <Col xs={4}>
+        <Col xs={12} md={4}>
           <div className="d-flex flex-column align-items-center gap-5">
             <h3 className="fw-bold">Rotiserre Chicken</h3>
             <img
-              style={{ width: "100%", maxWidth: "300px", objectFit: "cover" }}
+              style={{ width: "100%", maxWidth: "400px", objectFit: "cover" }}
               src={FoodImage}
             />
             <Button
               onClick={handleShowAddDiary}
-              className="py-2 px-5 rounded-4"
+              className="py-2 px-5 rounded-4 border-0 w-75 text-center"
               style={{ backgroundColor: "#507DBC" }}
             >
               Add to Diary
@@ -54,19 +54,15 @@ const SearchMeal = () => {
               handleClose={handleCloseAddDiary}
             />
             <Button
-              className="py-2 px-5 rounded-4"
+              className="py-2 px-5 rounded-4 border-0 w-75 text-center"
               style={{ backgroundColor: "#507DBC" }}
               onClick={() => showToast("Added to favourites!")}
             >
               Add to Favourites
             </Button>
-          </div>
-        </Col>
-        <Col xs={4}>
-          <div className="d-flex flex-column align-items-center gap-3">
             <Button
               onClick={handleShowRecipe}
-              className="py-2 px-5 rounded-4"
+              className="py-2 px-5 rounded-4 border-0 w-75 text-center"
               style={{ backgroundColor: "#507DBC" }}
             >
               View Recipe
@@ -79,6 +75,10 @@ const SearchMeal = () => {
             >
               <img src={RecipeInfo} />
             </Modal>
+          </div>
+        </Col>
+        <Col xs={12} md={4}>
+          <div className="d-flex flex-column align-items-center gap-3">
             <img
               style={{ width: "100%", maxWidth: "300px", objectFit: "cover" }}
               src={NutritionFacts}

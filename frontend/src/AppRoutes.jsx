@@ -14,7 +14,6 @@ import SettingsPage from "./pages/SettingsPage";
 import CreateReminderPage from "./pages/CreateReminderPage";
 import ExerciseDiaryPage from "./pages/ExerciseDiaryPage";
 import LogCardioPage from "./pages/LogCardioPage";
-import LogStepsPage from "./pages/LogStepsPage";
 import LogWorkoutPage from "./pages/LogWorkoutPage";
 import SearchMealPage from "./pages/SearchMealPage";
 import FavouriteMealPage from "./pages/FavouriteMealPage";
@@ -26,6 +25,9 @@ import ChangePasswordPage from "./pages/ChangePasswordPage";
 import DeleteAccountPage from "./pages/DeleteAccountPage";
 import DeactivateAccountPage from "./pages/DeactivateAccountPage";
 import EditReminderPage from "./pages/EditReminderPage";
+import StepsPage from "./pages/StepsPage";
+import CaloriePage from "./pages/CaloriePage";
+import CardiovsWorkoutPage from "./pages/CardiovsWorkoutPage";
 
 const AppRoutes = () => {
   return (
@@ -148,14 +150,6 @@ const AppRoutes = () => {
           }
         />
         <Route
-          path="/settings"
-          element={
-            <Layout>
-              <SettingsPage />
-            </Layout>
-          }
-        />
-        <Route
           path="/create-reminder"
           element={
             <Layout>
@@ -190,55 +184,71 @@ const AppRoutes = () => {
           }
         />
 
-              <Route
-        path="fitness-exercise-diary"
-        element={
-          <Layout>
-            <ExerciseDiaryPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="fitness-log-steps"
-        element={
-          <Layout>
-            <LogStepsPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="fitness-log-workout"
-        element={
-          <Layout>
-            <LogWorkoutPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="fitness-log-cardio"
-        element={
-          <Layout>
-            <LogCardioPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="reminders/edit-reminder/:id"
-        element={
-          <Layout>
-            <EditReminderPage />
-          </Layout>
-        }
-      />
-      <Route 
-        path="notifications/show-notification/:id"
-        element={
-          <Layout>
-            <ShowNotificationPage />
-          </Layout>
-        }
-      />
+        <Route
+          path="fitness-exercise-diary"
+          element={
+            <Layout>
+              <ExerciseDiaryPage />
+            </Layout>
+          }
+        />
 
+        <Route
+          path="fitness-log-workout"
+          element={
+            <Layout>
+              <LogWorkoutPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="fitness-log-cardio"
+          element={
+            <Layout>
+              <LogCardioPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="reminders/edit-reminder/:id"
+          element={
+            <Layout>
+              <EditReminderPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="notifications/show-notification/:id"
+          element={
+            <Layout>
+              <ShowNotificationPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/steps"
+          element={
+            <Layout>
+              <StepsPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/calorie-burned"
+          element={
+            <Layout>
+              <CaloriePage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/cardio-vs-workout"
+          element={
+            <Layout>
+              <CardiovsWorkoutPage />
+            </Layout>
+          }
+        />
       </Route>
     </Routes>
   );

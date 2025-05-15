@@ -1,5 +1,6 @@
 body {
     font-family: "PT Sans", sans-serif;
+    background-color: #F3F3F5;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -70,6 +71,7 @@ p {
 
 .meal-list.active {
     background-color: #507DBC;
+    border: none
 }
 
 .workout-list.active {
@@ -152,6 +154,7 @@ p {
   outline: none !important;
   color: red !important;
 }
+  
 
 .progress .progress-bar{
     background-color: #A1C6EA;
@@ -163,6 +166,17 @@ p {
     border-radius: 5px;
     transform: scale(1.1);
   }
+
+  .custom-tabs .nav-link {
+    color: #507DBC; /* Brand color */
+    font-weight: 500;
+  }
+  
+  .custom-tabs .nav-link.active {
+    color: #507DBC;           /* Black when active */
+    font-weight: bold;     /* Bold text when active */
+  }
+  
   
 
 

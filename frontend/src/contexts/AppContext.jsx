@@ -5,7 +5,7 @@ import { ToastContainer } from "react-bootstrap";
 const AppContext = createContext(undefined);
 
 export const AppContextProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [toast, setToast] = useState(undefined);
   return (
     <AppContext.Provider

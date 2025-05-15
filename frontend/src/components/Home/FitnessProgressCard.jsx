@@ -24,9 +24,9 @@ const FitnessProgressCard = () => {
             },
           }}
         >
-          <p className="fw-bold" style={{ marginTop: "-20px" }}>
+          <h5 className="fw-bold" style={{ marginTop: "-20px" }}>
             45 minutes
-          </p>
+          </h5>
         </CircularProgressbarWithChildren>
       </div>
 
