@@ -8,7 +8,7 @@ const brandColor = "#176087";
 const UpcomingRemindersCard = ({ reminders }) => {
   return (
     <Card
-      className="shadow-sm mt-5"
+      className="shadow-sm"
       style={{
         borderRadius: "10px",
         padding: "1rem",
