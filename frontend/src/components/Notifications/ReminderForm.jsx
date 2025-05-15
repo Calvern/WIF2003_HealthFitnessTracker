@@ -109,7 +109,7 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
       </Row>
 
       <Row className="mb-2">
-        <Col md="6">
+        <Col md="12">
           <Form.Group controlId="formRecurring">
             <FormLabel>Recurring</FormLabel>
             <Form.Select
@@ -133,66 +133,7 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
             </Form.Select>
           </Form.Group>
         </Col>
-        <Col md="6">
-          <Form.Group controlId="formNotificationMethod">
-            <Form.Label>Notification Method</Form.Label>
-            <div className="d-flex gap-4 justify-content-between">
-              {/* Email Radio */}
-              <label
-                htmlFor="email-radio"
-                className="radio-label d-flex align-items-center gap-2 px-3 py-2 rounded flex-grow-1 text-center"
-                style={{
-                  height: "40px",
-                  cursor: "pointer",
-                  backgroundColor: "#DAE3E5",
-                }}
-              >
-                <Form.Check
-                  id="email-radio"
-                  type="radio"
-                  name="notificationMethod"
-                  value="Email"
-                  checked={reminder.notificationMethod === "Email"}
-                  onChange={(e) =>
-                    setReminder({
-                      ...reminder,
-                      notificationMethod: e.target.value,
-                    })
-                  }
-                  className="custom-radio"
-                />
-                <span className="radio-text">Email</span>
-              </label>
 
-              {/* Browser Notification Radio */}
-              <label
-                htmlFor="browser-radio"
-                className="radio-label d-flex align-items-center gap-2 px-3 py-2 rounded flex-grow-1 text-center"
-                style={{
-                  height: "40px",
-                  cursor: "pointer",
-                  backgroundColor: "#DAE3E5",
-                }}
-              >
-                <Form.Check
-                  id="browser-radio"
-                  type="radio"
-                  name="notificationMethod"
-                  value="Browser"
-                  checked={reminder.notificationMethod === "Browser"}
-                  onChange={(e) =>
-                    setReminder({
-                      ...reminder,
-                      notificationMethod: e.target.value,
-                    })
-                  }
-                  className="custom-radio"
-                />
-                <span className="radio-text">Browser</span>
-              </label>
-            </div>
-          </Form.Group>
-        </Col>
       </Row>
 
       <Row className="mb-2">
