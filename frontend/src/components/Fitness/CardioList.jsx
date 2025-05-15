@@ -1,6 +1,6 @@
 import { ListGroup } from "react-bootstrap";
 
-const CardioList = ({ onItemClick }) => {
+const ExrciseList = ({ onItemClick }) => {
   const cardioWorkouts = [
     "Running",
     "Walking",
@@ -8,22 +8,23 @@ const CardioList = ({ onItemClick }) => {
     "Cycling",
     "Hiking",
     "Swimming",
+    
   ];
 
   return (
     <>
-      <h5 className="mt-5 fw-bold">Matching Cardio</h5>
+      <h5 className="mt-5 fw-bold">Matching Searches</h5>
       <ListGroup as="ul">
-        {cardioWorkouts.map((cardio) => (
+        {cardioWorkouts.map((exercise) => (
           <ListGroup.Item
-            key={cardio}
+            key={exercise}
             className="workout-list"
             as="li"
-            eventKey={cardio}
+            eventKey={exercise}
             action
-            onClick={() => onItemClick && onItemClick(cardio)}
+            onClick={() => onItemClick && onItemClick(exercise)}
           >
-            {cardio}
+            {exercise}
           </ListGroup.Item>
         ))}
       </ListGroup>
@@ -31,4 +32,4 @@ const CardioList = ({ onItemClick }) => {
   );
 };
 
-export default CardioList;
+export default ExrciseList;
