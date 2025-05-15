@@ -34,7 +34,6 @@ const ActivitiesDoneCard = () => {
 
   return (
     <Card
-      className="mt-5"
       style={{
         width: "100%",
         height: "100%",
