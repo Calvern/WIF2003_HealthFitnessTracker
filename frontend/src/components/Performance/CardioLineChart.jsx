@@ -1,14 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import {Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend,} from "chart.js";
 
 ChartJS.register(
   LineElement,
