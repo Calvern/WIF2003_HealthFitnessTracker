@@ -36,8 +36,17 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isLoggedIn }) => {
             >
               Home
             </Nav.Link>
-            <div>
-              <Button
+
+            <Nav.Link
+              as={Link}
+              className="text-white"
+              to="/fitness"
+              onClick={handleCloseSidebar}
+            >
+              Fitness
+            </Nav.Link>
+            {/* <div> */}
+              {/* <Button
                 className="w-100 text-white text-start px-3 py-2 d-flex justify-content-between"
                 style={{ backgroundColor: "transparent", border: "none" }}
                 onClick={() => setOpenFitness((prevState) => !prevState)}
@@ -46,8 +55,8 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isLoggedIn }) => {
                 <span>
                   {openFitness ? <CaretDownFill /> : <CaretRightFill />}
                 </span>
-              </Button>
-              <Collapse in={openFitness}>
+              </Button> */}
+              {/* <Collapse in={openFitness}>
                 <div>
                   <Nav className="flex-column px-2">
                     <Nav.Link
@@ -76,8 +85,8 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isLoggedIn }) => {
                     </Nav.Link>
                   </Nav>
                 </div>
-              </Collapse>
-            </div>
+              </Collapse> */}
+            {/* </div> */}
 
             <div>
               <Button

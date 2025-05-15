@@ -5,7 +5,7 @@ import { Search, X } from "react-bootstrap-icons";
 const SearchBar = ({ width = "75%" }) => {
   const [searchValue, setsearchValue] = useState("");
   return (
-    <Form onSubmit={(e) => e.preventDefault()} className="mt-5">
+    <Form onSubmit={(e) => e.preventDefault()} className="mt-2">
       <InputGroup style={{ width }}>
         <FormControl
           className="border-0 border-bottom border-dark border-2 rounded-0 shadow-none"

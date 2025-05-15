@@ -8,12 +8,12 @@ const brandColor = "#176087";
 const UpcomingRemindersCard = ({ reminders }) => {
   return (
     <Card
-      className="shadow-sm"
+      className="h-100 shadow-sm mt-5"
       style={{
         borderRadius: "10px",
         padding: "1rem",
         boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-        height: "100%", // changed to auto height for better responsiveness
+        height: "100%",
       }}
     >
       <Card.Header
@@ -60,7 +60,7 @@ const UpcomingRemindersCard = ({ reminders }) => {
                 <Col
                   xs={12}
                   md={4}
-                  className="d-flex align-items-center gap-1"
+                  className="d-flex align-items-center gap-1 "
                 >
                   <Bell style={{ color: brandColor }} />
                   <small>{reminder.date}</small>

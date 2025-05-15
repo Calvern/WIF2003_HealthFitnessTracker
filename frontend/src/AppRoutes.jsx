@@ -12,9 +12,9 @@ import NotificationsPage from "./pages/NotificationsPage";
 import RemindersPage from "./pages/RemindersPage";
 import SettingsPage from "./pages/SettingsPage";
 import CreateReminderPage from "./pages/CreateReminderPage";
-import ExerciseDiaryPage from "./pages/ExerciseDiaryPage";
-import LogCardioPage from "./pages/LogCardioPage";
-import LogWorkoutPage from "./pages/LogWorkoutPage";
+// import ExerciseDiaryPage from "./pages/ExerciseDiaryPage";
+// import LogCardioPage from "./pages/LogCardioPage";
+// import LogWorkoutPage from "./pages/LogWorkoutPage";
 import SearchMealPage from "./pages/SearchMealPage";
 import FavouriteMealPage from "./pages/FavouriteMealPage";
 import FoodDetailsPage from "./pages/FoodDetailsPage";
@@ -28,6 +28,7 @@ import EditReminderPage from "./pages/EditReminderPage";
 import StepsPage from "./pages/StepsPage";
 import CaloriePage from "./pages/CaloriePage";
 import CardiovsWorkoutPage from "./pages/CardiovsWorkoutPage";
+import FitnessPage from "./pages/FitnessPage";
 
 const AppRoutes = () => {
   return (
@@ -183,8 +184,16 @@ const AppRoutes = () => {
             </Layout>
           }
         />
-
         <Route
+        path="fitness"
+          element={
+            <Layout>
+              <FitnessPage />
+            </Layout>
+          }
+        />
+
+        {/* <Route
           path="fitness-exercise-diary"
           element={
             <Layout>
@@ -208,7 +217,7 @@ const AppRoutes = () => {
               <LogCardioPage />
             </Layout>
           }
-        />
+        /> */}
         <Route
           path="reminders/edit-reminder/:id"
           element={
