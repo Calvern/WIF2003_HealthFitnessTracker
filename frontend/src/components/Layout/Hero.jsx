@@ -24,8 +24,7 @@ const Hero = () => {
             <span className="d-block">Begins Here</span>
           </h1>
           <h3 className="w-50">
-            Track your workouts, monitor your nutrition, and visualize your
-            progress — all in one easy-to-use platform
+            Track your workouts, monitor your nutrition, and visualize your progress
           </h3>
           <Link to="/sign-in" className="link-button">
             Get Started
