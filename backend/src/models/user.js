@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
     type: String,
     default: "",
   },
-  profilePicture: {
+  profilePictureUrl: {
     type: String, // URL to Cloudinary image
   },
   gender: {
@@ -32,14 +32,14 @@ const userSchema = mongoose.Schema({
     type: Number, // in kilograms
   },
   height: {
-    type: Number, // in centimeters
+    type: Number,
   },
   activityLevel: {
     type: Number,
   },
   weightGoal: {
     type: Number,
-    enum: [-500, 0, 500], // daily calorie surplus or deficit
+    enum: [-500, 0, 500],
   },
   dailyTargetCalorie: {
     type: Number,

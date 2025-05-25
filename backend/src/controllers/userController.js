@@ -1,6 +1,7 @@
 import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 import calculateAge from "../utilities/calculateAge.js";
+import cloudinary from "cloudinary";
 
 const registerMyUser = async (req, res) => {
   try {
@@ -33,6 +34,7 @@ const registerMyUser = async (req, res) => {
 const registerMyUserProfile = async (req, res) => {
   try {
     const userId = req.userId;
+
     const user = await User.findOneAndUpdate({ _id: userId }, req.body, {
       new: true,
     });
@@ -41,6 +43,10 @@ const registerMyUserProfile = async (req, res) => {
       res.status(404).json({ message: "User does not exist" });
     }
 
+    const imageFile = req.file;
+    const imageUrl = await uploadImagesToCloudinary(imageFile);
+    user.profilePictureUrl = imageUrl;
+    console.log("Received profile data:", user.profilePictureUrl);
     await user.save();
     res.status(201).json(user);
   } catch (error) {
@@ -80,3 +86,10 @@ export default {
   registerMyUserProfile,
   registerMyUserPhysicalInfo,
 };
+
+async function uploadImagesToCloudinary(imageFile) {
+  const base64Image = Buffer.from(imageFile.buffer).toString("base64");
+  const dataURI = `data:${imageFile.mimetype};base64,${base64Image}`;
+  const uploadResponse = await cloudinary.v2.uploader.upload(dataURI);
+  return uploadResponse.url;
+}

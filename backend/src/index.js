@@ -4,6 +4,7 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { v2 as cloudinary } from "cloudinary";
 
 const app = express();
 app.use(express.json());
@@ -22,6 +23,12 @@ app.use(
 mongoose
   .connect(process.env.MONGODB_CONNECTION_STRING)
   .then(console.log("Connected to database"));
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
+});
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
