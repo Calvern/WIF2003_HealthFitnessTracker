@@ -21,9 +21,9 @@ const FavouriteMealPage = () => {
       <h2 className="fw-bold mb-5">Your favourites meals</h2>
       <div className="responsive-grid">
         <MealCard handleShowAddDiary={handleShowAddDiary} isFavourite={true} />
-        <MealCard handleShowAddDiary={handleShowAddDiary} isFavourite={false} />
         <MealCard handleShowAddDiary={handleShowAddDiary} isFavourite={true} />
-        <MealCard handleShowAddDiary={handleShowAddDiary} isFavourite={false} />
+        <MealCard handleShowAddDiary={handleShowAddDiary} isFavourite={true} />
+        <MealCard handleShowAddDiary={handleShowAddDiary} isFavourite={true} />
         <MealCard handleShowAddDiary={handleShowAddDiary} isFavourite={true} />
       </div>
       <div className="w-100 d-flex justify-content-center">
