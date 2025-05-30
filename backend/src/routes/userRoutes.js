@@ -1,8 +1,12 @@
 import express from "express";
 import userController from "../controllers/userController.js";
-import { validateUserRegisterRequest } from "../middlewares/validation.js";
+import {
+  validateUserCreatePhysicalInfoRequest,
+  validateUserCreateProfileRequest,
+  validateUserRegisterRequest,
+} from "../middlewares/validation.js";
 import { verifyToken } from "../middlewares/auth.js";
-import multer from "multer"
+import multer from "multer";
 
 const router = express.Router();
 
@@ -22,12 +26,15 @@ const upload = multer({
 
 router.put(
   "/create-profile",
+
   upload.single("imageFile"),
+  validateUserCreateProfileRequest,
   verifyToken,
   userController.registerMyUserProfile
 );
 router.put(
   "/create-physical",
+  validateUserCreatePhysicalInfoRequest,
   verifyToken,
   userController.registerMyUserPhysicalInfo
 );
