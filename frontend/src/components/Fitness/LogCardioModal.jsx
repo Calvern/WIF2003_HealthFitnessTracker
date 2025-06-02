@@ -5,11 +5,6 @@ const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await onSubmit({
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
-        required: true,
-      },
       type: "cardio",
       name: cardio,
       date: log.date,

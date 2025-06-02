@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const exerciseLogSchema = mongoose.Schema({
-//   userID: { type: String, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   type: { type: String, enum: ["cardio", "workout"], required: true },
   name: { type: String, required: true },
   date: { type: String, required: true },

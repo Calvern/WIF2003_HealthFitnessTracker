@@ -9,6 +9,7 @@ export const logExercise = async (exerciseData) => {
   const res =await fetch(`${API_BASE_URL}/api/exercises`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(exerciseData),
   });
 

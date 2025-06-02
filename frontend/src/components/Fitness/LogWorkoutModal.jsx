@@ -4,7 +4,6 @@ import { logExercise } from "../../api/ExerciseApi";
 const LogWorkoutModal = ({ show, onClose, workout, log, setLog, onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const data = {
       type: "workout",
       name: workout,
