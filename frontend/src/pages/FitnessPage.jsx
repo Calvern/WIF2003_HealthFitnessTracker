@@ -7,8 +7,9 @@ import { useState } from "react";
 import LogCardioModal from "../components/Fitness/LogCardioModal";
 import LogWorkoutModal from "../components/Fitness/LogWorkoutModal";
 import StepsCard from "../components/Fitness/StepsCard";
+import { logExercise } from "../api/ExerciseApi";
 
-const LogCardioPage = () => {
+const FitnessPage = () => {
   const [selectedCardio, setSelectedCardio] = useState(null);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
   const [selectedLog, setSelectedLog] = useState(null);
@@ -28,20 +29,34 @@ const LogCardioPage = () => {
     reps: "",
   });
 
-  const handleCardioSubmit = (e) => {
-    e.preventDefault();
+  const handleCardioSubmit = async (log) => {
     console.log("Cardio Activity:", selectedCardio);
-    console.log("Log:", cardioLog);
+    console.log("Log:", log);
     setSelectedCardio(null);
-    setCardioLog({ date: "", time: "", sets: "" });
+    setCardioLog({ date: "", time: "", duration: "" }); // sets not needed for cardio
+
+    try {
+      await logExercise(log); // ✅ correct variable
+      alert("Cardio logged!");
+    } catch (error) {
+      console.error("Failed to log cardio", error);
+      alert("Error logging cardio");
+    }
   };
 
-  const handleWorkoutSubmit = (e) => {
-    e.preventDefault();
+  const handleWorkoutSubmit = async (log) => {
     console.log("Workout Activity:", selectedWorkout);
-    console.log("Log:", workoutLog);
+    console.log("Log:", log);
     setSelectedWorkout(null);
     setWorkoutLog({ date: "", time: "", sets: "", reps: "" });
+
+    try {
+      await logExercise(log); // ✅ correct variable
+      alert("Workout logged!");
+    } catch (error) {
+      console.error("Failed to log workout", error);
+      alert("Error logging workout");
+    }
   };
 
   const handleActivityClick = (activity) => {
@@ -79,12 +94,15 @@ const LogCardioPage = () => {
 
   return (
     <div className="container px-5 py-5">
-       {/* Activities at the bottom (full width) */}
-       <h5 className="fw-bold mb-3">Fitness Tracker</h5>
+      {/* Activities at the bottom (full width) */}
+      <h5 className="fw-bold mb-3">Fitness Tracker</h5>
 
       <div className="row">
         <div className="col-12 mb-5">
-          <ActivitiesDoneCard onActivityClick={handleActivityClick} showToggle={true} />
+          <ActivitiesDoneCard
+            onActivityClick={handleActivityClick}
+            showToggle={true}
+          />
           {showWorkoutModal && (
             <WorkoutDetailsModal
               show={showWorkoutModal}
@@ -156,4 +174,4 @@ const LogCardioPage = () => {
   );
 };
 
-export default LogCardioPage;
+export default FitnessPage;

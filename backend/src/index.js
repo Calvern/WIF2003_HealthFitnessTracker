@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import exerciseRoutes from "./routes/exerciseRoutes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
@@ -32,6 +33,7 @@ cloudinary.config({
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/exercises", exerciseRoutes);
 
 app.listen(7001, () => {
   console.log("Server is running on localhost:7001");

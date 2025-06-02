@@ -1,0 +1,25 @@
+const exerciseList = [
+  { name: "Running", type: "cardio", met: 9.8 },
+  { name: "Walking", type: "cardio", met: 3.5 },
+  { name: "Jogging", type: "cardio", met: 7.0 },
+  { name: "Cycling", type: "cardio", met: 8.5 },
+  { name: "Hiking", type: "cardio", met: 6.0 },
+  { name: "Swimming", type: "cardio", met: 8.0 },
+  { name: "Push-Ups", type: "workout" },
+  { name: "Pull-Ups", type: "workout" },
+  { name: "Squats", type: "workout" },
+  { name: "Lunges", type: "workout" },
+  { name: "Deadlifts", type: "workout" },
+  { name: "Bench Press", type: "workout" },
+  { name: "Overhead Press", type: "workout" },
+  { name: "Plank", type: "workout" },
+  { name: "Burpees", type: "workout" },
+  { name: "Mountain Climbers", type: "workout" },
+  { name: "Jumping Jacks", type: "workout" },
+  { name: "Bicep Curls", type: "workout" },
+  { name: "Tricep Dips", type: "workout" },
+  { name: "Leg Raises", type: "workout" },
+  { name: "Crunches", type: "workout" },
+];
+
+export default exerciseList;

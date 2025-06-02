@@ -2,7 +2,24 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { useAppContext } from "../../contexts/AppContext";
 
 const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
-  const { showToast } = useAppContext();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await onSubmit({
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+        required: true,
+      },
+      type: "cardio",
+      name: cardio,
+      date: log.date,
+      startTime: log.time,
+      duration: Number(log.duration),
+      sets: null,
+      reps: null,
+    });
+    onClose();
+  };
 
   return (
     <Modal show={show} onHide={onClose} centered>
@@ -11,7 +28,7 @@ const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
           <h1 className="fw-bold">{cardio}</h1>
         </Modal.Title>
       </Modal.Header>
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={handleSubmit}>
         <Modal.Body>
           <Form.Group className="mb-3">
             <Form.Label>Date</Form.Label>
@@ -41,8 +58,8 @@ const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
               type="number"
               placeholder="e.g., 30"
               min={0}
-              value={log.sets}
-              onChange={(e) => setLog({ ...log, sets: e.target.value })}
+              value={log.duration}
+              onChange={(e) => setLog({ ...log, duration: e.target.value })}
               required
             />
           </Form.Group>
