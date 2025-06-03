@@ -9,6 +9,7 @@ const exerciseLogSchema = mongoose.Schema({
 
   // Cardio fields
   duration: Number,
+  caloriesBurned: Number,
 
   // Workout fields
   sets: Number,
