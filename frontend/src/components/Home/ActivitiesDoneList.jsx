@@ -83,7 +83,9 @@ const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
       }
 
       if (selectedCategory !== "All") {
-        filtered = filtered.filter((a) => a.category === selectedCategory);
+        filtered = filtered.filter(
+          (a) => a.type === selectedCategory.toLowerCase()
+        );
       }
     }
 
