@@ -50,9 +50,10 @@ export const createExercise = async (req, res) => {
 
 export const getExercises = async (req, res) => {
   try {
-    const exercises = await Exercise.find();
+    const exercises = await Exercise.find({ userId: req.userId }).sort({ date: -1 });
     res.status(200).json(exercises);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
+
