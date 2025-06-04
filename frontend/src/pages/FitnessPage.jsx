@@ -60,22 +60,22 @@ const FitnessPage = () => {
   };
 
   const handleActivityClick = (activity) => {
-    const date = activity.dateTime.split("T")[0];
-    const time = activity.dateTime.split("T")[1].slice(0, 5);
+    const date = activity.date
+    const time = activity.startTime;
     const commonData = { date, time };
 
-    if (activity.category === "Workout") {
+    if (activity.type === "workout") {
       setSelectedLog({
-        workout: activity.activity,
-        sets: 3,
-        reps: 10,
+        workout: activity.name,
+        sets: activity.sets,
+        reps: activity.reps,
         ...commonData,
       });
       setShowWorkoutModal(true);
     } else {
       setSelectedLog({
-        cardio: activity.activity,
-        duration: 30,
+        cardio: activity.name,
+        duration: activity.duration,
         ...commonData,
       });
       setShowCardioModal(true);
