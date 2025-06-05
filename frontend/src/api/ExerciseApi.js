@@ -49,29 +49,46 @@ const flattenExercises = (data) => {
   const allActivities = [];
 
   data.forEach((entry) => {
-    const { date, cardio = [], workout = [] } = entry;
+    const { date, cardio = [], workout = [], steps = 0 } = entry;
+
+    // if (steps > 0) {
+    //   allActivities.push({
+    //     name: `${steps.toLocaleString()} steps`,
+    //     type: "steps",
+    //     date,
+    //   });
+    // }
 
     cardio.forEach((c) => {
-      allActivities.push({
-        ...c,
-        type: "cardio",
-        date, // attach parent date
-      });
+      allActivities.push({ ...c, type: "cardio", date });
     });
 
     workout.forEach((w) => {
-      allActivities.push({
-        ...w,
-        type: "workout",
-        date,
-      });
+      allActivities.push({ ...w, type: "workout", date });
     });
   });
 
   return allActivities.sort((a, b) => {
-    // sort by date and then startTime (optional)
     const dateCompare = new Date(b.date) - new Date(a.date);
     if (dateCompare !== 0) return dateCompare;
     return a.startTime?.localeCompare(b.startTime ?? "") ?? 0;
   });
+};
+
+export const logDailySteps = async (stepData) => {
+  const res = await fetch(`${API_BASE_URL}/api/exercises/steps`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(stepData),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || "Failed to log daily steps");
+  }
+
+  return res.json();
 };

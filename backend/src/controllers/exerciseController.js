@@ -61,3 +61,25 @@ export const updateTargetSteps = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const logSteps = async (req, res) => {
+  const { date, steps } = req.body;
+  const userId = req.userId;
+
+  if (!date || typeof steps !== "number") {
+    return res.status(400).json({ message: "Invalid request data" });
+  }
+
+  try {
+    const updated = await Exercise.findOneAndUpdate(
+      { userId, date },
+      { $set: { steps } },
+      { upsert: true, new: true }
+    );
+
+    res.status(200).json(updated);
+  } catch (error) {
+    console.error("Log steps error:", error);
+    res.status(500).json({ message: "Failed to log steps" });
+  }
+};

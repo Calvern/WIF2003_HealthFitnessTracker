@@ -10,13 +10,14 @@ ChartJS.register(ArcElement, Tooltip);
 const StepsCard = () => {
   const [showSetTargetModal, setShowSetTargetModal] = useState(false);
   const [showLogStepsModal, setShowLogStepsModal] = useState(false);
+  const [log, setLog] = useState({ date: "", steps: 0 });
 
-  const [goal, setGoal] = useState(10000);
-  const [steps, setSteps] = useState(6421);
-  const [activeMinutes, setActiveMinutes] = useState(34);
-  const [minutesGoal, setMinutesGoal] = useState(60);
-  const [calories, setCalories] = useState(390);
-  const [caloriesGoal, setCaloriesGoal] = useState(500);
+  const [goal, setGoal] = useState();
+  const [steps, setSteps] = useState();
+  const [activeMinutes, setActiveMinutes] = useState();
+  const [minutesGoal, setMinutesGoal] = useState();
+  const [calories, setCalories] = useState();
+  const [caloriesGoal, setCaloriesGoal] = useState();
 
   const [selectedTab, setSelectedTab] = useState("steps");
 
@@ -99,50 +100,49 @@ const StepsCard = () => {
         </ButtonGroup>
       </div>
 
-<div className="d-flex justify-content-center align-items-center gap-4 my-4">
-  <div style={{ position: "relative", height: 200, width: 200 }}>
-    <Doughnut data={doughnutData} options={chartOptions} />
-    <div
-      style={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        textAlign: "center",
-      }}
-    >
-      <h5 className="mb-0" style={{ color: chartData.color }}>
-        {chartData.value}
-      </h5>
-      <small className="text-muted">
-        / {chartData.goal} {chartData.label}
-      </small>
-    </div>
-  </div>
+      <div className="d-flex justify-content-center align-items-center gap-4 my-4">
+        <div style={{ position: "relative", height: 200, width: 200 }}>
+          <Doughnut data={doughnutData} options={chartOptions} />
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              textAlign: "center",
+            }}
+          >
+            <h5 className="mb-0" style={{ color: chartData.color }}>
+              {chartData.value}
+            </h5>
+            <small className="text-muted">
+              / {chartData.goal} {chartData.label}
+            </small>
+          </div>
+        </div>
 
-  <div className="text-muted ms-5 text-center">
-    <div style={{ fontSize: "1.5rem" }}>Average this week:</div>
-    <div style={{ fontSize: "1.8rem" }}>
-      <strong>{Math.round(chartData.goal * 0.72)}</strong> {chartData.label}
-    </div>
-     <div className="mt-3 d-flex justify-content-between">
-        <button
-          className="btn btn-outline-primary"
-          onClick={() => setShowSetTargetModal(true)}
-        >
-          Set Target
-        </button>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowLogStepsModal(true)}
-        >
-          Log Steps
-        </button>
+        <div className="text-muted ms-5 text-center">
+          <div style={{ fontSize: "1.5rem" }}>Average this week:</div>
+          <div style={{ fontSize: "1.8rem" }}>
+            <strong>{Math.round(chartData.goal * 0.72)}</strong>{" "}
+            {chartData.label}
+          </div>
+          <div className="mt-3 d-flex justify-content-between">
+            <button
+              className="btn btn-outline-primary"
+              onClick={() => setShowSetTargetModal(true)}
+            >
+              Set Target
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => setShowLogStepsModal(true)}
+            >
+              Log Steps
+            </button>
+          </div>
+        </div>
       </div>
-
-  </div>
-</div>
-
 
       {/* <div className="mt-5 d-flex justify-content-between mt-4">
         <button
@@ -179,8 +179,8 @@ const StepsCard = () => {
         show={showLogStepsModal}
         onClose={() => setShowLogStepsModal(false)}
         steps={steps}
-        log={{ sets: steps }}
-        setLog={({ sets }) => setSteps(sets)}
+        log={log}
+        setLog={setLog}
         onSubmit={handleLogSubmit}
       />
     </div>
