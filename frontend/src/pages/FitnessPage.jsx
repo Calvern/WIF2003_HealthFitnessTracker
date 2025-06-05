@@ -12,7 +12,6 @@ import { logExercise } from "../api/ExerciseApi";
 const FitnessPage = () => {
   const [selectedCardio, setSelectedCardio] = useState(null);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
-  const [selectedLog, setSelectedLog] = useState(null);
   const [showWorkoutModal, setShowWorkoutModal] = useState(false);
   const [showCardioModal, setShowCardioModal] = useState(false);
 
@@ -33,10 +32,10 @@ const FitnessPage = () => {
     console.log("Cardio Activity:", selectedCardio);
     console.log("Log:", log);
     setSelectedCardio(null);
-    setCardioLog({ date: "", time: "", duration: "" }); // sets not needed for cardio
+    setCardioLog({ date: "", time: "", duration: "" });
 
     try {
-      await logExercise(log); // ✅ correct variable
+      await logExercise(log);
       alert("Cardio logged!");
     } catch (error) {
       console.error("Failed to log cardio", error);
@@ -51,13 +50,25 @@ const FitnessPage = () => {
     setWorkoutLog({ date: "", time: "", sets: "", reps: "" });
 
     try {
-      await logExercise(log); // ✅ correct variable
+      await logExercise(log);
       alert("Workout logged!");
     } catch (error) {
       console.error("Failed to log workout", error);
       alert("Error logging workout");
     }
   };
+
+  const handleWorkoutDelete = async () => {
+  try {
+    await deleteExercise(selectedLog.id);
+    alert("Workout removed!");
+    setShowWorkoutModal(false);
+  } catch (err) {
+    console.error("Delete error:", err);
+    alert("Failed to delete workout.");
+  }
+};
+
 
   const handleActivityClick = (activity) => {
     const date = activity.date
@@ -83,18 +94,15 @@ const FitnessPage = () => {
   };
 
   const handleWorkoutDetailsSubmit = () => {
-    // Save workout logic
     setShowWorkoutModal(false);
   };
 
   const handleCardioDetailsSubmit = () => {
-    // Save cardio logic
     setShowCardioModal(false);
   };
 
   return (
     <div className="container px-5 py-5">
-      {/* Activities at the bottom (full width) */}
       <h5 className="fw-bold mb-3">Fitness Tracker</h5>
 
       <div className="row">
@@ -110,6 +118,7 @@ const FitnessPage = () => {
               log={selectedLog}
               setLog={setSelectedLog}
               onSubmit={handleWorkoutDetailsSubmit}
+              onDelete={handleWorkoutDelete}
             />
           )}
           {showCardioModal && (

@@ -35,6 +35,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/exercises", exerciseRoutes);
 
+
 app.listen(7001, () => {
   console.log("Server is running on localhost:7001");
 });

@@ -2,18 +2,6 @@ import Exercise from "../models/exercise.js";
 import User from "../models/user.js";
 import exerciseList from "../../../frontend/src/data/exerciseList.js";
 
-// export const createExercise = async (req, res) => {
-//   console.log("Received:", req.body);
-//   try {
-//     const exercise = new Exercise({ ...req.body, userId: req.userId,});
-//     const saved = await exercise.save();
-//     res.status(201).json(saved);
-//   } catch (err) {
-//     console.error("Error saving exercise:", err.message);
-//     res.status(400).json({ error: err.message });
-//   }
-// };
-
 export const createExercise = async (req, res) => {
   console.log("Received:", req.body);
   try {
@@ -57,3 +45,27 @@ export const getExercises = async (req, res) => {
   }
 };
 
+export const updateTargetSteps = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { targetSteps, workoutMinutes } = req.body;
+
+    if (typeof targetSteps !== "number" || typeof workoutMinutes !== "number") {
+      return res.status(400).json({ message: "Invalid input data" });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        dailyTargetSteps: targetSteps,
+        dailyTargetActivity: workoutMinutes,
+      },
+      { new: true }
+    );
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Update daily targets error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

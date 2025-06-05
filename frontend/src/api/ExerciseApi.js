@@ -34,6 +34,22 @@ export const useFetchExercises = () => {
     activitiesData,
     isPending
   }
+};
 
+export const setDailyTarget = async (targetData) => {
+  const res = await fetch(`${API_BASE_URL}/api/exercises/target`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(targetData),
+  });
 
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || "Failed to update target");
+  }
+
+  return res.json();
 };
