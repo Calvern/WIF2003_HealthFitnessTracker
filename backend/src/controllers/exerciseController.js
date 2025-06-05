@@ -3,42 +3,34 @@ import User from "../models/user.js";
 import exerciseList from "../../../frontend/src/data/exerciseList.js";
 
 export const createExercise = async (req, res) => {
-  console.log("Received:", req.body);
+ const { date, steps = 0, workout = [], cardio = [] } = req.body;
+  const userId = req.userId;
+
   try {
-    const { type, name, duration } = req.body;
-    const userId = req.userId;
+    const log = await Exercise.findOneAndUpdate(
+      { userId, date },
+      {
+        $set: { steps },
+        $push: {
+          workout: { $each: workout },
+          cardio: { $each: cardio }
+        }
+      },
+      { upsert: true, new: true }
+    );
 
-    let caloriesBurned = 0;
-
-    if (type === "cardio" && duration) {
-      const user = await User.findById(userId);
-      const exercise = exerciseList.find((ex) => ex.name === name);
-      const weight = user?.weight;
-      const met = exercise?.met;
-
-      if (met && duration && weight) {
-        caloriesBurned = (met * weight * (duration / 60)).toFixed(2);
-      }
-    }
-
-    const exerciseLog = new Exercise({
-      ...req.body,
-      userId,
-      caloriesBurned: Number(caloriesBurned), // ensure it's a number
-    });
-
-    const saved = await exerciseLog.save();
-    res.status(201).json(saved);
-  } catch (err) {
-    console.error("Error saving exercise:", err.message);
-    res.status(400).json({ error: err.message });
+    res.status(200).json(log);
+  } catch (error) {
+    console.error("Log exercise error:", error);
+    res.status(500).json({ message: "Failed to save exercise log" });
   }
 };
 
-
 export const getExercises = async (req, res) => {
   try {
-    const exercises = await Exercise.find({ userId: req.userId }).sort({ date: -1 });
+    const exercises = await Exercise.find({ userId: req.userId }).sort({
+      date: -1,
+    });
     res.status(200).json(exercises);
   } catch (err) {
     res.status(500).json({ message: err.message });

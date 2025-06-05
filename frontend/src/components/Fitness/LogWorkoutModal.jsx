@@ -4,18 +4,20 @@ import { logExercise } from "../../api/ExerciseApi";
 const LogWorkoutModal = ({ show, onClose, workout, log, setLog, onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = {
-      type: "workout",
-      name: workout,
+    await onSubmit({
       date: log.date,
-      startTime: log.time,
-      sets: Number(log.sets),
-      reps: Number(log.reps),
-      duration: null, // Explicitly null for cardio-only field
-    };
+      steps: 0,
+      workout: [
+        {
+          name: workout,
+          startTime: log.time,
+          sets: Number(log.sets),
+          reps: Number(log.reps),
+        },
+      ],
+      cardio: [],
+    });
 
-    console.log("Submitting:", data);
-    await onSubmit(data);
     onClose();
   };
 

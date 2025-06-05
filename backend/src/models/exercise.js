@@ -1,20 +1,25 @@
 import mongoose from "mongoose";
 
-const exerciseLogSchema = mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  type: { type: String, enum: ["cardio", "workout"], required: true },
-  name: { type: String, required: true },
-  date: { type: String, required: true },
-  startTime: { type: String, required: true },
-
-  // Cardio fields
-  duration: Number,
-  caloriesBurned: Number,
-
-  // Workout fields
+const workoutSchema = new mongoose.Schema({
+  name: String,
+  startTime: String,
   sets: Number,
   reps: Number,
 });
 
-const Exercise = mongoose.model("ExerciseLog", exerciseLogSchema);
-export default Exercise;
+const cardioSchema = new mongoose.Schema({
+  name: String,
+  startTime: String,
+  duration: Number,
+  caloriesBurned: Number,
+});
+
+const exerciseLogSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  date: { type: String, required: true }, 
+  steps: { type: Number, default: 0 },
+  workout: [workoutSchema],
+  cardio: [cardioSchema],
+});
+
+export default mongoose.model("ExerciseLog", exerciseLogSchema);

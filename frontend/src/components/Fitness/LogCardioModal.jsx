@@ -5,14 +5,18 @@ const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await onSubmit({
-      type: "cardio",
-      name: cardio,
       date: log.date,
-      startTime: log.time,
-      duration: Number(log.duration),
-      sets: null,
-      reps: null,
+      steps: 0,
+      cardio: [
+        {
+          name: cardio,
+          startTime: log.time,
+          duration: Number(log.duration),
+        },
+      ],
+      workout: [],
     });
+
     onClose();
   };
 
