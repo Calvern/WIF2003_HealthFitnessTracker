@@ -16,24 +16,15 @@ export const logExercise = async (exerciseData) => {
   return res.json();
 };
 
-export const useFetchExercises = () => {
-  const fetchExercisesRequest = async () => {
-    const res = await fetch(`${API_BASE_URL}/api/exercises`, {
-      credentials: "include",
-    });
-    if (!res.ok) throw new Error("Failed to fetch exercises");
-    return res.json();
-  };
-
-  const { data: activitiesData, isPending } = useQuery({
-    queryKey: ["fetchExercises"],
-    queryFn: fetchExercisesRequest,
+export const fetchExercisesRequest = async () => {
+  const res = await fetch(`${API_BASE_URL}/api/exercises`, {
+    credentials: "include",
   });
 
-  return {
-    activitiesData,
-    isPending
-  }
+  if (!res.ok) throw new Error("Failed to fetch exercises");
+
+  const data = await res.json();
+  return flattenExercises(data);
 };
 
 export const setDailyTarget = async (targetData) => {
@@ -52,4 +43,35 @@ export const setDailyTarget = async (targetData) => {
   }
 
   return res.json();
+};
+
+const flattenExercises = (data) => {
+  const allActivities = [];
+
+  data.forEach((entry) => {
+    const { date, cardio = [], workout = [] } = entry;
+
+    cardio.forEach((c) => {
+      allActivities.push({
+        ...c,
+        type: "cardio",
+        date, // attach parent date
+      });
+    });
+
+    workout.forEach((w) => {
+      allActivities.push({
+        ...w,
+        type: "workout",
+        date,
+      });
+    });
+  });
+
+  return allActivities.sort((a, b) => {
+    // sort by date and then startTime (optional)
+    const dateCompare = new Date(b.date) - new Date(a.date);
+    if (dateCompare !== 0) return dateCompare;
+    return a.startTime?.localeCompare(b.startTime ?? "") ?? 0;
+  });
 };

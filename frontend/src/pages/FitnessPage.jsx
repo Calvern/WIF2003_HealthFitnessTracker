@@ -14,6 +14,8 @@ const FitnessPage = () => {
   const [selectedWorkout, setSelectedWorkout] = useState(null);
   const [showWorkoutModal, setShowWorkoutModal] = useState(false);
   const [showCardioModal, setShowCardioModal] = useState(false);
+  const [selectedLog, setSelectedLog] = useState(null);
+
 
   const [cardioLog, setCardioLog] = useState({
     date: "",

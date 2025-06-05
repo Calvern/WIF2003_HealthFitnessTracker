@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Card, ButtonGroup, ToggleButton } from "react-bootstrap";
 import { GiWeightLiftingUp } from "react-icons/gi";
 import { GrYoga } from "react-icons/gr";
 import { format, isWithinInterval, subDays, parseISO } from "date-fns";
-import { useFetchExercises } from "../../api/ExerciseApi";
+import { fetchExercisesRequest } from "../../api/ExerciseApi";
 
 const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
-  const { activitiesData, isPending } = useFetchExercises();
+const useExercises = () => {
+  return useQuery({
+    queryKey: ["exercises"],
+    queryFn: fetchExercisesRequest,
+  });
+};
+const { data: activitiesData = [], isPending } = useExercises();
+
   const [selectedRange, setSelectedRange] = useState("7D");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [loading, setLoading] = useState(isPending);
-  const [error, setError] = useState(null);
 
   const dateRanges = [
     { value: "today", label: "Today" },
@@ -18,14 +24,13 @@ const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
     { value: "7D", label: "7D" },
     { value: "30D", label: "30D" },
     { value: "All", label: "All" },
-    // { value: "6M", label: "6M" },
   ];
 
   const categoryOptions = ["All", "Workout", "Cardio"];
 
   const getFilteredActivities = () => {
     const now = new Date();
-    let filtered = activitiesData;
+    let filtered = activitiesData || [];
 
     if (showToggle) {
       switch (selectedRange) {
@@ -59,25 +64,6 @@ const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
             })
           );
           break;
-        // case "All":
-        //   filtered = activitiesData;
-        //   break;
-        // case "3M":
-        //   filtered = filtered.filter((a) =>
-        //     isWithinInterval(parseISO(a.date), {
-        //       start: subDays(now, 90),
-        //       end: now,
-        //     })
-        //   );
-        //   break;
-        // case "6M":
-        //   filtered = filtered.filter((a) =>
-        //     isWithinInterval(parseISO(a.date), {
-        //       start: subDays(now, 180),
-        //       end: now,
-        //     })
-        //   );
-        //   break;
         default:
           break;
       }
