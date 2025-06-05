@@ -30,7 +30,7 @@ const MainNavBar = () => {
     <>
       <Navbar
         expand={true}
-        className="py-3"
+        className="py-3 sticky-top shadow-sm"
         style={{ backgroundColor: "#0A2239" }}
       >
         <Container>

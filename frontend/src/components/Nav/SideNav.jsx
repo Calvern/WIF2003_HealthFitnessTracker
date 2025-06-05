@@ -2,11 +2,14 @@ import { useState } from "react";
 import { Button, Collapse, Nav, Offcanvas } from "react-bootstrap";
 import { CaretDownFill, CaretRightFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
+import Icon from "../../assets/Icon1.png";
 
-const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
+const SideNav = ({ showOffcanvas, setShowOffcanvas, isLoggedIn }) => {
   const [openFitness, setOpenFitness] = useState(false);
   const [openNutrition, setOpenNutrition] = useState(false);
   const [openPerformance, setOpenPerformance] = useState(false);
+  const handleCloseSidebar = () => setShowOffcanvas(false);
+
   return (
     <Offcanvas
       show={showOffcanvas}
@@ -15,18 +18,35 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
       style={{ backgroundColor: "#0A2239" }}
     >
       <Offcanvas.Header closeButton>
-        <Offcanvas.Title className="text-white">
-          React-Bootstrap
+        <Offcanvas.Title>
+          <img
+            src={Icon}
+            style={{ width: "100%", maxWidth: "120px", objectFit: "cover" }}
+          />
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        {isAuthenticated && (
+        {isLoggedIn && (
           <Nav className="flex-column gap-3">
-            <Nav.Link as={Link} className="text-white" to="/home">
+            <Nav.Link
+              as={Link}
+              className="text-white"
+              to="/home"
+              onClick={handleCloseSidebar}
+            >
               Home
             </Nav.Link>
-            <div>
-              <Button
+
+            <Nav.Link
+              as={Link}
+              className="text-white"
+              to="/fitness"
+              onClick={handleCloseSidebar}
+            >
+              Fitness
+            </Nav.Link>
+            {/* <div> */}
+              {/* <Button
                 className="w-100 text-white text-start px-3 py-2 d-flex justify-content-between"
                 style={{ backgroundColor: "transparent", border: "none" }}
                 onClick={() => setOpenFitness((prevState) => !prevState)}
@@ -35,30 +55,38 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
                 <span>
                   {openFitness ? <CaretDownFill /> : <CaretRightFill />}
                 </span>
-              </Button>
-              <Collapse in={openFitness}>
+              </Button> */}
+              {/* <Collapse in={openFitness}>
                 <div>
                   <Nav className="flex-column px-2">
                     <Nav.Link
                       as={Link}
                       className="side-nav-link"
-                      to="/workouts"
+                      to="/fitness-exercise-diary"
+                      onClick={handleCloseSidebar}
                     >
                       Exercise Diary
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
-                      Log Steps
-                    </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/fitness-log-workout"
+                      onClick={handleCloseSidebar}
+                    >
                       Log Workout
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/fitness-log-cardio"
+                      onClick={handleCloseSidebar}
+                    >
                       Log Cardio
                     </Nav.Link>
                   </Nav>
                 </div>
-              </Collapse>
-            </div>
+              </Collapse> */}
+            {/* </div> */}
 
             <div>
               <Button
@@ -77,14 +105,25 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
                     <Nav.Link
                       as={Link}
                       className="side-nav-link"
-                      to="/workouts"
+                      to="/food-diary"
+                      onClick={handleCloseSidebar}
                     >
                       Food Diary
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/search-meal"
+                      onClick={handleCloseSidebar}
+                    >
                       Search for Meals
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/meal-favourites"
+                      onClick={handleCloseSidebar}
+                    >
                       Favourites
                     </Nav.Link>
                   </Nav>
@@ -109,14 +148,25 @@ const SideNav = ({ showOffcanvas, setShowOffcanvas, isAuthenticated }) => {
                     <Nav.Link
                       as={Link}
                       className="side-nav-link"
-                      to="/workouts"
+                      to="/steps"
+                      onClick={handleCloseSidebar}
                     >
                       Steps
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/cardio-vs-workout"
+                      onClick={handleCloseSidebar}
+                    >
                       Cardio vs Workout
                     </Nav.Link>
-                    <Nav.Link as={Link} className="side-nav-link">
+                    <Nav.Link
+                      as={Link}
+                      className="side-nav-link"
+                      to="/calorie-burned"
+                      onClick={handleCloseSidebar}
+                    >
                       Calories Burned
                     </Nav.Link>
                   </Nav>

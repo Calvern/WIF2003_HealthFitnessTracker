@@ -1,5 +1,6 @@
 body {
     font-family: "PT Sans", sans-serif;
+    background-color: #F3F3F5;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -70,6 +71,7 @@ p {
 
 .meal-list.active {
     background-color: #507DBC;
+    border: none
 }
 
 .workout-list.active {
@@ -152,9 +154,57 @@ p {
   outline: none !important;
   color: red !important;
 }
+  
 
+.progress .progress-bar{
+    background-color: #A1C6EA;
+}
 
+.notification-popover-item:hover {
+    background-color: #f0f0f0; /* or any hover color you want */
+    font-weight: bold; /* optional: text color on hover */
+    border-radius: 5px;
+    transform: scale(1.1);
+  }
 
+  .custom-tabs .nav-link {
+    color: #507DBC; /* Brand color */
+    font-weight: 500;
+  }
+  
+  .custom-tabs .nav-link.active {
+    color: #507DBC;           /* Black when active */
+    font-weight: bold;     /* Bold text when active */
+  }
+
+  .responsive-grid {
+    display: grid;
+    gap: 4rem;
+    grid-template-columns: 1fr; /* default: 1 column */
+    place-items: center;
+  }
+  
+  @media (min-width: 768px) {
+    .responsive-grid {
+      grid-template-columns: 1fr 1fr; /* md: 2 columns */
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .responsive-grid {
+      grid-template-columns: 1fr 1fr 1fr; /* lg: 3 columns */
+    }
+  }
+
+ 
+  
+.card::-webkit-scrollbar {
+  width: 6px;
+}
+.card::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
 
 
 

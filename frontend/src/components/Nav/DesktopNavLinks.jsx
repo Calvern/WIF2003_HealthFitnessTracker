@@ -1,25 +1,30 @@
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Icon from "../../assets/Icon1.png";
 
 const DesktopNavLinks = () => {
   return (
-    <Nav className="gap-3">
+    <Nav className="gap-3 align-items-center">
       <Navbar.Brand as={Link} className="text-white" to="/home">
-        React-Bootstrap
+        <img
+          src={Icon}
+          style={{ width: "100%", maxWidth: "120px", objectFit: "cover" }}
+        />
       </Navbar.Brand>{" "}
       <Nav.Link as={Link} className="text-white fw-bold" to="/home">
         Home
       </Nav.Link>
-      <NavDropdown
+      <Nav.Link as={Link} className="text-white fw-bold" to="/fitness">
+        Fitness
+      </Nav.Link>
+
+      {/* <NavDropdown
         className="main-nav-dropdown"
         title="Fitness"
         id="nav-fitness"
-      >
-        <NavDropdown.Item as={Link} to="/fitness-exercise-diary">
-          Exercise Diary
-        </NavDropdown.Item>
-        <NavDropdown.Item as={Link} to="/fitness-log-steps">
-          Log Steps
+      > */}
+        {/* <NavDropdown.Item as={Link} to="/fitness">
+          Fitness
         </NavDropdown.Item>
         <NavDropdown.Item as={Link} to="/fitness-log-workout">
           Log Workout
@@ -27,7 +32,7 @@ const DesktopNavLinks = () => {
         <NavDropdown.Item as={Link} to="/fitness-log-cardio">
           Log Cardio
         </NavDropdown.Item>
-      </NavDropdown>
+      </NavDropdown> */}
       <NavDropdown
         className="main-nav-dropdown"
         title="Nutrition"
@@ -48,13 +53,13 @@ const DesktopNavLinks = () => {
         title="Performance"
         id="nav-performance"
       >
-        <NavDropdown.Item as={Link} to="/performance-steps">
+        <NavDropdown.Item as={Link} to="/steps">
           Steps
         </NavDropdown.Item>
-        <NavDropdown.Item as={Link} to="/performance-cardio-vs-workout">
+        <NavDropdown.Item as={Link} to="/cardio-vs-workout">
           Cardio vs Workout
         </NavDropdown.Item>
-        <NavDropdown.Item as={Link} to="/performance-calories-burned">
+        <NavDropdown.Item as={Link} to="/calorie-burned">
           Calories Burned
         </NavDropdown.Item>
       </NavDropdown>

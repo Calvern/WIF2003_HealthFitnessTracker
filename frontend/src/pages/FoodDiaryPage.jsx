@@ -81,9 +81,9 @@ const FoodDiaryPage = () => {
     <Container className="py-5">
       <CalendarForm />
       <Row className="mt-5">
-        <Col className="d-flex align-foods-center" xs={6}>
+        <Col className="d-flex align-foods-center" xs={4} md={6}>
           <Button
-            className="rounded-4 px-4 py-2"
+            className="rounded-4 px-4 py-2 border border-0"
             style={{ backgroundColor: "#176087" }}
             onClick={handleShow}
           >
@@ -91,7 +91,7 @@ const FoodDiaryPage = () => {
           </Button>
           <RecommendModal show={show} handleClose={handleClose} />
         </Col>
-        <Col xs={6}>
+        <Col xs={8} md={6}>
           <Row>
             {["Calories", "Carbs", "Fat", "Protein"].map((label, i) => (
               <Col
@@ -113,12 +113,16 @@ const FoodDiaryPage = () => {
       <MealSection title="Dinner" foodData={dummyFoodData.dinner} />
 
       <Row className="mt-5">
-        <Col className="d-flex justify-content-end align-foods-center" xs={6}>
+        <Col
+          className="d-flex justify-content-end align-foods-center"
+          xs={4}
+          md={6}
+        >
           <h3 className="m-0 fw-bold" style={{ color: "#176087" }}>
             Total
           </h3>
         </Col>
-        <Col xs={6}>
+        <Col xs={8} md={6}>
           <Row style={{ backgroundColor: "#DAE3E5" }}>
             <Col
               xs={3}
@@ -149,12 +153,16 @@ const FoodDiaryPage = () => {
       </Row>
 
       <Row>
-        <Col className="d-flex justify-content-end align-foods-center" xs={6}>
+        <Col
+          className="d-flex justify-content-end align-foods-center"
+          xs={4}
+          md={6}
+        >
           <h3 className="m-0 fw-bold" style={{ color: "#176087" }}>
             Target
           </h3>
         </Col>
-        <Col xs={6}>
+        <Col xs={8} md={6}>
           <Row>
             <Col
               xs={3}
@@ -168,12 +176,16 @@ const FoodDiaryPage = () => {
       </Row>
 
       <Row>
-        <Col className="d-flex justify-content-end align-foods-center" xs={6}>
+        <Col
+          className="d-flex justify-content-end align-foods-center"
+          xs={4}
+          md={6}
+        >
           <h3 className="m-0 fw-bold" style={{ color: "#176087" }}>
             Remaining
           </h3>
         </Col>
-        <Col xs={6}>
+        <Col xs={8} md={6}>
           <Row>
             <Col
               xs={3}

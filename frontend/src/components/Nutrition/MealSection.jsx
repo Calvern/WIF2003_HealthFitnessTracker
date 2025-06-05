@@ -21,7 +21,7 @@ const MealSection = ({ title, foodData }) => {
         <MealEntries key={index} {...foodItem} />
       ))}
       <Row className="mt-2">
-        <Col xs={6}>
+        <Col xs={4} md={6}>
           <Link
             to="/search-meal"
             style={{ textDecoration: "none", color: "#176087" }}
@@ -29,7 +29,7 @@ const MealSection = ({ title, foodData }) => {
             Add Food
           </Link>
         </Col>
-        <Col xs={6}>
+        <Col xs={8} md={6}>
           <Row className="text-center">
             {["calories", "carbs", "fat", "protein"].map((key, idx) => (
               <Col xs={3} key={idx}>

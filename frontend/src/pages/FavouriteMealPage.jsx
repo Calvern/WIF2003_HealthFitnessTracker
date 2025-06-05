@@ -1,4 +1,4 @@
-import { Container, Pagination } from "react-bootstrap";
+import { Col, Container, Pagination, Row } from "react-bootstrap";
 import MealCard from "../components/Nutrition/MealCard";
 import { useState } from "react";
 import AddMealModal from "../components/Nutrition/AddMealModal";
@@ -18,10 +18,14 @@ const FavouriteMealPage = () => {
     <Container className="mt-5">
       <AddMealModal show={showAddDiary} handleClose={handleCloseAddDiary} />
 
-      <h2 className="fw-bold ">Your favourites meals</h2>
-      <MealCard handleShowAddDiary={handleShowAddDiary} />
-      <MealCard handleShowAddDiary={handleShowAddDiary} />
-      <MealCard handleShowAddDiary={handleShowAddDiary} />
+      <h2 className="fw-bold mb-5">Your favourites meals</h2>
+      <div className="responsive-grid">
+        <MealCard handleShowAddDiary={handleShowAddDiary} isFavourite={true} />
+        <MealCard handleShowAddDiary={handleShowAddDiary} isFavourite={true} />
+        <MealCard handleShowAddDiary={handleShowAddDiary} isFavourite={true} />
+        <MealCard handleShowAddDiary={handleShowAddDiary} isFavourite={true} />
+        <MealCard handleShowAddDiary={handleShowAddDiary} isFavourite={true} />
+      </div>
       <div className="w-100 d-flex justify-content-center">
         <Pagination className="mt-3">
           {items.map((pageNumber) => (

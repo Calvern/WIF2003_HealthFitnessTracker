@@ -1,61 +1,35 @@
-import { Card, ListGroup } from "react-bootstrap";
+import { ListGroup } from "react-bootstrap";
 
-const CardioList = () => {
+const ExrciseList = ({ onItemClick }) => {
+  const cardioWorkouts = [
+    "Running",
+    "Walking",
+    "Jogging",
+    "Cycling",
+    "Hiking",
+    "Swimming",
+    
+  ];
+
   return (
     <>
-      <h5 className="mt-5 fw-bold">Matching Cardio</h5>
+      <h5 className="mt-5 fw-bold">Matching Searches</h5>
       <ListGroup as="ul">
-        <ListGroup.Item
-          className="workout-list"
-          as="li"
-          eventKey="Push-Ups"
-          action
-        >
-          Running
-        </ListGroup.Item>
-        <ListGroup.Item
-          className="workout-list"
-          as="li"
-          eventKey="Pull-Ups"
-          action
-        >
-          Walking
-        </ListGroup.Item>
-        <ListGroup.Item
-          className="workout-list"
-          as="li"
-          eventKey="Squats"
-          action
-        >
-          Jogging
-        </ListGroup.Item>
-        <ListGroup.Item
-          className="workout-list"
-          as="li"
-          eventKey="Lunges"
-          action
-        >
-          Cycling
-        </ListGroup.Item>
-        <ListGroup.Item
-          className="workout-list"
-          as="li"
-          eventKey="Deadlifts"
-          action
-        >
-          Hiking
-        </ListGroup.Item>
-        <ListGroup.Item
-          className="workout-list"
-          as="li"
-          eventKey="Bench Press"
-          action
-        >
-          Swimming
-        </ListGroup.Item>
+        {cardioWorkouts.map((exercise) => (
+          <ListGroup.Item
+            key={exercise}
+            className="workout-list"
+            as="li"
+            eventKey={exercise}
+            action
+            onClick={() => onItemClick && onItemClick(exercise)}
+          >
+            {exercise}
+          </ListGroup.Item>
+        ))}
       </ListGroup>
     </>
   );
 };
 
-export default CardioList;
+export default ExrciseList;

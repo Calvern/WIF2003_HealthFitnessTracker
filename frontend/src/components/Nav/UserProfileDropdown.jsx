@@ -1,7 +1,10 @@
-import { Dropdown, Image } from "react-bootstrap";
+import { Button, Dropdown, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useAppContext } from "../../contexts/AppContext";
+import { useSignOutUser } from "../../api/AuthApi";
 
 const UserProfileDropdown = ({ progress }) => {
+  const {signOut} = useSignOutUser();
   return (
     <Dropdown drop="down-centered" align="end">
       <Dropdown.Toggle
@@ -25,10 +28,7 @@ const UserProfileDropdown = ({ progress }) => {
         <Dropdown.Item as={Link} to="/profile">
           My Profile
         </Dropdown.Item>
-        <Dropdown.Item as={Link} to="/settings">
-          Settings
-        </Dropdown.Item>
-        <Dropdown.Item as={Link} to="/logout">
+        <Dropdown.Item as={Button} onClick={signOut}>
           Logout
         </Dropdown.Item>
       </Dropdown.Menu>

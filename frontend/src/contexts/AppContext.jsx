@@ -1,17 +1,17 @@
 import { createContext, useContext, useState } from "react";
 import CustomToast from "../components/CustomToast";
 import { ToastContainer } from "react-bootstrap";
+import { useValidateToken } from "../api/AuthApi";
 
 const AppContext = createContext(undefined);
 
 export const AppContextProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const { isError } = useValidateToken();
   const [toast, setToast] = useState(undefined);
   return (
     <AppContext.Provider
       value={{
-        isLoggedIn,
-        setIsLoggedIn,
+        isLoggedIn: !isError,
         showToast: (toastMessage) => {
           setToast(toastMessage);
         },
