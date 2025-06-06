@@ -177,7 +177,7 @@ const AppRoutes = () => {
         />
 
         <Route
-          path="meal-favourites/:foodId"
+          path="meal-detail/:mealId"
           element={
             <Layout>
               <FoodDetailsPage />

@@ -2,9 +2,10 @@ import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppContext } from "../contexts/AppContext";
 import { useForm } from "react-hook-form";
 import { useRegister } from "../api/UsersApi";
+
+
 
 const RegisterPage = () => {
   const { registerUser } = useRegister();
