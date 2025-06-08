@@ -1,14 +1,21 @@
 import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateExercise } from "../../api/ExerciseApi";
+import { updateCardioExercise, deleteExercise } from "../../api/ExerciseApi";
 
-const CardioDetailsModal = ({ show, onClose, log, setLog, onSubmit }) => {
+const CardioDetailsModal = ({
+  show,
+  onClose,
+  log,
+  setLog,
+  onSubmit,
+  onDelete,
+}) => {
   const [editMode, setEditMode] = useState(false);
   const queryClient = useQueryClient();
 
   const { mutate: editExercise } = useMutation({
-    mutationFn: updateExercise,
+    mutationFn: updateCardioExercise,
     onSuccess: () => {
       queryClient.invalidateQueries(["exercises"]);
     },
@@ -30,6 +37,20 @@ const CardioDetailsModal = ({ show, onClose, log, setLog, onSubmit }) => {
 
     setEditMode(false);
     onClose();
+  };
+
+  const { mutate: removeExercise } = useMutation({
+    mutationFn: deleteExercise,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["exercises"]); // Refresh the list
+    },
+    onError: (err) => {
+      console.error("Delete failed:", err.message);
+    },
+  });
+
+  const handleDelete = (id) => {
+    removeExercise(id);
   };
 
   return (
@@ -106,7 +127,9 @@ const CardioDetailsModal = ({ show, onClose, log, setLog, onSubmit }) => {
                 >
                   Edit
                 </Button>
-                <Button variant="danger">Remove</Button>
+                <Button variant="danger" onClick={handleDelete}>
+                  Remove
+                </Button>
               </div>
             </Modal.Footer>
           </>

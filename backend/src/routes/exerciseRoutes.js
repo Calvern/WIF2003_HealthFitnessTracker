@@ -8,7 +8,7 @@ import {
   fetchCardioDuration, 
   fetchCaloriesBurned,
   fetchWeeklySummary,
-  updateExercise,
+  updateCardioExercise,
 } from "../controllers/exerciseController.js";
 import { verifyToken } from "../middlewares/auth.js";
 
@@ -22,6 +22,6 @@ router.get("/steps/today", verifyToken, fetchSteps);
 router.get("/cardio/duration", verifyToken, fetchCardioDuration);
 router.get("/calories/burned", verifyToken, fetchCaloriesBurned);
 router.get("/summary/weekly", verifyToken, fetchWeeklySummary);
-router.put("/update/:id", verifyToken, updateExercise);
+router.put("/update/cardio/:id", verifyToken, updateCardioExercise);
 
 export default router;

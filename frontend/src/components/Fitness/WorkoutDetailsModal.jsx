@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteExercise } from "../../api/ExerciseApi";
 
-const WorkoutDetailsModal = ({ show, onClose, log, setLog, onSubmit }) => {
-  console.log(" entry clicked:", log);
+const WorkoutDetailsModal = ({ show, onClose, log, setLog, onSubmit, onDelete }) => {
+  const queryClient = useQueryClient();
 
   const [editMode, setEditMode] = useState(false);
 
@@ -10,6 +12,21 @@ const WorkoutDetailsModal = ({ show, onClose, log, setLog, onSubmit }) => {
     e.preventDefault();
     onSubmit(); // Call parent handler
     setEditMode(false); // Return to view mode
+  };
+
+  const { mutate: removeExercise } = useMutation({
+    mutationFn: deleteExercise,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["exercises"]); // Refresh the list
+    },
+    onError: (err) => {
+      console.error("Delete failed:", err.message);
+    },
+  });
+
+  const handleDelete = (id) => {
+    removeExercise(id);
+    onClose();
   };
 
   return (
@@ -100,7 +117,8 @@ const WorkoutDetailsModal = ({ show, onClose, log, setLog, onSubmit }) => {
                 >
                   Edit
                 </Button>
-                <Button variant="danger">
+                <Button variant="danger"
+                  onClick={handleDelete}>
                   Remove
                 </Button>
               </div>

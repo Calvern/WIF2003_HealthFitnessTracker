@@ -152,9 +152,9 @@ export const fetchWeeklyAverages = async () => {
   return data;
 };
 
-export const updateExercise = async ({ id, data }) => {
+export const updateCardioExercise = async ({ id, data }) => {
   console.log("Updating exercise:", id, data);
-  const res = await fetch(`${API_BASE_URL}/api/exercises/update/${id}`, {
+  const res = await fetch(`${API_BASE_URL}/api/exercises/update/cardio/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -167,3 +167,16 @@ export const updateExercise = async ({ id, data }) => {
 
   return res.json();
 };
+
+export async function deleteExercise(id) {
+  const response = await fetch(`/api/exercises/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete exercise");
+  }
+
+  return response.json();
+}
+

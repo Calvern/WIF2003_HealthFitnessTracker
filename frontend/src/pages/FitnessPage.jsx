@@ -1,4 +1,4 @@
-import SearchBar from "../components/Nutrition/SearchBar";
+import SearchBar from "../components/Fitness/Search";
 import ActivitiesDoneCard from "../components/Home/ActivitiesDoneList";
 import WorkoutDetailsModal from "../components/Fitness/WorkoutDetailsModal";
 import CardioDetailsModal from "../components/Fitness/CardioDetailsModal";
@@ -128,6 +128,7 @@ const FitnessPage = () => {
               log={selectedLog}
               setLog={setSelectedLog}
               onSubmit={handleCardioDetailsSubmit}
+              onDelete={handleWorkoutDelete}
             />
           )}
         </div>
