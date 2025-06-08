@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { useQuery } from "@tanstack/react-query";
-import { fetchSteps, fetchCardioDuration } from "../../api/ExerciseApi";
+import {
+  fetchSteps,
+  fetchCardioDuration,
+  fetchCaloriesBurned,
+} from "../../api/ExerciseApi";
 import { getUserGoals } from "../../api/UsersApi";
 import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
 import SetTargetModal from "./SetTargetModal";
@@ -26,9 +30,14 @@ const StepsCard = () => {
   });
 
   const { data: cardioData } = useQuery({
-  queryKey: ["cardioDuration"],
-  queryFn: fetchCardioDuration,
-});
+    queryKey: ["cardioDuration"],
+    queryFn: fetchCardioDuration,
+  });
+
+  const { data: caloriesData } = useQuery({
+    queryKey: ["caloriesBurned"],
+    queryFn: fetchCaloriesBurned,
+  });
 
   const [showSetTargetModal, setShowSetTargetModal] = useState(false);
   const [showLogStepsModal, setShowLogStepsModal] = useState(false);
@@ -44,13 +53,16 @@ const StepsCard = () => {
 
   useEffect(() => {
     if (todaySteps) {
-      setSteps(todaySteps.steps);
+      setSteps(todaySteps.steps || 0);
       setGoal(userGoals.steps);
       setMinutesGoal(userGoals.activity);
       setCaloriesGoal(userGoals.calories);
       setActiveMinutes(cardioData || 100);
+      setCalories(caloriesData || 0);
     }
   }, [todaySteps]);
+  
+  console.log("Today calories Data:", caloriesData);
 
   const chartMap = {
     steps: {
@@ -66,7 +78,7 @@ const StepsCard = () => {
       label: "min",
     },
     calories: {
-      value: 1000,
+      value: calories,
       goal: caloriesGoal,
       color: "#F4A259",
       label: "kcal",
@@ -85,7 +97,6 @@ const StepsCard = () => {
       },
     ],
   };
-  console.log("Doughnut Data", doughnutData);
 
   const chartOptions = {
     cutout: "70%",

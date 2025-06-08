@@ -102,11 +102,28 @@ export const fetchSteps = async () => {
 };
 
 export const fetchCardioDuration = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/exercises/cardio/duration`, {
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${API_BASE_URL}/api/exercises/cardio/duration`,
+    {
+      credentials: "include",
+    }
+  );
 
   const data = await response.json();
 
   return data.totalDuration || 0;
+};
+
+export const fetchCaloriesBurned = async () => {
+  const response = await fetch(
+    `${API_BASE_URL}/api/exercises/calories/burned`,
+    {
+      credentials: "include",
+    }
+  );
+
+  const data = await response.json();
+  console.log("Fetcheddddd Calories Data:", data.totalCalories);
+
+  return data.totalCalories || 0;
 };

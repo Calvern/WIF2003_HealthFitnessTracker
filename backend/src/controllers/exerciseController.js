@@ -3,18 +3,38 @@ import User from "../models/user.js";
 import exerciseList from "../../../frontend/src/data/exerciseList.js";
 
 export const createExercise = async (req, res) => {
- const { date, steps = 0, workout = [], cardio = [] } = req.body;
+  const { date, steps = 0, workout = [], cardio = [] } = req.body;
   const userId = req.userId;
 
   try {
+    // Fetch user weight from database
+    const user = await User.findById(userId);
+    const weight = user?.weight || 0;
+
+    // Process cardio array to calculate calories burned
+    const processedCardio = cardio.map((item) => {
+      const exerciseMeta = exerciseList.find(
+        (ex) => ex.name.toLowerCase() === item.name.toLowerCase()
+      );
+
+      const MET = exerciseMeta?.met || 0; // Default MET = 100 if not found
+      const duration = item.duration || 0; // in minutes
+      const caloriesBurned = (MET * 3.5 * weight * duration) / 200;
+
+      return {
+        ...item,
+        caloriesBurned: Math.round(caloriesBurned),
+      };
+    });
+
     const log = await Exercise.findOneAndUpdate(
       { userId, date },
       {
         $set: { steps },
         $push: {
           workout: { $each: workout },
-          cardio: { $each: cardio }
-        }
+          cardio: { $each: processedCardio },
+        },
       },
       { upsert: true, new: true }
     );
@@ -90,7 +110,6 @@ export const fetchSteps = async (req, res) => {
     const today = new Date().toISOString().split("T")[0];
 
     const entry = await Exercise.findOne({ userId, date: today });
-    console.log("Fetched Steps Entry:", entry);
 
     res.json(entry);
   } catch (err) {
@@ -117,4 +136,28 @@ export const fetchCardioDuration = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const fetchCaloriesBurned = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const today = new Date().toISOString().split("T")[0];
+
+    const log = await Exercise.findOne({ userId, date: today });
+
+    if (!log || !log.cardio || log.cardio.length === 0) {
+      return res.json({ totalCalories: 0 });
+    }
+
+    const totalCalories = log.cardio.reduce(
+      (sum, entry) => sum + (entry.caloriesBurned || 0),
+      0
+    );
+
+    res.json({ totalCalories });
+  } catch (error) {
+    console.error("Error fetching calories burned:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 

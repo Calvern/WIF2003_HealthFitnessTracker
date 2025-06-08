@@ -31,8 +31,6 @@ const FitnessPage = () => {
   });
 
   const handleCardioSubmit = async (log) => {
-    console.log("Cardio Activity:", selectedCardio);
-    console.log("Log:", log);
     setSelectedCardio(null);
     setCardioLog({ date: "", time: "", duration: "" });
 
@@ -46,8 +44,6 @@ const FitnessPage = () => {
   };
 
   const handleWorkoutSubmit = async (log) => {
-    console.log("Workout Activity:", selectedWorkout);
-    console.log("Log:", log);
     setSelectedWorkout(null);
     setWorkoutLog({ date: "", time: "", sets: "", reps: "" });
 
