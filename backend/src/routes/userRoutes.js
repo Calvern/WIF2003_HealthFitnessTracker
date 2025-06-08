@@ -1,5 +1,6 @@
 import express from "express";
 import userController from "../controllers/userController.js";
+import { getUserGoals } from "../controllers/userController.js";
 import { validateUserRegisterRequest } from "../middlewares/validation.js";
 import { verifyToken } from "../middlewares/auth.js";
 import multer from "multer"
@@ -31,5 +32,7 @@ router.put(
   verifyToken,
   userController.registerMyUserPhysicalInfo
 );
+
+router.get("/goals", verifyToken, getUserGoals);
 
 export default router;

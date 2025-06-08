@@ -85,7 +85,7 @@ export const logDailySteps = async (stepData) => {
 };
 
 export const fetchSteps = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/exercises/steps/today`,{
+  const response = await fetch(`${API_BASE_URL}/api/exercises/steps/today`, {
     credentials: "include",
   });
 
@@ -100,3 +100,4 @@ export const fetchSteps = async () => {
     steps: todayEntry.steps || 0,
   };
 };
+

@@ -95,3 +95,24 @@ async function uploadImagesToCloudinary(imageFile) {
   const uploadResponse = await cloudinary.v2.uploader.upload(dataURI);
   return uploadResponse.url;
 }
+
+export const getUserGoals = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const user = await User.findById(userId).select(
+      "dailyTargetCalorie dailyTargetSteps dailyTargetActivity"
+    );
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json({
+      calories: user.dailyTargetCalorie || 0,
+      steps: user.dailyTargetSteps || 0,
+      activity: user.dailyTargetActivity || 0,
+    });
+  } catch (err) {
+    console.error("Error fetching user goals:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
