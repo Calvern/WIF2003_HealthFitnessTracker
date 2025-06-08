@@ -15,7 +15,8 @@ const FitnessPage = () => {
   const [showWorkoutModal, setShowWorkoutModal] = useState(false);
   const [showCardioModal, setShowCardioModal] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
-
+  const [searchTerm, setSearchTerm] = useState("");
+  
 
   const [cardioLog, setCardioLog] = useState({
     date: "",
@@ -83,6 +84,7 @@ const FitnessPage = () => {
       setShowWorkoutModal(true);
     } else {
       setSelectedLog({
+        id: activity._id,
         cardio: activity.name,
         duration: activity.duration,
         ...commonData,
@@ -168,8 +170,9 @@ const FitnessPage = () => {
               style={{ height: "350px", overflowY: "auto" }}
             >
               <h3 className="fw-bold my-3 text-center "> Log Exercise</h3>
-              <SearchBar width="100%" />
+              <SearchBar width="100%" onSearchChange={setSearchTerm} />
               <ExerciseSearchList
+                searchItem={searchTerm}
                 onCardioClick={(name) => setSelectedCardio(name)}
                 onWorkoutClick={(name) => setSelectedWorkout(name)}
               />

@@ -1,15 +1,35 @@
 import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateExercise } from "../../api/ExerciseApi";
 
 const CardioDetailsModal = ({ show, onClose, log, setLog, onSubmit }) => {
-    console.log(" entry clicked:", log);
-
   const [editMode, setEditMode] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { mutate: editExercise } = useMutation({
+    mutationFn: updateExercise,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["exercises"]);
+    },
+    onError: (err) => {
+      console.error("Update failed:", err.message);
+    },
+  });
 
   const handleSave = (e) => {
     e.preventDefault();
-    onSubmit(); // Call parent handler
-    setEditMode(false); // Return to view mode
+    editExercise({
+      id: log.id,
+      data: {
+        date: log.date,
+        startTime: log.startTime,
+        duration: log.duration,
+      },
+    });
+
+    setEditMode(false);
+    onClose();
   };
 
   return (
@@ -37,19 +57,19 @@ const CardioDetailsModal = ({ show, onClose, log, setLog, onSubmit }) => {
               <Form.Label>Start Time</Form.Label>
               <Form.Control
                 type="time"
-                value={log.time}
-                onChange={(e) => setLog({ ...log, time: e.target.value })}
+                value={log.startTime}
+                onChange={(e) => setLog({ ...log, startTime: e.target.value })}
                 required
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Duration</Form.Label>
+              <Form.Label>Duration (minutes)</Form.Label>
               <Form.Control
                 type="number"
                 min={0}
-                value={log.minutes}
-                onChange={(e) => setLog({ ...log, sets: e.target.value })}
+                value={log.duration}
+                onChange={(e) => setLog({ ...log, duration: e.target.value })}
                 required
               />
             </Form.Group>
@@ -65,9 +85,15 @@ const CardioDetailsModal = ({ show, onClose, log, setLog, onSubmit }) => {
           </Form>
         ) : (
           <>
-            <p><strong>Date:</strong> {log.date}</p>
-            <p><strong>Start Time:</strong> {log.time}</p>
-            <p><strong>Duration:</strong> {log.duration} minutes</p>
+            <p>
+              <strong>Date:</strong> {log.date}
+            </p>
+            <p>
+              <strong>Start Time:</strong> {log.time}
+            </p>
+            <p>
+              <strong>Duration:</strong> {log.duration} minutes
+            </p>
             <Modal.Footer className="d-flex justify-content-between">
               <Button variant="secondary" onClick={onClose}>
                 Close
@@ -80,9 +106,7 @@ const CardioDetailsModal = ({ show, onClose, log, setLog, onSubmit }) => {
                 >
                   Edit
                 </Button>
-                <Button variant="danger">
-                  Remove
-                </Button>
+                <Button variant="danger">Remove</Button>
               </div>
             </Modal.Footer>
           </>

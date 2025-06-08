@@ -62,13 +62,18 @@ const StepsCard = () => {
       setSummary(data);
     };
 
-    if (todaySteps) {
+    if (
+      todaySteps &&
+      userGoals &&
+      typeof cardioData !== "undefined" &&
+      typeof caloriesData !== "undefined"
+    ) {
       setSteps(todaySteps.steps || 0);
       setGoal(userGoals.steps);
       setMinutesGoal(userGoals.activity);
       setCaloriesGoal(userGoals.calories);
-      setActiveMinutes(cardioData || 100);
-      setCalories(caloriesData || 0);
+      setActiveMinutes(cardioData);
+      setCalories(caloriesData);
 
       loadSummary();
     }

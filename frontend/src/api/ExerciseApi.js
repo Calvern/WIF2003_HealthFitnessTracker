@@ -50,11 +50,11 @@ const flattenExercises = (data) => {
   data.forEach((entry) => {
     const { date, cardio = [], workout = [], steps = 0 } = entry;
     cardio.forEach((c) => {
-      allActivities.push({ ...c, type: "cardio", date });
+      allActivities.push({ ...c, type: "cardio", date, id: c._id });
     });
 
     workout.forEach((w) => {
-      allActivities.push({ ...w, type: "workout", date });
+      allActivities.push({ ...w, type: "workout", date, id: w._id });
     });
   });
 
@@ -152,3 +152,18 @@ export const fetchWeeklyAverages = async () => {
   return data;
 };
 
+export const updateExercise = async ({ id, data }) => {
+  console.log("Updating exercise:", id, data);
+  const res = await fetch(`${API_BASE_URL}/api/exercises/update/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) throw new Error("Failed to update exercise");
+
+  return res.json();
+};

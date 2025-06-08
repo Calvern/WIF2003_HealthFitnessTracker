@@ -215,3 +215,28 @@ export const fetchWeeklySummary = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const updateExercise = async (req, res) => {
+  console.log("Update exercise request received"); // 🪵 Add this
+  try {
+    const { id } = req.params;
+    const updatedData = req.body;
+
+    console.log("Updating exercise with ID:", id); // 🪵 Add this
+    const updatedExercise = await Exercise.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
+
+    if (!updatedExercise) {
+      console.log("Exercise not found for ID:", id); // 🪵 Add this
+      return res.status(404).json({ message: "Exercise not found" });
+    }
+
+    res.json(updatedExercise);
+  } catch (error) {
+    console.error("Error updating exercise:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+

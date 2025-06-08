@@ -6,7 +6,10 @@ import { GrYoga } from "react-icons/gr";
 import { format, isWithinInterval, subDays, parseISO } from "date-fns";
 import { fetchExercisesRequest } from "../../api/ExerciseApi";
 
-const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
+const ActivitiesDoneCard = ({
+  onActivityClick,
+  showToggle = true,
+}) => {
   const useExercises = () => {
     return useQuery({
       queryKey: ["exercises"],
@@ -80,7 +83,6 @@ const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, 8);
     }
-
     return filtered;
   };
 
@@ -88,7 +90,6 @@ const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
     return <div className="text-center">Loading activities...</div>;
   }
   const filteredActivities = getFilteredActivities();
-  console.log(activitiesData);
   return (
     <>
       {showToggle && (

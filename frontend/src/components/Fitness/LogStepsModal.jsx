@@ -4,10 +4,8 @@ import { logDailySteps } from "../../api/ExerciseApi";
 const LogStepsModal = ({ show, onClose, steps, log, setLog, onSubmit }) => {
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    console.log("Logging steps:", log);
     try {
       await logDailySteps(log);
-      alert("Steps logged!");
       onClose();
       queryClient.invalidateQueries(["exercises"]);
     } catch (err) {
@@ -23,7 +21,6 @@ const LogStepsModal = ({ show, onClose, steps, log, setLog, onSubmit }) => {
         </Modal.Title>
       </Modal.Header>
       <Form onSubmit={handleOnSubmit}>
-        {console.log("Current log state in modal:", log)} 
         <Modal.Body>
           <Form.Group className="mb-3">
             <Form.Label>Date</Form.Label>
