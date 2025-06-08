@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { useQuery } from "@tanstack/react-query";
-import { fetchSteps } from "../../api/ExerciseApi";
+import { fetchSteps, fetchCardioDuration } from "../../api/ExerciseApi";
 import { getUserGoals } from "../../api/UsersApi";
 import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
 import SetTargetModal from "./SetTargetModal";
@@ -25,6 +25,11 @@ const StepsCard = () => {
     queryFn: getUserGoals,
   });
 
+  const { data: cardioData } = useQuery({
+  queryKey: ["cardioDuration"],
+  queryFn: fetchCardioDuration,
+});
+
   const [showSetTargetModal, setShowSetTargetModal] = useState(false);
   const [showLogStepsModal, setShowLogStepsModal] = useState(false);
   const [log, setLog] = useState({ date: "", steps: 0 });
@@ -43,6 +48,7 @@ const StepsCard = () => {
       setGoal(userGoals.steps);
       setMinutesGoal(userGoals.activity);
       setCaloriesGoal(userGoals.calories);
+      setActiveMinutes(cardioData || 100);
     }
   }, [todaySteps]);
 
@@ -54,7 +60,7 @@ const StepsCard = () => {
       label: "steps",
     },
     minutes: {
-      value: 10000,
+      value: activeMinutes,
       goal: minutesGoal,
       color: "#58A27C",
       label: "min",

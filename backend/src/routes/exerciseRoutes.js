@@ -5,6 +5,7 @@ import {
   updateTargetSteps,
   logSteps,
   fetchSteps,
+  fetchCardioDuration
 } from "../controllers/exerciseController.js";
 import { verifyToken } from "../middlewares/auth.js";
 
@@ -15,7 +16,6 @@ router.get("/", verifyToken, getExercises);
 router.put("/target", verifyToken, updateTargetSteps);
 router.post("/steps", verifyToken, logSteps);
 router.get("/steps/today", verifyToken, fetchSteps);
-
-
+router.get("/cardio/duration", verifyToken, fetchCardioDuration);
 
 export default router;

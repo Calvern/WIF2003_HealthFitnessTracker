@@ -101,3 +101,12 @@ export const fetchSteps = async () => {
   };
 };
 
+export const fetchCardioDuration = async () => {
+  const response = await fetch(`${API_BASE_URL}/api/exercises/cardio/duration`, {
+    credentials: "include",
+  });
+
+  const data = await response.json();
+
+  return data.totalDuration || 0;
+};

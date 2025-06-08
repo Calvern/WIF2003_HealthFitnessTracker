@@ -99,3 +99,22 @@ export const fetchSteps = async (req, res) => {
   }
 };
 
+export const fetchCardioDuration = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const today = new Date().toISOString().split("T")[0];
+
+    const log = await Exercise.findOne({ userId, date: today });
+
+    if (!log || !log.cardio || log.cardio.length === 0) {
+      return res.json({ totalDuration: 0 });
+    }
+
+    const totalDuration = log.cardio.reduce((sum, entry) => sum + (entry.duration || 0), 0);
+    res.json({ totalDuration });
+  } catch (error) {
+    console.error("Error fetching cardio duration:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
