@@ -81,8 +81,8 @@ const CardioDetailsModal = ({
               <Form.Label>Start Time</Form.Label>
               <Form.Control
                 type="time"
-                value={log.startTime}
-                onChange={(e) => setLog({ ...log, startTime: e.target.value })}
+                value={log.time}
+                onChange={(e) => setLog({ ...log, time: e.target.value })}
                 required
               />
             </Form.Group>

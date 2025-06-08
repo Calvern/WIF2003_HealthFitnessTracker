@@ -1,7 +1,10 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import { logDailySteps } from "../../api/ExerciseApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 const LogStepsModal = ({ show, onClose, steps, log, setLog, onSubmit }) => {
+  const queryClient = useQueryClient();
+
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     try {

@@ -1,4 +1,5 @@
 import SearchBar from "../components/Fitness/Search";
+import { useQueryClient } from "@tanstack/react-query";
 import ActivitiesDoneCard from "../components/Home/ActivitiesDoneList";
 import WorkoutDetailsModal from "../components/Fitness/WorkoutDetailsModal";
 import CardioDetailsModal from "../components/Fitness/CardioDetailsModal";

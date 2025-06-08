@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   fetchSteps,
   fetchCardioDuration,
@@ -16,6 +16,7 @@ import { ButtonGroup, ToggleButton } from "react-bootstrap";
 ChartJS.register(ArcElement, Tooltip);
 
 const StepsCard = () => {
+  const queryClient = useQueryClient();
   const {
     data: todaySteps,
     isPending,
@@ -39,16 +40,15 @@ const StepsCard = () => {
     queryKey: ["caloriesBurned"],
     queryFn: fetchCaloriesBurned,
   });
-
   const [showSetTargetModal, setShowSetTargetModal] = useState(false);
   const [showLogStepsModal, setShowLogStepsModal] = useState(false);
   const [log, setLog] = useState({ date: "", steps: 0 });
-  const [goal, setGoal] = useState(0);
-  const [steps, setSteps] = useState(0);
-  const [activeMinutes, setActiveMinutes] = useState(0);
-  const [minutesGoal, setMinutesGoal] = useState(0);
-  const [calories, setCalories] = useState(0);
-  const [caloriesGoal, setCaloriesGoal] = useState(0);
+  const [goal, setGoal] = useState();
+  const [steps, setSteps] = useState();
+  const [activeMinutes, setActiveMinutes] = useState();
+  const [minutesGoal, setMinutesGoal] = useState();
+  const [calories, setCalories] = useState();
+  const [caloriesGoal, setCaloriesGoal] = useState();
   const [summary, setSummary] = useState({
     averageSteps: 0,
     averageMinutes: 0,
@@ -124,12 +124,16 @@ const StepsCard = () => {
     setCaloriesGoal(Number(target.calories));
   };
 
-  const handleLogSubmit = (e) => {
-    e.preventDefault();
+  const handleLogSubmit = async (e) => {
+    // e.preventDefault();
     const stepsLogged = parseInt(log.steps);
     if (!isNaN(stepsLogged) && stepsLogged >= 0) {
       setSteps(stepsLogged);
       setShowLogStepsModal(false);
+
+      await queryClient.invalidateQueries(["steps"]);
+      await queryClient.invalidateQueries(["userGoals"]);
+      await queryClient.invalidateQueries(["cardioDuration"]);
     }
   };
 

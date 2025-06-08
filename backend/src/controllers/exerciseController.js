@@ -17,8 +17,8 @@ export const createExercise = async (req, res) => {
         (ex) => ex.name.toLowerCase() === item.name.toLowerCase()
       );
 
-      const MET = exerciseMeta?.met || 0; // Default MET = 100 if not found
-      const duration = item.duration || 0; // in minutes
+      const MET = exerciseMeta?.met || 0;
+      const duration = item.duration || 0;
       const caloriesBurned = (MET * 3.5 * weight * duration) / 200;
 
       return {
@@ -107,11 +107,11 @@ export const logSteps = async (req, res) => {
 export const fetchSteps = async (req, res) => {
   try {
     const userId = req.userId;
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toLocaleDateString("en-CA");
 
     const entry = await Exercise.findOne({ userId, date: today });
 
-    res.json(entry);
+    res.json(entry || { steps: 0 });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -121,7 +121,7 @@ export const fetchSteps = async (req, res) => {
 export const fetchCardioDuration = async (req, res) => {
   try {
     const userId = req.userId;
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toLocaleDateString("en-CA");
 
     const log = await Exercise.findOne({ userId, date: today });
 
@@ -143,7 +143,7 @@ export const fetchCardioDuration = async (req, res) => {
 export const fetchCaloriesBurned = async (req, res) => {
   try {
     const userId = req.userId;
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toLocaleDateString("en-CA");
 
     const log = await Exercise.findOne({ userId, date: today });
 
@@ -185,18 +185,16 @@ export const fetchWeeklySummary = async (req, res) => {
       if (hasSteps || hasCardio) {
         totalSteps += log.steps || 0;
 
-        // Sum cardio durations (minutes)
-        const cardioMinutes = log.cardio?.reduce(
-          (sum, entry) => sum + (entry.duration || 0),
-          0
-        ) || 0;
+        const cardioMinutes =
+          log.cardio?.reduce((sum, entry) => sum + (entry.duration || 0), 0) ||
+          0;
         totalMinutes += cardioMinutes;
 
-        // Sum cardio calories
-        const dailyCalories = log.cardio?.reduce(
-          (sum, entry) => sum + (entry.caloriesBurned || 0),
-          0
-        ) || 0;
+        const dailyCalories =
+          log.cardio?.reduce(
+            (sum, entry) => sum + (entry.caloriesBurned || 0),
+            0
+          ) || 0;
         totalCalories += dailyCalories;
 
         daysWithData += 1;
@@ -223,11 +221,13 @@ export const updateCardioExercise = async (req, res) => {
 
     const updatedExercise = await Exercise.findOneAndUpdate(
       { "cardio._id": id },
-      { $set: {
-        "cardio.$.date": updatedData.date,
-        "cardio.$.startTime": updatedData.startTime,
-        "cardio.$.duration": updatedData.duration
-      }},
+      {
+        $set: {
+          "cardio.$.date": updatedData.date,
+          "cardio.$.startTime": updatedData.startTime,
+          "cardio.$.duration": updatedData.duration,
+        },
+      },
       { new: true }
     );
 
@@ -249,12 +249,14 @@ export const updateWorkoutExercise = async (req, res) => {
 
     const updatedExercise = await Exercise.findOneAndUpdate(
       { "workout._id": id },
-      { $set: {
-        "workout.$.date": updatedData.date,
-        "workout.$.startTime": updatedData.startTime,
-        "workout.$.sets": updatedData.sets,
-        "workout.$.reps": updatedData.reps,
-      }},
+      {
+        $set: {
+          "workout.$.date": updatedData.date,
+          "workout.$.startTime": updatedData.startTime,
+          "workout.$.sets": updatedData.sets,
+          "workout.$.reps": updatedData.reps,
+        },
+      },
       { new: true }
     );
 
@@ -267,7 +269,7 @@ export const updateWorkoutExercise = async (req, res) => {
     console.error("Error updating workout exercise:", error);
     res.status(500).json({ message: "Server error" });
   }
-}
+};
 
 export const deleteCardioExercise = async (req, res) => {
   try {
@@ -283,7 +285,10 @@ export const deleteCardioExercise = async (req, res) => {
       return res.status(404).json({ message: "Cardio exercise not found" });
     }
 
-    res.json({ message: "Cardio exercise deleted successfully", deletedExercise });
+    res.json({
+      message: "Cardio exercise deleted successfully",
+      deletedExercise,
+    });
   } catch (error) {
     console.error("Error deleting cardio exercise:", error);
     res.status(500).json({ message: "Server error" });
@@ -304,13 +309,12 @@ export const deleteWorkoutExercise = async (req, res) => {
       return res.status(404).json({ message: "Workout exercise not found" });
     }
 
-    res.json({ message: "Workout exercise deleted successfully", deletedExercise });
+    res.json({
+      message: "Workout exercise deleted successfully",
+      deletedExercise,
+    });
   } catch (error) {
     console.error("Error deleting workout exercise:", error);
     res.status(500).json({ message: "Server error" });
   }
-}; 
-
-
-
-
+};
