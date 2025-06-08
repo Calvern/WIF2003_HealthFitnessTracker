@@ -83,3 +83,19 @@ export const logSteps = async (req, res) => {
     res.status(500).json({ message: "Failed to log steps" });
   }
 };
+
+export const fetchSteps = async (req, res) => {
+  try {
+    const userId = req.userId
+    const today = new Date().toISOString().split("T")[0];
+
+    const entry = await Exercise.findOne({ userId, date: today });
+    console.log("Fetched Steps Entry:", entry);
+
+    res.json(entry);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+

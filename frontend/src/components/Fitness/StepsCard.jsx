@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
+import { useQuery } from "@tanstack/react-query";
+import { fetchSteps } from "../../api/ExerciseApi";
 import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
 import SetTargetModal from "./SetTargetModal";
 import LogStepsModal from "./LogStepsModal";
@@ -8,20 +10,36 @@ import { ButtonGroup, ToggleButton } from "react-bootstrap";
 ChartJS.register(ArcElement, Tooltip);
 
 const StepsCard = () => {
+  const {
+    data: todaySteps,
+    isPending,
+    error,
+  } = useQuery({
+    queryKey: ["steps"],
+    queryFn: fetchSteps,
+  });
+  console.log("Fetched Steps Data:", todaySteps);
+
+
   const [showSetTargetModal, setShowSetTargetModal] = useState(false);
   const [showLogStepsModal, setShowLogStepsModal] = useState(false);
   const [log, setLog] = useState({ date: "", steps: 0 });
-
-  const [goal, setGoal] = useState();
-  const [steps, setSteps] = useState();
-  const [activeMinutes, setActiveMinutes] = useState();
-  const [minutesGoal, setMinutesGoal] = useState();
-  const [calories, setCalories] = useState();
-  const [caloriesGoal, setCaloriesGoal] = useState();
+  const [goal, setGoal] = useState(0);
+  const [steps, setSteps] = useState(0);
+  const [activeMinutes, setActiveMinutes] = useState(0);
+  const [minutesGoal, setMinutesGoal] = useState(0);
+  const [calories, setCalories] = useState(0);
+  const [caloriesGoal, setCaloriesGoal] = useState(0);
 
   const [selectedTab, setSelectedTab] = useState("steps");
 
-  const chartData = {
+  useEffect(() => {
+    if (todaySteps) {
+      setSteps(todaySteps.steps);
+    }
+  }, [todaySteps]);
+
+  const chartMap = {
     steps: {
       value: steps,
       goal: goal,
@@ -29,18 +47,20 @@ const StepsCard = () => {
       label: "steps",
     },
     minutes: {
-      value: activeMinutes,
+      value: 10000,
       goal: minutesGoal,
       color: "#58A27C",
       label: "min",
     },
     calories: {
-      value: calories,
+      value: 1000,
       goal: caloriesGoal,
       color: "#F4A259",
       label: "kcal",
     },
-  }[selectedTab];
+  };
+
+  const chartData = chartMap[selectedTab] || chartMap["steps"];
 
   const doughnutData = {
     labels: ["Progress", "Remaining"],
@@ -52,6 +72,7 @@ const StepsCard = () => {
       },
     ],
   };
+  console.log("Doughnut Data", doughnutData);
 
   const chartOptions = {
     cutout: "70%",
@@ -66,12 +87,16 @@ const StepsCard = () => {
 
   const handleLogSubmit = (e) => {
     e.preventDefault();
-    const stepsLogged = parseInt(log.sets);
+    const stepsLogged = parseInt(log.steps);
     if (!isNaN(stepsLogged) && stepsLogged >= 0) {
       setSteps(stepsLogged);
       setShowLogStepsModal(false);
     }
   };
+
+  if (isPending) return <div>Loading...</div>;
+  if (error) return <div>Error loading step data</div>;
+  if (!todaySteps) return <div>No step data available</div>;
 
   return (
     <div className="p-4 mb-4">
@@ -100,72 +125,61 @@ const StepsCard = () => {
         </ButtonGroup>
       </div>
 
-      <div className="d-flex justify-content-center align-items-center gap-4 my-4">
-        <div style={{ position: "relative", height: 200, width: 200 }}>
-          <Doughnut data={doughnutData} options={chartOptions} />
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              textAlign: "center",
-            }}
-          >
-            <h5 className="mb-0" style={{ color: chartData.color }}>
-              {chartData.value}
-            </h5>
-            <small className="text-muted">
-              / {chartData.goal} {chartData.label}
-            </small>
+      <div className="row justify-content-center align-items-center my-4">
+        <div className="col-12 col-md-6 d-flex justify-content-center mb-4 mb-md-0">
+          <div style={{ position: "relative", height: 200, width: 200 }}>
+            <Doughnut data={doughnutData} options={chartOptions} />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                textAlign: "center",
+              }}
+            >
+              <h5 className="mb-0" style={{ color: chartData.color }}>
+                {chartData.value}
+              </h5>
+              <small className="text-muted">
+                / {chartData.goal} {chartData.label}
+              </small>
+            </div>
           </div>
         </div>
 
-        <div className="text-muted ms-5 text-center">
+        <div className="col-12 col-md-6 text-muted text-center">
           <div style={{ fontSize: "1.5rem" }}>Average this week:</div>
-          <div style={{ fontSize: "1.8rem" }}>
-            <strong>{Math.round(chartData.goal * 0.72)}</strong>{" "}
-            {chartData.label}
-          </div>
-          <div className="mt-3 d-flex justify-content-between">
-            <button
-              className="btn btn-outline-primary"
-              onClick={() => setShowSetTargetModal(true)}
-            >
-              Set Target
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => setShowLogStepsModal(true)}
-            >
-              Log Steps
-            </button>
+          <div style={{ fontSize: "1.8rem" }}>{chartData.label}</div>
+          <div className="mt-3 d-flex justify-content-center gap-2 flex-wrap">
+            {selectedTab === "steps" && (
+              <>
+                <button
+                  className="btn btn-outline-primary"
+                  onClick={() => setShowSetTargetModal(true)}
+                >
+                  Set Target
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setShowLogStepsModal(true)}
+                >
+                  Log Steps
+                </button>
+              </>
+            )}
+
+            {selectedTab === "minutes" && (
+              <button
+                className="btn btn-outline-primary"
+                onClick={() => setShowSetTargetModal(true)}
+              >
+                Set Target
+              </button>
+            )}
+            {/* No buttons for calories tab */}
           </div>
         </div>
-      </div>
-
-      {/* <div className="mt-5 d-flex justify-content-between mt-4">
-        <button
-          className="btn btn-outline-primary"
-          onClick={() => setShowSetTargetModal(true)}
-        >
-          Set Target
-        </button>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowLogStepsModal(true)}
-        >
-          Log Steps
-        </button>
-      </div> */}
-
-      <hr className="mt-4 mb-2" style={{ color: "#6c757d" }}></hr>
-
-      {/* Filters (just placeholder text/button for now) */}
-      <div className="text-end mt-3">
-        <button className="btn btn-link p-0 text-decoration-none text-primary">
-          Filters
-        </button>
       </div>
 
       {/* Modals */}

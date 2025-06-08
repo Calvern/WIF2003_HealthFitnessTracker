@@ -7,13 +7,13 @@ import { format, isWithinInterval, subDays, parseISO } from "date-fns";
 import { fetchExercisesRequest } from "../../api/ExerciseApi";
 
 const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
-const useExercises = () => {
-  return useQuery({
-    queryKey: ["exercises"],
-    queryFn: fetchExercisesRequest,
-  });
-};
-const { data: activitiesData = [], isPending } = useExercises();
+  const useExercises = () => {
+    return useQuery({
+      queryKey: ["exercises"],
+      queryFn: fetchExercisesRequest,
+    });
+  };
+  const { data: activitiesData = [], isPending } = useExercises();
 
   const [selectedRange, setSelectedRange] = useState("7D");
   const [selectedCategory, setSelectedCategory] = useState("All");

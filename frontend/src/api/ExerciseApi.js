@@ -50,15 +50,6 @@ const flattenExercises = (data) => {
 
   data.forEach((entry) => {
     const { date, cardio = [], workout = [], steps = 0 } = entry;
-
-    // if (steps > 0) {
-    //   allActivities.push({
-    //     name: `${steps.toLocaleString()} steps`,
-    //     type: "steps",
-    //     date,
-    //   });
-    // }
-
     cardio.forEach((c) => {
       allActivities.push({ ...c, type: "cardio", date });
     });
@@ -91,4 +82,21 @@ export const logDailySteps = async (stepData) => {
   }
 
   return res.json();
+};
+
+export const fetchSteps = async () => {
+  const response = await fetch(`${API_BASE_URL}/api/exercises/steps/today`,{
+    credentials: "include",
+  });
+
+  const todayEntry = await response.json();
+  console.log("Fetched Steps Dataaaa:", todayEntry);
+
+  if (!todayEntry) {
+    return { steps: 0 };
+  }
+
+  return {
+    steps: todayEntry.steps || 0,
+  };
 };
