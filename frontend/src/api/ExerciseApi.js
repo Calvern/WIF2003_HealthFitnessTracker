@@ -4,7 +4,6 @@ import { useAppContext } from "../contexts/AppContext";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const logExercise = async (exerciseData) => {
-  console.log("Sending to backend:", exerciseData);
   const res = await fetch(`${API_BASE_URL}/api/exercises`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -90,8 +89,6 @@ export const fetchSteps = async () => {
   });
 
   const todayEntry = await response.json();
-  console.log("Fetched Steps Dataaaa:", todayEntry);
-
   if (!todayEntry) {
     return { steps: 0 };
   }
@@ -123,7 +120,35 @@ export const fetchCaloriesBurned = async () => {
   );
 
   const data = await response.json();
-  console.log("Fetcheddddd Calories Data:", data.totalCalories);
-
   return data.totalCalories || 0;
 };
+
+const getThisWeekDates = () => {
+  const today = new Date();
+  const day = today.getDay(); // 0 (Sun) - 6 (Sat)
+  const diffToMonday = (day === 0 ? -6 : 1) - day;
+
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + diffToMonday);
+
+  const dates = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    dates.push(d.toISOString().split("T")[0]); // "YYYY-MM-DD"
+  }
+  return dates;
+};
+
+export const fetchWeeklyAverages = async () => {
+  const dates = getThisWeekDates().join(",");
+
+  const res = await fetch(
+    `${API_BASE_URL}/api/exercises/summary/weekly?dates=${dates}`,
+    { credentials: "include" }
+  );
+
+  const data = await res.json();
+  return data;
+};
+

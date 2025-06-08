@@ -106,7 +106,7 @@ export const logSteps = async (req, res) => {
 
 export const fetchSteps = async (req, res) => {
   try {
-    const userId = req.userId
+    const userId = req.userId;
     const today = new Date().toISOString().split("T")[0];
 
     const entry = await Exercise.findOne({ userId, date: today });
@@ -129,7 +129,10 @@ export const fetchCardioDuration = async (req, res) => {
       return res.json({ totalDuration: 0 });
     }
 
-    const totalDuration = log.cardio.reduce((sum, entry) => sum + (entry.duration || 0), 0);
+    const totalDuration = log.cardio.reduce(
+      (sum, entry) => sum + (entry.duration || 0),
+      0
+    );
     res.json({ totalDuration });
   } catch (error) {
     console.error("Error fetching cardio duration:", error);
@@ -160,4 +163,55 @@ export const fetchCaloriesBurned = async (req, res) => {
   }
 };
 
+export const fetchWeeklySummary = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const dates = req.query.dates?.split(",") || [];
 
+    const logs = await Exercise.find({
+      userId,
+      date: { $in: dates },
+    });
+
+    let totalSteps = 0;
+    let totalMinutes = 0;
+    let totalCalories = 0;
+    let daysWithData = 0;
+
+    logs.forEach((log) => {
+      const hasSteps = log.steps > 0;
+      const hasCardio = Array.isArray(log.cardio) && log.cardio.length > 0;
+
+      if (hasSteps || hasCardio) {
+        totalSteps += log.steps || 0;
+
+        // Sum cardio durations (minutes)
+        const cardioMinutes = log.cardio?.reduce(
+          (sum, entry) => sum + (entry.duration || 0),
+          0
+        ) || 0;
+        totalMinutes += cardioMinutes;
+
+        // Sum cardio calories
+        const dailyCalories = log.cardio?.reduce(
+          (sum, entry) => sum + (entry.caloriesBurned || 0),
+          0
+        ) || 0;
+        totalCalories += dailyCalories;
+
+        daysWithData += 1;
+      }
+    });
+
+    const avg = {
+      averageSteps: Math.round(totalSteps / (daysWithData || 1)),
+      averageMinutes: Math.round(totalMinutes / (daysWithData || 1)),
+      averageCalories: Math.round(totalCalories / (daysWithData || 1)),
+    };
+
+    res.json(avg);
+  } catch (error) {
+    console.error("Error fetching weekly summary:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

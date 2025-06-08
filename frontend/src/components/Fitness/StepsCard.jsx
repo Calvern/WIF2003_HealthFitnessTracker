@@ -5,6 +5,7 @@ import {
   fetchSteps,
   fetchCardioDuration,
   fetchCaloriesBurned,
+  fetchWeeklyAverages,
 } from "../../api/ExerciseApi";
 import { getUserGoals } from "../../api/UsersApi";
 import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
@@ -48,10 +49,19 @@ const StepsCard = () => {
   const [minutesGoal, setMinutesGoal] = useState(0);
   const [calories, setCalories] = useState(0);
   const [caloriesGoal, setCaloriesGoal] = useState(0);
-
+  const [summary, setSummary] = useState({
+    averageSteps: 0,
+    averageMinutes: 0,
+    averageCalories: 0,
+  });
   const [selectedTab, setSelectedTab] = useState("steps");
 
   useEffect(() => {
+    const loadSummary = async () => {
+      const data = await fetchWeeklyAverages();
+      setSummary(data);
+    };
+
     if (todaySteps) {
       setSteps(todaySteps.steps || 0);
       setGoal(userGoals.steps);
@@ -59,10 +69,10 @@ const StepsCard = () => {
       setCaloriesGoal(userGoals.calories);
       setActiveMinutes(cardioData || 100);
       setCalories(caloriesData || 0);
+
+      loadSummary();
     }
-  }, [todaySteps]);
-  
-  console.log("Today calories Data:", caloriesData);
+  }, [todaySteps, userGoals, cardioData, caloriesData]);
 
   const chartMap = {
     steps: {
@@ -174,7 +184,11 @@ const StepsCard = () => {
 
         <div className="col-12 col-md-6 text-muted text-center">
           <div style={{ fontSize: "1.5rem" }}>Average this week:</div>
-          <div style={{ fontSize: "1.8rem" }}>{chartData.label}</div>
+          <div style={{ fontSize: "1.8rem" }}>
+            {selectedTab === "steps" && `${summary.averageSteps} steps`}
+            {selectedTab === "minutes" && `${summary.averageMinutes} min`}
+            {selectedTab === "calories" && `${summary.averageCalories} kcal`}
+          </div>
           <div className="mt-3 d-flex justify-content-center gap-2 flex-wrap">
             {selectedTab === "steps" && (
               <>
