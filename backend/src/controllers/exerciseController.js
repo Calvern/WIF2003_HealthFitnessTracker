@@ -242,5 +242,75 @@ export const updateCardioExercise = async (req, res) => {
   }
 };
 
+export const updateWorkoutExercise = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedData = req.body;
+
+    const updatedExercise = await Exercise.findOneAndUpdate(
+      { "workout._id": id },
+      { $set: {
+        "workout.$.date": updatedData.date,
+        "workout.$.startTime": updatedData.startTime,
+        "workout.$.sets": updatedData.sets,
+        "workout.$.reps": updatedData.reps,
+      }},
+      { new: true }
+    );
+
+    if (!updatedExercise) {
+      return res.status(404).json({ message: "Workout exercise not found" });
+    }
+
+    res.json(updatedExercise);
+  } catch (error) {
+    console.error("Error updating workout exercise:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+export const deleteCardioExercise = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedExercise = await Exercise.findOneAndUpdate(
+      { "cardio._id": id },
+      { $pull: { cardio: { _id: id } } },
+      { new: true }
+    );
+
+    if (!deletedExercise) {
+      return res.status(404).json({ message: "Cardio exercise not found" });
+    }
+
+    res.json({ message: "Cardio exercise deleted successfully", deletedExercise });
+  } catch (error) {
+    console.error("Error deleting cardio exercise:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const deleteWorkoutExercise = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedExercise = await Exercise.findOneAndUpdate(
+      { "workout._id": id },
+      { $pull: { workout: { _id: id } } },
+      { new: true }
+    );
+
+    if (!deletedExercise) {
+      return res.status(404).json({ message: "Workout exercise not found" });
+    }
+
+    res.json({ message: "Workout exercise deleted successfully", deletedExercise });
+  } catch (error) {
+    console.error("Error deleting workout exercise:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}; 
+
+
 
 

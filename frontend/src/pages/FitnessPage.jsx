@@ -76,6 +76,7 @@ const FitnessPage = () => {
 
     if (activity.type === "workout") {
       setSelectedLog({
+        id: activity._id,
         workout: activity.name,
         sets: activity.sets,
         reps: activity.reps,

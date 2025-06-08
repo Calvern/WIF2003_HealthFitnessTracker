@@ -168,15 +168,44 @@ export const updateCardioExercise = async ({ id, data }) => {
   return res.json();
 };
 
-export async function deleteExercise(id) {
-  const response = await fetch(`/api/exercises/${id}`, {
+export const updateWorkoutExercise = async ({ id, data }) => {
+  const res = await fetch(`${API_BASE_URL}/api/exercises/update/workout/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) throw new Error("Failed to update workout exercise");
+
+  return res.json();
+};
+
+export async function deleteCardioExercise(id) {
+  const response = await fetch(`${API_BASE_URL}/api/exercises/delete/cardio/${id}`, {
     method: "DELETE",
+    credentials: "include",
   });
 
   if (!response.ok) {
     throw new Error("Failed to delete exercise");
+    
   }
 
   return response.json();
 }
 
+export async function deleteWorkoutExercise(id) {
+  const response = await fetch(`${API_BASE_URL}/api/exercises/delete/workout/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete workout exercise");
+  }
+
+  return response.json();
+}
