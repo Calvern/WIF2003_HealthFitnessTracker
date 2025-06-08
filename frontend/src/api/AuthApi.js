@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const useValidateToken = () => {
+export const useValidateToken = (number) => {
   const validateTokenRequest = async () => {
     const response = await fetch(`${API_BASE_URL}/api/auth/validate-token`, {
       credentials: "include",

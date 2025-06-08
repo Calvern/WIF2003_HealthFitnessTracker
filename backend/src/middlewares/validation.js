@@ -1,4 +1,4 @@
-import { body, param, validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 
 const handleValidationErrors = async (req, res, next) => {
   const errors = validationResult(req);
@@ -20,7 +20,18 @@ export const validateUserCreateProfileRequest = [
   body("firstName").isString().notEmpty().withMessage("First Name is required"),
   body("lastName").isString().notEmpty().withMessage("Last Name is required"),
   body("gender").isString().notEmpty().withMessage("Gender is required"),
-  body("date").isDate().notEmpty().withMessage("First Name is required"),
+  body("dob").isDate().withMessage("Date is required"),
+  handleValidationErrors,
+];
+
+export const validateUserCreatePhysicalInfoRequest = [
+  body("height").isInt().notEmpty().withMessage("Height is required"),
+  body("weight").isInt().notEmpty().withMessage("Weight is required"),
+  body("activityLevel")
+    .isFloat()
+    .notEmpty()
+    .withMessage("Activity Level is required"),
+  body("weightGoal").isInt().notEmpty().withMessage("Weight Goal is required"),
   handleValidationErrors,
 ];
 

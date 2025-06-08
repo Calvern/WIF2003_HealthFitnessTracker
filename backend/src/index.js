@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import exerciseRoutes from "./routes/exerciseRoutes.js";
+import foodDiaryRoutes from "./routes/foodDiaryRoutes.js";
+import mealRoutes from "./routes/mealRoutes.js"
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
@@ -35,6 +37,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/exercises", exerciseRoutes);
 
+app.use("/api/food-diary", foodDiaryRoutes);
+app.use("/api/meal", mealRoutes);
 
 app.listen(7001, () => {
   console.log("Server is running on localhost:7001");
