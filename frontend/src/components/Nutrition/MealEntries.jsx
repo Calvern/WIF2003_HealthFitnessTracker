@@ -2,7 +2,15 @@ import { Button, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../../contexts/AppContext";
 
-const MealEntries = ({ foodName, calories, carbs, fat, protein }) => {
+const MealEntries = ({
+  mealId,
+  imageUrl,
+  foodName,
+  calories,
+  carbs,
+  fat,
+  protein,
+}) => {
   const { showToast } = useAppContext();
   return (
     <Row
@@ -18,7 +26,9 @@ const MealEntries = ({ foodName, calories, carbs, fat, protein }) => {
         <div className="d-flex flex-column flex-md-row gap-3 align-items-center">
           <Link
             className="text-center food-entry-details-link"
-            to="/meal-favourites/5931"
+            to={`/meal-detail/${mealId}?imageUrl=${encodeURIComponent(
+              imageUrl
+            )}`}
           >
             View Details
           </Link>

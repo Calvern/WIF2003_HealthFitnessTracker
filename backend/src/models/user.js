@@ -44,11 +44,28 @@ const userSchema = mongoose.Schema({
   dailyTargetCalorie: {
     type: Number,
   },
+
+  favouriteFood: [
+    {
+      mealId: {
+        type: Number,
+        required: true,
+      },
+      foodName: {
+        type: String,
+        required: true,
+      },
+      imageUrl: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    this.password = await bcrypt.hash(this.password, 8);
+    this.password = bcrypt.hash(this.password, 8);
   }
   next();
 });

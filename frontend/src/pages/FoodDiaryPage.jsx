@@ -1,85 +1,59 @@
 import { useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import "react-datepicker/dist/react-datepicker.css";
-import MealEntries from "../components/Nutrition/MealEntries";
-import { Link } from "react-router-dom";
 import RecommendModal from "../components/Nutrition/RecommendModal";
 import CalendarForm from "../components/Nutrition/CalendarForm";
-import { useAppContext } from "../contexts/AppContext";
 import MealSection from "../components/Nutrition/MealSection";
+import { useGetDiaryByDate, useRecommendMeals } from "../api/FoodDiaryApi";
 
 const FoodDiaryPage = () => {
-  const dummyFoodData = {
-    breakfast: [
-      {
-        foodName: "Chicken",
-        calories: 465,
-        carbs: 506,
-        fat: 78,
-        protein: 88,
-      },
-      {
-        foodName: "Chicken",
-        calories: 465,
-        carbs: 506,
-        fat: 78,
-        protein: 88,
-      },
-    ],
-    lunch: [
-      {
-        foodName: "Chicken",
-        calories: 465,
-        carbs: 506,
-        fat: 78,
-        protein: 88,
-      },
-      {
-        foodName: "Chicken",
-        calories: 465,
-        carbs: 506,
-        fat: 78,
-        protein: 88,
-      },
-    ],
-    dinner: [
-      {
-        foodName: "Chicken",
-        calories: 465,
-        carbs: 506,
-        fat: 78,
-        protein: 88,
-      },
-      {
-        foodName: "Chicken",
-        calories: 465,
-        carbs: 506,
-        fat: 78,
-        protein: 88,
-      },
-    ],
-  };
-
-  const total = Object.values(dummyFoodData)
-    .flat()
-    .reduce(
-      (acc, food) => ({
-        calories: acc.calories + Number(food.calories),
-        carbs: acc.carbs + Number(food.carbs),
-        fat: acc.fat + Number(food.fat),
-        protein: acc.protein + Number(food.protein),
-      }),
-      { calories: 0, carbs: 0, fat: 0, protein: 0 }
-    );
-
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const formatDate = (date) => {
+    return date.toISOString().split("T")[0]; // yyyy-mm-dd
+  };
+  const { recommendMeal, isPending: isRecommending } = useRecommendMeals();
+  const submitRecommendation = async (targetCalorie) => {
+    const formData = {
+      targetCalorie,
+      date: formatDate(selectedDate),
+    };
+    await recommendMeal(formData);
+    handleClose();
+  };
+
+  const { foodDiary, isPending: isGetting } = useGetDiaryByDate(
+    formatDate(selectedDate)
+  );
+  if (isGetting) {
+    return <div>Loading</div>;
+  }
+
+  const breakfast = foodDiary.meals.filter(
+    (meal) => meal.mealType === "breakfast"
+  );
+  const lunch = foodDiary.meals.filter((meal) => meal.mealType === "lunch");
+  const dinner = foodDiary.meals.filter((meal) => meal.mealType === "dinner");
+
+  const total = foodDiary?.meals?.reduce(
+    (acc, meal) => ({
+      calories: acc.calories + Number(meal.calories || 0),
+      protein: acc.protein + Number(meal.protein || 0),
+      fat: acc.fat + Number(meal.fat || 0),
+      carbs: acc.carbs + Number(meal.carbs || 0),
+    }),
+    { calories: 0, protein: 0, fat: 0, carbs: 0 }
+  );
+
   return (
     <Container className="py-5">
-      <CalendarForm />
+      <CalendarForm
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+      />
       <Row className="mt-5">
         <Col className="d-flex align-foods-center" xs={4} md={6}>
           <Button
@@ -89,7 +63,12 @@ const FoodDiaryPage = () => {
           >
             Recommend
           </Button>
-          <RecommendModal show={show} handleClose={handleClose} />
+          <RecommendModal
+            show={show}
+            handleClose={handleClose}
+            submitRecommendation={submitRecommendation}
+            isPending={isRecommending}
+          />
         </Col>
         <Col xs={8} md={6}>
           <Row>
@@ -108,9 +87,9 @@ const FoodDiaryPage = () => {
         </Col>
       </Row>
 
-      <MealSection title="Breakfast" foodData={dummyFoodData.breakfast} />
-      <MealSection title="Lunch" foodData={dummyFoodData.lunch} />
-      <MealSection title="Dinner" foodData={dummyFoodData.dinner} />
+      <MealSection title="Breakfast" foodData={breakfast} />
+      <MealSection title="Lunch" foodData={lunch} />
+      <MealSection title="Dinner" foodData={dinner} />
 
       <Row className="mt-5">
         <Col
