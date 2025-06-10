@@ -8,4 +8,6 @@ router.post("/recommend-food", verifyToken, foodDiaryController.recommendMeal);
 
 router.get("/", verifyToken, foodDiaryController.getDiaryByDate);
 
+router.get("/calorie-summary", verifyToken, foodDiaryController.getCalorieSummary);
+
 export default router;

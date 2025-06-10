@@ -318,3 +318,37 @@ export const deleteWorkoutExercise = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const getCalorieOutSummary = async (req, res) => {
+  try {
+    const { mode } = req.query;
+    const userId = req.userId;
+
+    const pipeline = [
+      { $match: { user: userId } },
+      {
+        $project: {
+          caloriesBurned: "$calories", // adjust based on your model
+          date: 1,
+        },
+      },
+      {
+        $group: {
+          _id: mode === "weekly"
+            ? { $week: "$date" }
+            : { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+          totalCaloriesOut: { $sum: "$caloriesBurned" },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ];
+
+    const result = await Exercise.aggregate(pipeline);
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to summarize calories out" });
+  }
+};
