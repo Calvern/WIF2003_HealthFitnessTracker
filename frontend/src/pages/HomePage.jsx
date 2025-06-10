@@ -13,10 +13,6 @@ import ActivitiesDoneCard from "../components/Home/ActivitiesDoneList";
 import UpcomingRemindersCard from "../components/Home/UpcomingRemindersCard";
 
 const HomePage = () => {
-  const handleActivityClick = (activity) => {
-    console.log("Clicked activity:", activity);
-  };
-
   const chartData = {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     datasets: [
@@ -172,8 +168,6 @@ const HomePage = () => {
       <Row className="mb-5 justify-content-center">
         <Col className="mt-5" xs={12} md={6} lg={7}>
           <ActivitiesDoneCard
-            onActivityClick={handleActivityClick}
-            showToggle={false}
           />
         </Col>
         <Col xs={12} md={6} lg={5}>

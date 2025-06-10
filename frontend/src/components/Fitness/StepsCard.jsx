@@ -1,5 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  fetchSteps,
+  fetchCardioDuration,
+  fetchCaloriesBurned,
+  fetchWeeklyAverages,
+} from "../../api/ExerciseApi";
+import { getUserGoals } from "../../api/UsersApi";
 import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
 import SetTargetModal from "./SetTargetModal";
 import LogStepsModal from "./LogStepsModal";
@@ -8,19 +16,70 @@ import { ButtonGroup, ToggleButton } from "react-bootstrap";
 ChartJS.register(ArcElement, Tooltip);
 
 const StepsCard = () => {
+  const queryClient = useQueryClient();
+  const {
+    data: todaySteps,
+    isPending,
+    error,
+  } = useQuery({
+    queryKey: ["steps"],
+    queryFn: fetchSteps,
+  });
+
+  const { data: userGoals } = useQuery({
+    queryKey: ["userGoals"],
+    queryFn: getUserGoals,
+  });
+
+  const { data: cardioData } = useQuery({
+    queryKey: ["cardioDuration"],
+    queryFn: fetchCardioDuration,
+  });
+
+  const { data: caloriesData } = useQuery({
+    queryKey: ["caloriesBurned"],
+    queryFn: fetchCaloriesBurned,
+  });
   const [showSetTargetModal, setShowSetTargetModal] = useState(false);
   const [showLogStepsModal, setShowLogStepsModal] = useState(false);
-
-  const [goal, setGoal] = useState(10000);
-  const [steps, setSteps] = useState(6421);
-  const [activeMinutes, setActiveMinutes] = useState(34);
-  const [minutesGoal, setMinutesGoal] = useState(60);
-  const [calories, setCalories] = useState(390);
-  const [caloriesGoal, setCaloriesGoal] = useState(500);
-
+  const [log, setLog] = useState({ date: "", steps: 0 });
+  const [goal, setGoal] = useState();
+  const [steps, setSteps] = useState();
+  const [activeMinutes, setActiveMinutes] = useState();
+  const [minutesGoal, setMinutesGoal] = useState();
+  const [calories, setCalories] = useState();
+  const [caloriesGoal, setCaloriesGoal] = useState();
+  const [summary, setSummary] = useState({
+    averageSteps: 0,
+    averageMinutes: 0,
+    averageCalories: 0,
+  });
   const [selectedTab, setSelectedTab] = useState("steps");
 
-  const chartData = {
+  useEffect(() => {
+    const loadSummary = async () => {
+      const data = await fetchWeeklyAverages();
+      setSummary(data);
+    };
+
+    if (
+      todaySteps &&
+      userGoals &&
+      typeof cardioData !== "undefined" &&
+      typeof caloriesData !== "undefined"
+    ) {
+      setSteps(todaySteps.steps || 0);
+      setGoal(userGoals.steps);
+      setMinutesGoal(userGoals.activity);
+      setCaloriesGoal(userGoals.calories);
+      setActiveMinutes(cardioData);
+      setCalories(caloriesData);
+
+      loadSummary();
+    }
+  }, [todaySteps, userGoals, cardioData, caloriesData]);
+
+  const chartMap = {
     steps: {
       value: steps,
       goal: goal,
@@ -39,7 +98,9 @@ const StepsCard = () => {
       color: "#F4A259",
       label: "kcal",
     },
-  }[selectedTab];
+  };
+
+  const chartData = chartMap[selectedTab] || chartMap["steps"];
 
   const doughnutData = {
     labels: ["Progress", "Remaining"],
@@ -63,14 +124,22 @@ const StepsCard = () => {
     setCaloriesGoal(Number(target.calories));
   };
 
-  const handleLogSubmit = (e) => {
-    e.preventDefault();
-    const stepsLogged = parseInt(log.sets);
+  const handleLogSubmit = async (e) => {
+    // e.preventDefault();
+    const stepsLogged = parseInt(log.steps);
     if (!isNaN(stepsLogged) && stepsLogged >= 0) {
       setSteps(stepsLogged);
       setShowLogStepsModal(false);
+
+      await queryClient.invalidateQueries(["steps"]);
+      await queryClient.invalidateQueries(["userGoals"]);
+      await queryClient.invalidateQueries(["cardioDuration"]);
     }
   };
+
+  if (isPending) return <div>Loading...</div>;
+  if (error) return <div>Error loading step data</div>;
+  if (!todaySteps) return <div>No step data available</div>;
 
   return (
     <div className="p-4 mb-4">
@@ -99,73 +168,65 @@ const StepsCard = () => {
         </ButtonGroup>
       </div>
 
-<div className="d-flex justify-content-center align-items-center gap-4 my-4">
-  <div style={{ position: "relative", height: 200, width: 200 }}>
-    <Doughnut data={doughnutData} options={chartOptions} />
-    <div
-      style={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        textAlign: "center",
-      }}
-    >
-      <h5 className="mb-0" style={{ color: chartData.color }}>
-        {chartData.value}
-      </h5>
-      <small className="text-muted">
-        / {chartData.goal} {chartData.label}
-      </small>
-    </div>
-  </div>
+      <div className="row justify-content-center align-items-center my-4">
+        <div className="col-12 col-md-6 d-flex justify-content-center mb-4 mb-md-0">
+          <div style={{ position: "relative", height: 200, width: 200 }}>
+            <Doughnut data={doughnutData} options={chartOptions} />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                textAlign: "center",
+              }}
+            >
+              <h5 className="mb-0" style={{ color: chartData.color }}>
+                {chartData.value}
+              </h5>
+              <small className="text-muted">
+                / {chartData.goal} {chartData.label}
+              </small>
+            </div>
+          </div>
+        </div>
 
-  <div className="text-muted ms-5 text-center">
-    <div style={{ fontSize: "1.5rem" }}>Average this week:</div>
-    <div style={{ fontSize: "1.8rem" }}>
-      <strong>{Math.round(chartData.goal * 0.72)}</strong> {chartData.label}
-    </div>
-     <div className="mt-3 d-flex justify-content-between">
-        <button
-          className="btn btn-outline-primary"
-          onClick={() => setShowSetTargetModal(true)}
-        >
-          Set Target
-        </button>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowLogStepsModal(true)}
-        >
-          Log Steps
-        </button>
-      </div>
+        <div className="col-12 col-md-6 text-muted text-center">
+          <div style={{ fontSize: "1.5rem" }}>Average this week:</div>
+          <div style={{ fontSize: "1.8rem" }}>
+            {selectedTab === "steps" && `${summary.averageSteps} steps`}
+            {selectedTab === "minutes" && `${summary.averageMinutes} min`}
+            {selectedTab === "calories" && `${summary.averageCalories} kcal`}
+          </div>
+          <div className="mt-3 d-flex justify-content-center gap-2 flex-wrap">
+            {selectedTab === "steps" && (
+              <>
+                <button
+                  className="btn btn-outline-primary"
+                  onClick={() => setShowSetTargetModal(true)}
+                >
+                  Set Target
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setShowLogStepsModal(true)}
+                >
+                  Log Steps
+                </button>
+              </>
+            )}
 
-  </div>
-</div>
-
-
-      {/* <div className="mt-5 d-flex justify-content-between mt-4">
-        <button
-          className="btn btn-outline-primary"
-          onClick={() => setShowSetTargetModal(true)}
-        >
-          Set Target
-        </button>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowLogStepsModal(true)}
-        >
-          Log Steps
-        </button>
-      </div> */}
-
-      <hr className="mt-4 mb-2" style={{ color: "#6c757d" }}></hr>
-
-      {/* Filters (just placeholder text/button for now) */}
-      <div className="text-end mt-3">
-        <button className="btn btn-link p-0 text-decoration-none text-primary">
-          Filters
-        </button>
+            {selectedTab === "minutes" && (
+              <button
+                className="btn btn-outline-primary"
+                onClick={() => setShowSetTargetModal(true)}
+              >
+                Set Target
+              </button>
+            )}
+            {/* No buttons for calories tab */}
+          </div>
+        </div>
       </div>
 
       {/* Modals */}
@@ -179,8 +240,8 @@ const StepsCard = () => {
         show={showLogStepsModal}
         onClose={() => setShowLogStepsModal(false)}
         steps={steps}
-        log={{ sets: steps }}
-        setLog={({ sets }) => setSteps(sets)}
+        log={log}
+        setLog={setLog}
         onSubmit={handleLogSubmit}
       />
     </div>

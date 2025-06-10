@@ -35,7 +35,7 @@ const SearchBar = ({ width = "75%", onSearchChange }) => {
           style={{ backgroundColor: "transparent", color: "black" }}
           onClick={() => {
             setsearchValue("");
-            onSearchChange(""); // Clear filter on X
+            onSearchChange("");
           }}
         >
           <X size={20} />

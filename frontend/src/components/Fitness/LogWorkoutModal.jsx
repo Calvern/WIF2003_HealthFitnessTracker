@@ -1,6 +1,26 @@
 import { Modal, Button, Form } from "react-bootstrap";
+import { logExercise } from "../../api/ExerciseApi";
 
 const LogWorkoutModal = ({ show, onClose, workout, log, setLog, onSubmit }) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await onSubmit({
+      date: log.date,
+      steps: 0,
+      workout: [
+        {
+          name: workout,
+          startTime: log.time,
+          sets: Number(log.sets),
+          reps: Number(log.reps),
+        },
+      ],
+      cardio: [],
+    });
+
+    onClose();
+  };
+
   return (
     <Modal show={show} onHide={onClose} centered>
       <Modal.Header closeButton>
@@ -8,7 +28,7 @@ const LogWorkoutModal = ({ show, onClose, workout, log, setLog, onSubmit }) => {
           <h1 className="fw-bold">{workout}</h1>
         </Modal.Title>
       </Modal.Header>
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={handleSubmit}>
         <Modal.Body>
           <Form.Group className="mb-3">
             <Form.Label>Date</Form.Label>
