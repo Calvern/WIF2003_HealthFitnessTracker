@@ -177,9 +177,44 @@ const fetchNutrition = async (id) => {
   };
 };
 
+const getCalorieSummary = async (req, res) => {
+  try {
+    const { mode } = req.query;
+    const userId = req.userId;
+
+    const pipeline = [
+      { $match: { user: userId } },
+      {
+        $project: {
+          calories: { $sum: "$meals.calories" },
+          date: 1,
+        },
+      },
+      {
+        $group: {
+          _id: mode === "weekly"
+            ? { $week: "$date" }
+            : { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+          totalCalories: { $sum: "$calories" },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ];
+
+    const result = await FoodDiary.aggregate(pipeline);
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to summarize calories" });
+  }
+};
+
 export default {
   recommendMeal,
   getDiaryByDate,
   addFoodToDiary,
   removeFoodFromDiary,
+  getCalorieSummary,
 };

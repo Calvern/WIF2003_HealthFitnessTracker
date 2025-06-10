@@ -9,6 +9,7 @@ import {
 } from "chart.js";
 import { useEffect, useRef } from "react";
 import { Bar } from "react-chartjs-2";
+import { useCalorieSummary } from "../../hooks/useCalorieSummary";
 
 ChartJS.register(
   CategoryScale,
@@ -20,65 +21,58 @@ ChartJS.register(
 );
 
 const BarChart = ({ mode }) => {
+  const { data, isLoading } = useCalorieSummary(mode);
+
   const chartRef = useRef(null);
 
   useEffect(() => {
-    const handleResize = () => {
-      chartRef.current?.resize();
-    };
-
+    const handleResize = () => chartRef.current?.resize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  const labels =
-    mode === "daily"
-      ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-      : ["Apr 1–7", "Apr 8–14", "Apr 15–21", "Apr 22–28"];
-  const data = {
-    labels: labels, // X-axis labels
+
+  if (isLoading) return <p>Loading chart...</p>;
+
+  const { inData, outData } = data;
+
+  // Align and format the data
+  const labels = inData.map(item => item._id);
+  const caloriesIn = inData.map(item => item.totalCalories);
+  const caloriesOut = outData.map(item => {
+    const match = outData.find(out => out._id === item._id);
+    return match ? match.totalCaloriesOut : 0;
+  });
+
+  const chartData = {
+    labels,
     datasets: [
       {
         label: "Calories In",
-        data: [10, 20, 30, 30, 30, 30, 70],
+        data: caloriesIn,
         backgroundColor: "#507DBC",
         borderRadius: 50,
       },
       {
         label: "Calories Out",
-        data: [15, 25, 35, 5, 60, 90, 100],
-        borderRadius: 50,
+        data: caloriesOut,
         backgroundColor: "#A1C6EA",
+        borderRadius: 50,
       },
     ],
   };
 
   const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-        labels: {
-          font: {
-            family: "'PT Sans', sans-serif",
-          },
-        },
-      },
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top",
     },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: "Calories",
-        },
-        beginAtZero: true,
-      },
+    title: {
+      display: false,
     },
-  };
+  },
+};
+
 
   return (
     <div
@@ -88,7 +82,7 @@ const BarChart = ({ mode }) => {
       <h3 className="text-center fw-bold">
         Calories Intake vs Calories Consumption
       </h3>
-      <Bar ref={chartRef} data={data} options={options} />
+      <Bar ref={chartRef} data={chartData} options={options} />
     </div>
   );
 };

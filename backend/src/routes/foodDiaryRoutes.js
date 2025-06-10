@@ -12,4 +12,6 @@ router.post("/", verifyToken, foodDiaryController.addFoodToDiary);
 
 router.delete("/", verifyToken, foodDiaryController.removeFoodFromDiary);
 
+router.get("/calorie-summary", verifyToken, foodDiaryController.getCalorieSummary);
+
 export default router;
