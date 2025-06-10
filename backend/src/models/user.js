@@ -44,6 +44,7 @@ const userSchema = mongoose.Schema({
   dailyTargetCalorie: {
     type: Number,
   },
+
   dailyTargetSteps: {
     type: Number,
   },
@@ -51,22 +52,16 @@ const userSchema = mongoose.Schema({
     type: Number,
   },
 
-  favouriteFood: [
-    {
-      mealId: {
-        type: Number,
-        required: true,
+  favouriteFood: {
+    type: [
+      {
+        mealId: Number,
+        foodName: String,
+        imageUrl: String,
       },
-      foodName: {
-        type: String,
-        required: true,
-      },
-      imageUrl: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
+    ],
+    default: [],
+  },
 });
 
 userSchema.pre("save", async function (next) {

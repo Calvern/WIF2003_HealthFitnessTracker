@@ -68,3 +68,43 @@ export const useGetDiaryByDate = (selectedDate) => {
     isPending,
   };
 };
+
+export const useRemoveFoodFromDiary = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useAppContext();
+  const removeFoodFromDiaryRequest = async (searchParams) => {
+    const queryParams = new URLSearchParams();
+    queryParams.append("date", searchParams.date);
+    queryParams.append("type", searchParams.type);
+    queryParams.append("mealId", searchParams.mealId);
+    const response = await fetch(`${API_BASE_URL}/api/food-diary`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Failed to remove food from diary");
+    }
+
+    return response.json();
+  };
+  const {
+    mutateAsync: removeFoodFromDiary,
+    isPending,
+    isError,
+  } = useMutation({
+    mutationFn: removeFoodFromDiaryRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getDiaryByDate"] });
+      showToast("Succesfully removed meal from diary");
+    },
+    onError: (error) => {
+      showToast(error.message);
+    },
+  });
+
+  return {
+    removeFoodFromDiary,
+    isError,
+    isPending,
+  };
+};

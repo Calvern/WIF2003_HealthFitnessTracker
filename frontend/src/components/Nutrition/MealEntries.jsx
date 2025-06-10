@@ -1,6 +1,10 @@
 import { Button, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../../contexts/AppContext";
+import {
+  useAddMealToFavourite,
+  useDeleteMealFromFavourite,
+} from "../../api/MealApi.js";
 
 const MealEntries = ({
   mealId,
@@ -11,7 +15,14 @@ const MealEntries = ({
   fat,
   protein,
 }) => {
-  const { showToast } = useAppContext();
+  const { addMealToFavourite, isPending: addPending } = useAddMealToFavourite();
+  const { deleteMealFromFavourite, isPending: deletePending } =
+    useDeleteMealFromFavourite();
+  const mealData = {
+    mealId,
+    foodName,
+    imageUrl,
+  };
   return (
     <Row
       className="border border-1 border-white"
@@ -26,20 +37,21 @@ const MealEntries = ({
         <div className="d-flex flex-column flex-md-row gap-3 align-items-center">
           <Link
             className="text-center food-entry-details-link"
-            to={`/meal-detail/${mealId}?imageUrl=${encodeURIComponent(
-              imageUrl
-            )}`}
+            to={`/meal-detail/${mealId}`}
           >
             View Details
           </Link>
           <Button
-            onClick={() => showToast("Added to favourites!")}
+            onClick={() => addMealToFavourite(mealData)}
             className="text-center food-entry-favourites-button"
           >
             Add to favourites
           </Button>
 
-          <Button className="text-center food-entry-remove-button">
+          <Button
+            className="text-center food-entry-remove-button"
+            onClick={() => deleteMealFromFavourite(mealId)}
+          >
             Remove
           </Button>
         </div>
