@@ -1,58 +1,91 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Button, Container, Form, Row, Col, InputGroup } from "react-bootstrap";
 import ProfileCard from "../components/Profile/ProfileCard";
 import { useNavigate } from "react-router-dom";
-import { useAppContext } from "../contexts/AppContext";
+import { useGetProfile, useUpdateProfile } from "../api/UsersApi";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-
-  const { showToast } = useAppContext();
+  const { updateUserProfile } = useUpdateProfile();
+  const { user: profile, isLoading } = useGetProfile();
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    profileImage:
-      "https://media.istockphoto.com/id/1682296067/photo/happy-studio-portrait-or-professional-man-real-estate-agent-or-asian-businessman-smile-for.jpg?s=612x612&w=0&k=20&c=9zbG2-9fl741fbTWw5fNgcEEe4ll-JegrGlQQ6m54rg=",
-    firstName: "Loiue",
-    lastName: "Volkman",
-    email: "loiuevolkman@gmail.com",
-    dob: "2003-05-05",
-    gender: 1,
-    height: 180,
-    weight: 75,
-    activity_level: 1.375,
-    weight_goal: 0,
-  });
+  const [imagePreview, setImagePreview] = useState(null);
 
-  const handleChange = (field) => (e) => {
-    setFormData({ ...formData, [field]: e.target.value });
-  };
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  useEffect(() => {
+    if (profile) {
+      reset({
+        profileImage: profile.profilePictureUrl,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        email: profile.email,
+        dob: profile.dob?.split("T")[0],
+        gender: profile.gender,
+        height: profile.height,
+        weight: profile.weight,
+        activityLevel: profile.activityLevel,
+        weightGoal: profile.weightGoal,
+        createdAt: profile.createdAt,
+      });
+      setImagePreview(profile.profilePictureUrl || "");
+    }
+  }, [profile, reset]);
+
+  const formValues = watch();
 
   const toggleEdit = (e) => {
     e.preventDefault();
     if (isEditing) {
-      showToast("Profile updated successfully!");
+      handleSubmit(onSubmit)();
     }
     setIsEditing(!isEditing);
   };
+
+  const onSubmit = handleSubmit((data) => {
+    const formData = new FormData();
+    for (const key in data) {
+      if (key !== "imageFile") {
+        formData.append(key, data[key]);
+      }
+    }
+    if (data.imageFile?.[0]) {
+      formData.append("imageFile", data.imageFile[0]);
+    }
+    updateUserProfile(formData);
+  });
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <Container className="py-5">
       <h2 className="fw-bold">Profile</h2>
       <Form onSubmit={toggleEdit}>
         <ProfileCard
-          formData={formData}
+          imagePreview={imagePreview}
+          setImagePreview={setImagePreview}
           isEditing={isEditing}
-          setFormData={setFormData}
+          register={register}
+          errors={errors}
+          firstName={formValues.firstName}
+          lastName={formValues.lastName}
+          gender={formValues.gender}
+          dob={formValues.dob}
+          createdAt={formValues.createdAt}
         />
         <Row className="mb-5 g-5">
           <Col md={6}>
             <Form.Group controlId="formFirstName">
               <Form.Label>First Name</Form.Label>
               <Form.Control
-                required
-                placeholder="First Name"
-                value={formData.firstName}
-                onChange={handleChange("firstName")}
+                {...register("firstName", { required: true })}
                 disabled={!isEditing}
               />
             </Form.Group>
@@ -61,25 +94,20 @@ const ProfilePage = () => {
             <Form.Group controlId="formLastName">
               <Form.Label>Last Name</Form.Label>
               <Form.Control
-                required
-                placeholder="Last Name"
-                value={formData.lastName}
-                onChange={handleChange("lastName")}
+                {...register("lastName", { required: true })}
                 disabled={!isEditing}
               />
             </Form.Group>
           </Col>
         </Row>
+
         <Row className="mb-5 g-5">
           <Col md={6}>
             <Form.Group controlId="formEmail">
               <Form.Label>Email</Form.Label>
               <Form.Control
-                required
                 type="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange("email")}
+                {...register("email", { required: true })}
                 disabled={!isEditing}
               />
             </Form.Group>
@@ -88,96 +116,89 @@ const ProfilePage = () => {
             <Form.Group controlId="formDob">
               <Form.Label>Date of Birth</Form.Label>
               <Form.Control
-                required
                 type="date"
-                value={formData.dob}
-                onChange={handleChange("dob")}
+                {...register("dob", { required: true })}
                 disabled={!isEditing}
               />
             </Form.Group>
           </Col>
         </Row>
-        <Row className=" mb-5 g-5">
+
+        <Row className="mb-5 g-5">
           <Col md={6}>
-            <Form.Label htmlFor="gender">Gender</Form.Label>
-            <Form.Select
-              required
-              className="shadow-none"
-              id="gender"
-              value={formData.gender}
-              onChange={handleChange("gender")}
-              disabled={!isEditing}
-            >
-              <option value={0}>Female</option>
-              <option value={1}>Male</option>
-            </Form.Select>
+            <Form.Group controlId="formGender">
+              <Form.Label>Gender</Form.Label>
+              <Form.Select
+                {...register("gender", { required: true })}
+                disabled={!isEditing}
+              >
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+              </Form.Select>
+            </Form.Group>
           </Col>
           <Col md={3}>
-            <Form.Label htmlFor="weight">Weight</Form.Label>
-            <InputGroup>
-              <Form.Control
-                required
-                value={formData.weight}
-                onChange={handleChange("weight")}
-                type="number"
-                min={0}
-                id="weight"
-                disabled={!isEditing}
-              />
-              <InputGroup.Text>kg</InputGroup.Text>
-            </InputGroup>
+            <Form.Group controlId="formWeight">
+              <Form.Label>Weight</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  {...register("weight", { required: true })}
+                  disabled={!isEditing}
+                />
+                <InputGroup.Text>kg</InputGroup.Text>
+              </InputGroup>
+            </Form.Group>
           </Col>
           <Col md={3}>
-            <Form.Label htmlFor="height">Height</Form.Label>
-            <InputGroup>
-              <Form.Control
-                required
-                value={formData.height}
-                onChange={handleChange("height")}
-                type="number"
-                min={0}
-                id="height"
-                disabled={!isEditing}
-              />
-              <InputGroup.Text>cm</InputGroup.Text>
-            </InputGroup>
+            <Form.Group controlId="formHeight">
+              <Form.Label>Height</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  type="number"
+                  min={0}
+                  {...register("height", { required: true })}
+                  disabled={!isEditing}
+                />
+                <InputGroup.Text>cm</InputGroup.Text>
+              </InputGroup>
+            </Form.Group>
           </Col>
         </Row>
 
-        <Row className=" mb-5 g-5">
+        <Row className="mb-5 g-5">
           <Col md={6}>
-            <Form.Label htmlFor="activity-level">Activity Level</Form.Label>
-            <Form.Select
-              className="mb-3 shadow-none"
-              id="activity-level"
-              value={formData.activity_level}
-              onChange={handleChange("activity_level")}
-              disabled={!isEditing}
-            >
-              <option value={1.2}>Sedentary (little/no exercise)</option>
-              <option value={1.375}>Lightly Active (1-3 days/week)</option>
-              <option value={1.55}>Moderately Active (3-5 days/week)</option>
-              <option value={1.725}>Very Active (6-7 days/week)</option>
-            </Form.Select>
+            <Form.Group controlId="formActivityLevel">
+              <Form.Label>Activity Level</Form.Label>
+              <Form.Select
+                {...register("activityLevel", { required: true })}
+                disabled={!isEditing}
+              >
+                <option value={1.2}>Sedentary (little/no exercise)</option>
+                <option value={1.375}>Lightly Active (1-3 days/week)</option>
+                <option value={1.55}>Moderately Active (3-5 days/week)</option>
+                <option value={1.725}>Very Active (6-7 days/week)</option>
+              </Form.Select>
+            </Form.Group>
           </Col>
           <Col md={6}>
-            <Form.Label htmlFor="weight-goal">Weight Goal</Form.Label>
-            <Form.Select
-              className="mb-3 shadow-none"
-              id="weight-goal"
-              value={formData.weight_goal}
-              onChange={handleChange("weight_goal")}
-              disabled={!isEditing}
-            >
-              <option value={-300}>Lose Weight</option>
-              <option value={0}>Maintain Weight</option>
-              <option value={300}>Gain Weight</option>
-            </Form.Select>
+            <Form.Group controlId="formWeightGoal">
+              <Form.Label>Weight Goal</Form.Label>
+              <Form.Select
+                {...register("weightGoal", { required: true })}
+                disabled={!isEditing}
+              >
+                <option value={-500}>Lose Weight</option>
+                <option value={0}>Maintain Weight</option>
+                <option value={500}>Gain Weight</option>
+              </Form.Select>
+            </Form.Group>
           </Col>
         </Row>
       </Form>
 
-      <div className="d-flex flex-column flex-md-row gap-5 justify-content-center">
+      <div className="d-flex flex-column flex-md-row gap-5 justify-content-center mt-5">
         <Button
           className="py-2 px-5 rounded-4 border-0"
           onClick={() => navigate("/change-password")}
@@ -186,14 +207,14 @@ const ProfilePage = () => {
           Change Password
         </Button>
         <Button
-          className=" py-2 px-5 rounded-4 border-0"
+          className="py-2 px-5 rounded-4 border-0"
           onClick={() => navigate("/deactivate-account")}
           style={{ backgroundColor: "#507DBC" }}
         >
           Deactivate Account
         </Button>
         <Button
-          className=" py-2 px-5 rounded-4 border-0"
+          className="py-2 px-5 rounded-4 border-0"
           onClick={() => navigate("/delete-account")}
           style={{ backgroundColor: "#FF0000" }}
         >

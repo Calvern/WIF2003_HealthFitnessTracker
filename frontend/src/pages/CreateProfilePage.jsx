@@ -136,7 +136,7 @@ const CreateProfilePage = () => {
                 required: "This field is required",
               })}
               type="date"
-              placeholder="Password"
+              placeholder="Date of Birth"
             />
             {errors.dob && (
               <span className="text-danger">{errors.dob.message}</span>

@@ -42,3 +42,19 @@ export const validateUserLogInRequest = [
     .withMessage("Password with 6 or more characters required"),
   handleValidationErrors,
 ];
+
+export const validateUserEditProfileRequest = [
+  body("firstName").isString().notEmpty().withMessage("First Name is required"),
+  body("lastName").isString().notEmpty().withMessage("Last Name is required"),
+  body("email").isString().notEmpty().withMessage("Email is required"),
+  body("gender").isString().notEmpty().withMessage("Gender is required"),
+  body("dob").isDate().withMessage("Date is required"),
+  body("height").isInt().notEmpty().withMessage("Height is required"),
+  body("weight").isInt().notEmpty().withMessage("Weight is required"),
+  body("activityLevel")
+    .isFloat()
+    .notEmpty()
+    .withMessage("Activity Level is required"),
+  body("weightGoal").isInt().notEmpty().withMessage("Weight Goal is required"),
+  handleValidationErrors,
+];

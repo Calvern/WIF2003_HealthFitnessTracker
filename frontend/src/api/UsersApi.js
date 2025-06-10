@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppContext } from "../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -151,6 +152,44 @@ export const useGetProfile = () => {
 
   return {
     user,
+    isLoading,
+    isSuccess,
+    error,
+  };
+};
+
+export const useUpdateProfile = () => {
+  const { showToast } = useAppContext();
+  const queryClient = useQueryClient();
+  const updateProfileRequest = async (formData) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
+      method: "PUT",
+      credentials: "include",
+      body: formData,
+    });
+    if (!response.ok) {
+      throw new Error("Failed to update user profile");
+    }
+    return response.json();
+  };
+  const {
+    mutateAsync: updateUserProfile,
+    isLoading,
+    isSuccess,
+    error,
+  } = useMutation({
+    mutationFn: updateProfileRequest,
+    onSuccess: async () => {
+      queryClient.invalidateQueries(["userInfo"]);
+      showToast("Profile updated successfully!");
+    },
+    onError: (error) => {
+      showToast(error.message);
+    },
+  });
+
+  return {
+    updateUserProfile,
     isLoading,
     isSuccess,
     error,

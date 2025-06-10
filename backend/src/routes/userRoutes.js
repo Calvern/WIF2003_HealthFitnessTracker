@@ -4,6 +4,7 @@ import { getUserGoals } from "../controllers/userController.js";
 import {
   validateUserCreatePhysicalInfoRequest,
   validateUserCreateProfileRequest,
+  validateUserEditProfileRequest,
   validateUserRegisterRequest,
 } from "../middlewares/validation.js";
 import { verifyToken } from "../middlewares/auth.js";
@@ -40,6 +41,14 @@ router.put(
   userController.registerMyUserPhysicalInfo
 );
 router.get("/profile", verifyToken, userController.getMyUserInfo);
+
+router.put(
+  "/profile",
+  upload.single("imageFile"),
+  validateUserEditProfileRequest,
+  verifyToken,
+  userController.updateMyUserProfile
+);
 
 router.get("/goals", verifyToken, getUserGoals);
 

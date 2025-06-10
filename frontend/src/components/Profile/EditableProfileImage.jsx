@@ -1,41 +1,54 @@
 import { Form } from "react-bootstrap";
 import { CameraFill } from "react-bootstrap-icons";
 
-const EditableProfileImage = ({ formData, setFormData, isEditing }) => {
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setFormData({ ...formData, profileImage: imageUrl });
-    }
-  };
-
+const EditableProfileImage = ({
+  imagePreview,
+  setImagePreview,
+  isEditing,
+  register,
+  errors,
+}) => {
   return (
-    <Form.Group controlId="formFile" className="mb-4 text-center">
+    <Form.Group className="mb-4 text-center">
       <div
-        className="rounded-circle border d-flex justify-content-center align-items-center mx-auto"
+        className="rounded-circle border d-flex align-items-center position-relative"
         style={{
-          width: "120px",
-          height: "120px",
+          width: "150px",
+          height: "150px",
           cursor: isEditing ? "pointer" : "default",
           overflow: "hidden",
           backgroundColor: "#D9D9D9",
-          position: "relative",
         }}
         onClick={() => {
-          if (isEditing) {
-            document.getElementById("fileUpload").click();
-          }
+          if (isEditing) document.getElementById("fileUpload").click();
         }}
       >
-        {formData.profileImage ? (
+        {imagePreview ? (
           <img
-            src={formData.profileImage}
-            alt="Profile"
+            src={imagePreview}
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            alt="Profile"
           />
         ) : (
           <CameraFill size={40} />
+        )}
+
+        {isEditing && imagePreview && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.4)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <CameraFill size={40} color="white" />
+          </div>
         )}
       </div>
 
@@ -44,8 +57,25 @@ const EditableProfileImage = ({ formData, setFormData, isEditing }) => {
         type="file"
         accept="image/*"
         style={{ display: "none" }}
-        onChange={handleImageChange}
+        disabled={!isEditing}
+        {...register("imageFile", {
+          validate: (files) => {
+            if (!files || files.length === 0) return true;
+            if (files.length > 1) return "Only one image allowed";
+            return true;
+          },
+          onChange: (e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              setImagePreview(URL.createObjectURL(file));
+            }
+          },
+        })}
       />
+
+      {errors?.imageFile && (
+        <span className="text-danger">{errors.imageFile.message}</span>
+      )}
     </Form.Group>
   );
 };

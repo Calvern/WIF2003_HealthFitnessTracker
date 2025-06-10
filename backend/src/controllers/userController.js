@@ -98,11 +98,38 @@ const getMyUserInfo = async (req, res) => {
   }
 };
 
+const updateMyUserProfile = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const user = await User.findOneAndUpdate({ _id: userId }, req.body, {
+      new: true,
+    });
+
+    if (!user) {
+      res.status(404).json({ message: "User does not exist" });
+    }
+
+    const imageFile = req.file;
+    if (imageFile) {
+      const imageUrl = await uploadImagesToCloudinary(imageFile);
+      user.profilePictureUrl = imageUrl;
+    }
+    console.log("Received profile data:", user.profilePictureUrl);
+    await user.save();
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 export default {
   registerMyUser,
   registerMyUserProfile,
   registerMyUserPhysicalInfo,
   getMyUserInfo,
+  updateMyUserProfile,
 };
 
 async function uploadImagesToCloudinary(imageFile) {
