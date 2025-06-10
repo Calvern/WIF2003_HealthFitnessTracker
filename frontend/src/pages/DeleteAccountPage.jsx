@@ -4,6 +4,7 @@ import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 
 const DeleteAccountPage = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
@@ -36,7 +37,7 @@ const DeleteAccountPage = () => {
         <Button
           style={{ backgroundColor: "#FF0000" }}
           className="w-100 mt-3 rounded-3 mb-2"
-          type="submit"
+          onClick={() => navigate("/profile")}
         >
           Delete Account
         </Button>

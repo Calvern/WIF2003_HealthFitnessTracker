@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppContext } from "../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -122,6 +123,79 @@ export const useCreatePhysicalInfo = () => {
   };
 };
 
+export const useGetProfile = () => {
+  const { showToast } = useAppContext();
+
+  const getProfile = async () => {
+    const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch user info");
+    }
+    return response.json();
+  };
+
+  const {
+    data: user,
+    isLoading,
+    isSuccess,
+    error,
+  } = useQuery({
+    queryKey: ["userInfo"],
+    queryFn: getProfile,
+    onError: (error) => {
+      showToast(error.message);
+    },
+  });
+
+  return {
+    user,
+    isLoading,
+    isSuccess,
+    error,
+  };
+};
+
+export const useUpdateProfile = () => {
+  const { showToast } = useAppContext();
+  const queryClient = useQueryClient();
+  const updateProfileRequest = async (formData) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
+      method: "PUT",
+      credentials: "include",
+      body: formData,
+    });
+    if (!response.ok) {
+      throw new Error("Failed to update user profile");
+    }
+    return response.json();
+  };
+  const {
+    mutateAsync: updateUserProfile,
+    isLoading,
+    isSuccess,
+    error,
+  } = useMutation({
+    mutationFn: updateProfileRequest,
+    onSuccess: async () => {
+      queryClient.invalidateQueries(["userInfo"]);
+      showToast("Profile updated successfully!");
+    },
+    onError: (error) => {
+      showToast(error.message);
+    },
+  });
+
+  return {
+    updateUserProfile,
+    isLoading,
+    isSuccess,
+    error,
+  };
+};
+
 export const getUserGoals = async () => {
   const response = await fetch(`${API_BASE_URL}/api/users/goals`, {
     credentials: "include",
@@ -132,4 +206,4 @@ export const getUserGoals = async () => {
   }
 
   return response.json();
-}
+};

@@ -41,6 +41,10 @@ const userSchema = mongoose.Schema({
     type: Number,
     enum: [-500, 0, 500],
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
   dailyTargetCalorie: {
     type: Number,
   },
