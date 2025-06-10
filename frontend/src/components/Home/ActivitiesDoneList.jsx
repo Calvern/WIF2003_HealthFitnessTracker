@@ -1,10 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Card, ButtonGroup, ToggleButton } from "react-bootstrap";
 import { GiWeightLiftingUp } from "react-icons/gi";
 import { GrYoga } from "react-icons/gr";
 import { format, isWithinInterval, subDays, parseISO } from "date-fns";
+import { fetchExercisesRequest } from "../../api/ExerciseApi";
 
-const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
+const ActivitiesDoneCard = ({
+  onActivityClick,
+  showToggle = true,
+}) => {
+  const useExercises = () => {
+    return useQuery({
+      queryKey: ["exercises"],
+      queryFn: fetchExercisesRequest,
+    });
+  };
+  const { data: activitiesData = [], isPending } = useExercises();
+
   const [selectedRange, setSelectedRange] = useState("7D");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -13,99 +26,34 @@ const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
     { value: "yesterday", label: "Yesterday" },
     { value: "7D", label: "7D" },
     { value: "30D", label: "30D" },
-    { value: "3M", label: "3M" },
-    { value: "6M", label: "6M" },
+    { value: "All", label: "All" },
   ];
 
-  const categoryOptions = ["All", "Workout", "Cardiovascular"];
-
-  const activitiesData = [
-    {
-      activity: "Running",
-      category: "Cardiovascular",
-      dateTime: "2025-05-14T07:30:00",
-    },
-    {
-      activity: "Push-ups",
-      category: "Workout",
-      dateTime: "2025-05-10T07:30:00",
-    },
-    {
-      activity: "Cycling",
-      category: "Cardiovascular",
-      dateTime: "2025-04-15T07:30:00",
-    },
-    {
-      activity: "Squats",
-      category: "Workout",
-      dateTime: "2025-05-13T07:30:00",
-    },
-    {
-      activity: "Yoga",
-      category: "Workout",
-      dateTime: "2025-05-12T07:30:00",
-    },
-    {
-      activity: "Swimming",
-      category: "Cardiovascular",
-      dateTime: "2025-05-11T07:30:00",
-    },
-    {
-      activity: "Walking",
-      category: "Cardiovascular",
-      dateTime: "2025-05-09T07:30:00",
-    },
-    {
-      activity: "Deadlifts",
-      category: "Workout",
-      dateTime: "2025-05-08T07:30:00",
-    },
-    {
-      activity: "Bench Press",
-      category: "Workout",
-      dateTime: "2025-05-07T07:30:00",
-    },
-    {
-      activity: "Hiking",
-      category: "Cardiovascular",
-      dateTime: "2025-05-06T07:30:00",
-    },
-    {
-      activity: "Jump Rope",
-      category: "Workout",
-      dateTime: "2025-05-05T07:30:00",
-    },
-    {
-      activity: "Rowing",
-      category: "Cardiovascular",
-      dateTime: "2025-05-04T07:30:00",
-    },
-  ];
+  const categoryOptions = ["All", "Workout", "Cardio"];
 
   const getFilteredActivities = () => {
     const now = new Date();
-    let filtered = activitiesData;
+    let filtered = activitiesData || [];
 
     if (showToggle) {
-      // Date range filter
       switch (selectedRange) {
         case "today":
           filtered = filtered.filter(
             (a) =>
-              format(new Date(a.dateTime), "yyyy-MM-dd") ===
+              format(new Date(a.date), "yyyy-MM-dd") ===
               format(now, "yyyy-MM-dd")
           );
           break;
         case "yesterday":
           filtered = filtered.filter(
             (a) =>
-              format(new Date(a.dateTime), "yyyy-MM-dd") ===
+              format(new Date(a.date), "yyyy-MM-dd") ===
               format(subDays(now, 1), "yyyy-MM-dd")
           );
           break;
         case "7D":
           filtered = filtered.filter((a) =>
-            isWithinInterval(parseISO(a.dateTime), {
+            isWithinInterval(parseISO(a.date), {
               start: subDays(now, 6),
               end: now,
             })
@@ -113,24 +61,8 @@ const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
           break;
         case "30D":
           filtered = filtered.filter((a) =>
-            isWithinInterval(parseISO(a.dateTime), {
+            isWithinInterval(parseISO(a.date), {
               start: subDays(now, 29),
-              end: now,
-            })
-          );
-          break;
-        case "3M":
-          filtered = filtered.filter((a) =>
-            isWithinInterval(parseISO(a.dateTime), {
-              start: subDays(now, 90),
-              end: now,
-            })
-          );
-          break;
-        case "6M":
-          filtered = filtered.filter((a) =>
-            isWithinInterval(parseISO(a.dateTime), {
-              start: subDays(now, 180),
               end: now,
             })
           );
@@ -139,27 +71,25 @@ const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
           break;
       }
 
-      // Category filter
       if (selectedCategory !== "All") {
-        filtered = filtered.filter((a) => a.category === selectedCategory);
+        filtered = filtered.filter(
+          (a) => a.type === selectedCategory.toLowerCase()
+        );
       }
     }
 
-    // If no toggle shown, return only latest 8
     if (!showToggle) {
       filtered = filtered
-        .sort(
-          (a, b) =>
-            new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()
-        )
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, 8);
     }
-
     return filtered;
   };
 
+  if (isPending) {
+    return <div className="text-center">Loading activities...</div>;
+  }
   const filteredActivities = getFilteredActivities();
-
   return (
     <>
       {showToggle && (
@@ -257,22 +187,22 @@ const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
                 onClick={() => onActivityClick(activity)}
               >
                 <div className="col-12 col-md-6 fw-semibold text-dark">
-                  {activity.activity}
+                  {activity.name}
                 </div>
                 <div className="col-12 col-md-4">
                   <span
                     style={{
                       color:
-                        activity.category === "Workout" ? "#198754" : "#0d6efd",
+                        activity.type === "workout" ? "#198754" : "#0d6efd",
                       fontSize: "0.85rem",
                       fontWeight: 500,
                     }}
                   >
-                    {activity.category}
+                    {activity.type}
                   </span>
                 </div>
                 <div className="col-12 col-md-2" style={{ color: "#6c757d" }}>
-                  {format(new Date(activity.dateTime), "dd MMM")}
+                  {format(new Date(activity.date), "dd MMM")}
                 </div>
               </div>
             ))

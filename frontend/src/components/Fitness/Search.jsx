@@ -1,39 +1,27 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
 import { Search, X } from "react-bootstrap-icons";
-import { useForm } from "react-hook-form";
 
-const SearchBar = ({ width = "75%", query, setQuery, resetSearch }) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: { query: query || "" },
-  });
+const SearchBar = ({ width = "75%", onSearchChange }) => {
+  const [searchValue, setsearchValue] = useState("");
 
-  useEffect(() => {
-    reset({ query: query });
-  }, [query]);
-
-  const onSubmit = handleSubmit(setQuery);
-
-  const onReset = () => {
-    reset({ query: "" });
-    resetSearch();
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setsearchValue(value);
+    if (onSearchChange) {
+      onSearchChange(value);
+    }
   };
 
   return (
-    <Form onSubmit={onSubmit} className="mt-2">
+    <Form onSubmit={(e) => e.preventDefault()} className="mt-2">
       <InputGroup style={{ width }}>
         <FormControl
-          {...register("query", {
-            required: "This field is required",
-          })}
           className="border-0 border-bottom border-dark border-2 rounded-0 shadow-none"
           style={{ backgroundColor: "transparent" }}
           placeholder="Search"
+          value={searchValue}
+          onChange={handleChange}
         />
         <Button
           className="border-0 border-bottom border-dark border-2 rounded-0"
@@ -45,14 +33,14 @@ const SearchBar = ({ width = "75%", query, setQuery, resetSearch }) => {
         <Button
           className="border-0 border-bottom border-dark border-2 rounded-0"
           style={{ backgroundColor: "transparent", color: "black" }}
-          onClick={onReset}
+          onClick={() => {
+            setsearchValue("");
+            onSearchChange("");
+          }}
         >
           <X size={20} />
         </Button>
       </InputGroup>
-      {errors.query && (
-        <span className="text-danger">{errors.query.message}</span>
-      )}
     </Form>
   );
 };

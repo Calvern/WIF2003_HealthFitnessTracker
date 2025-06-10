@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import exerciseRoutes from "./routes/exerciseRoutes.js";
 import foodDiaryRoutes from "./routes/foodDiaryRoutes.js";
 import mealRoutes from "./routes/mealRoutes.js"
 import cookieParser from "cookie-parser";
@@ -34,6 +35,8 @@ cloudinary.config({
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/exercises", exerciseRoutes);
+
 app.use("/api/food-diary", foodDiaryRoutes);
 app.use("/api/meal", mealRoutes);
 

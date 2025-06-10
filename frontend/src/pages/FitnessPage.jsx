@@ -1,4 +1,5 @@
-import SearchBar from "../components/Nutrition/SearchBar";
+import SearchBar from "../components/Fitness/Search";
+import { useQueryClient } from "@tanstack/react-query";
 import ActivitiesDoneCard from "../components/Home/ActivitiesDoneList";
 import WorkoutDetailsModal from "../components/Fitness/WorkoutDetailsModal";
 import CardioDetailsModal from "../components/Fitness/CardioDetailsModal";
@@ -7,13 +8,16 @@ import { useState } from "react";
 import LogCardioModal from "../components/Fitness/LogCardioModal";
 import LogWorkoutModal from "../components/Fitness/LogWorkoutModal";
 import StepsCard from "../components/Fitness/StepsCard";
+import { logExercise } from "../api/ExerciseApi";
 
-const LogCardioPage = () => {
+const FitnessPage = () => {
   const [selectedCardio, setSelectedCardio] = useState(null);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
-  const [selectedLog, setSelectedLog] = useState(null);
   const [showWorkoutModal, setShowWorkoutModal] = useState(false);
   const [showCardioModal, setShowCardioModal] = useState(false);
+  const [selectedLog, setSelectedLog] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  
 
   const [cardioLog, setCardioLog] = useState({
     date: "",
@@ -28,39 +32,63 @@ const LogCardioPage = () => {
     reps: "",
   });
 
-  const handleCardioSubmit = (e) => {
-    e.preventDefault();
-    console.log("Cardio Activity:", selectedCardio);
-    console.log("Log:", cardioLog);
+  const handleCardioSubmit = async (log) => {
     setSelectedCardio(null);
-    setCardioLog({ date: "", time: "", sets: "" });
+    setCardioLog({ date: "", time: "", duration: "" });
+
+    try {
+      await logExercise(log);
+      alert("Cardio logged!");
+    } catch (error) {
+      console.error("Failed to log cardio", error);
+      alert("Error logging cardio");
+    }
   };
 
-  const handleWorkoutSubmit = (e) => {
-    e.preventDefault();
-    console.log("Workout Activity:", selectedWorkout);
-    console.log("Log:", workoutLog);
+  const handleWorkoutSubmit = async (log) => {
     setSelectedWorkout(null);
     setWorkoutLog({ date: "", time: "", sets: "", reps: "" });
+
+    try {
+      await logExercise(log);
+      alert("Workout logged!");
+    } catch (error) {
+      console.error("Failed to log workout", error);
+      alert("Error logging workout");
+    }
   };
 
+  const handleWorkoutDelete = async () => {
+  try {
+    await deleteExercise(selectedLog.id);
+    alert("Workout removed!");
+    setShowWorkoutModal(false);
+  } catch (err) {
+    console.error("Delete error:", err);
+    alert("Failed to delete workout.");
+  }
+};
+
+
   const handleActivityClick = (activity) => {
-    const date = activity.dateTime.split("T")[0];
-    const time = activity.dateTime.split("T")[1].slice(0, 5);
+    const date = activity.date
+    const time = activity.startTime;
     const commonData = { date, time };
 
-    if (activity.category === "Workout") {
+    if (activity.type === "workout") {
       setSelectedLog({
-        workout: activity.activity,
-        sets: 3,
-        reps: 10,
+        id: activity._id,
+        workout: activity.name,
+        sets: activity.sets,
+        reps: activity.reps,
         ...commonData,
       });
       setShowWorkoutModal(true);
     } else {
       setSelectedLog({
-        cardio: activity.activity,
-        duration: 30,
+        id: activity._id,
+        cardio: activity.name,
+        duration: activity.duration,
         ...commonData,
       });
       setShowCardioModal(true);
@@ -68,23 +96,23 @@ const LogCardioPage = () => {
   };
 
   const handleWorkoutDetailsSubmit = () => {
-    // Save workout logic
     setShowWorkoutModal(false);
   };
 
   const handleCardioDetailsSubmit = () => {
-    // Save cardio logic
     setShowCardioModal(false);
   };
 
   return (
     <div className="container px-5 py-5">
-       {/* Activities at the bottom (full width) */}
-       <h5 className="fw-bold mb-3">Fitness Tracker</h5>
+      <h5 className="fw-bold mb-3">Fitness Tracker</h5>
 
       <div className="row">
         <div className="col-12 mb-5">
-          <ActivitiesDoneCard onActivityClick={handleActivityClick} showToggle={true} />
+          <ActivitiesDoneCard
+            onActivityClick={handleActivityClick}
+            showToggle={true}
+          />
           {showWorkoutModal && (
             <WorkoutDetailsModal
               show={showWorkoutModal}
@@ -92,6 +120,7 @@ const LogCardioPage = () => {
               log={selectedLog}
               setLog={setSelectedLog}
               onSubmit={handleWorkoutDetailsSubmit}
+              onDelete={handleWorkoutDelete}
             />
           )}
           {showCardioModal && (
@@ -101,6 +130,7 @@ const LogCardioPage = () => {
               log={selectedLog}
               setLog={setSelectedLog}
               onSubmit={handleCardioDetailsSubmit}
+              onDelete={handleWorkoutDelete}
             />
           )}
         </div>
@@ -143,8 +173,9 @@ const LogCardioPage = () => {
               style={{ height: "350px", overflowY: "auto" }}
             >
               <h3 className="fw-bold my-3 text-center "> Log Exercise</h3>
-              <SearchBar width="100%" />
+              <SearchBar width="100%" onSearchChange={setSearchTerm} />
               <ExerciseSearchList
+                searchItem={searchTerm}
                 onCardioClick={(name) => setSelectedCardio(name)}
                 onWorkoutClick={(name) => setSelectedWorkout(name)}
               />
@@ -156,4 +187,4 @@ const LogCardioPage = () => {
   );
 };
 
-export default LogCardioPage;
+export default FitnessPage;

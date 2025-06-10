@@ -1,6 +1,21 @@
 import { Modal, Button, Form } from "react-bootstrap";
+import { logDailySteps } from "../../api/ExerciseApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 const LogStepsModal = ({ show, onClose, steps, log, setLog, onSubmit }) => {
+  const queryClient = useQueryClient();
+
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await logDailySteps(log);
+      onClose();
+      queryClient.invalidateQueries(["exercises"]);
+    } catch (err) {
+      alert("Error logging steps: " + err.message);
+    }
+  };
+
   return (
     <Modal show={show} onHide={onClose} centered>
       <Modal.Header closeButton>
@@ -8,7 +23,7 @@ const LogStepsModal = ({ show, onClose, steps, log, setLog, onSubmit }) => {
           <h1 className="fw-bold">Log Steps</h1>
         </Modal.Title>
       </Modal.Header>
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={handleOnSubmit}>
         <Modal.Body>
           <Form.Group className="mb-3">
             <Form.Label>Date</Form.Label>
@@ -27,8 +42,10 @@ const LogStepsModal = ({ show, onClose, steps, log, setLog, onSubmit }) => {
               type="number"
               placeholder="e.g., 300"
               min={0}
-              value={log.sets}
-              onChange={(e) => setLog({ ...log, sets: e.target.value })}
+              value={log.steps}
+              onChange={(e) =>
+                setLog({ ...log, steps: Number(e.target.value) })
+              }
               required
             />
           </Form.Group>

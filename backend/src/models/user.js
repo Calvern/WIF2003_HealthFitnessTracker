@@ -44,6 +44,14 @@ const userSchema = mongoose.Schema({
   dailyTargetCalorie: {
     type: Number,
   },
+
+  dailyTargetSteps: {
+    type: Number,
+  },
+  dailyTargetActivity: {
+    type: Number,
+  },
+
   favouriteFood: {
     type: [
       {
