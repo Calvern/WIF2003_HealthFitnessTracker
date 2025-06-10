@@ -156,3 +156,15 @@ export const useGetProfile = () => {
     error,
   };
 };
+
+export const getUserGoals = async () => {
+  const response = await fetch(`${API_BASE_URL}/api/users/goals`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch user goals");
+  }
+
+  return response.json();
+};

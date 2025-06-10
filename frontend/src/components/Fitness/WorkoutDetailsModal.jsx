@@ -1,15 +1,58 @@
 import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateWorkoutExercise, deleteWorkoutExercise } from "../../api/ExerciseApi";
 
-const WorkoutDetailsModal = ({ show, onClose, log, setLog, onSubmit }) => {
-  console.log(" entry clicked:", log);
-
+const WorkoutDetailsModal = ({
+  show,
+  onClose,
+  log,
+  setLog,
+  onSubmit,
+  onDelete,
+}) => {
+  const queryClient = useQueryClient();
   const [editMode, setEditMode] = useState(false);
+
+  const { mutate: editExercise } = useMutation({
+    mutationFn: updateWorkoutExercise,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["exercises"]);
+    },
+    onError: (err) => {
+      console.error("Update failed:", err.message);
+    },
+  });
 
   const handleSave = (e) => {
     e.preventDefault();
-    onSubmit(); // Call parent handler
-    setEditMode(false); // Return to view mode
+    editExercise({
+      id: log.id,
+      data: {
+        date: log.date,
+        startTime: log.startTime,
+        sets: log.sets,
+        reps: log.reps,
+      },
+    });
+
+    setEditMode(false);
+    onClose();
+  };
+
+  const { mutate: removeExercise } = useMutation({
+    mutationFn: deleteWorkoutExercise,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["exercises"]); // Refresh the list
+    },
+    onError: (err) => {
+      console.error("Delete failed:", err.message);
+    },
+  });
+
+  const handleDelete = (id) => {
+    removeExercise(id);
+    onClose();
   };
 
   return (
@@ -100,7 +143,7 @@ const WorkoutDetailsModal = ({ show, onClose, log, setLog, onSubmit }) => {
                 >
                   Edit
                 </Button>
-                <Button variant="danger">
+                <Button variant="danger" onClick={() => handleDelete(log.id)}>
                   Remove
                 </Button>
               </div>

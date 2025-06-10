@@ -1,5 +1,6 @@
 import express from "express";
 import userController from "../controllers/userController.js";
+import { getUserGoals } from "../controllers/userController.js";
 import {
   validateUserCreatePhysicalInfoRequest,
   validateUserCreateProfileRequest,
@@ -39,5 +40,7 @@ router.put(
   userController.registerMyUserPhysicalInfo
 );
 router.get("/profile", verifyToken, userController.getMyUserInfo);
+
+router.get("/goals", verifyToken, getUserGoals);
 
 export default router;
