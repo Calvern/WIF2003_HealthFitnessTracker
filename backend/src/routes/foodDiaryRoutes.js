@@ -8,4 +8,8 @@ router.post("/recommend-food", verifyToken, foodDiaryController.recommendMeal);
 
 router.get("/", verifyToken, foodDiaryController.getDiaryByDate);
 
+router.post("/", verifyToken, foodDiaryController.addFoodToDiary);
+
+router.delete("/", verifyToken, foodDiaryController.removeFoodFromDiary);
+
 export default router;
