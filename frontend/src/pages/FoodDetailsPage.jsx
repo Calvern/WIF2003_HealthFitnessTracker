@@ -14,13 +14,13 @@ const FoodDetailsPage = () => {
   }, []);
   const navigate = useNavigate();
   const { mealId } = useParams();
-  const { mealDetails, isLoading: mealDetailsLoading } = useGetMealById(mealId);
-  const { nutritionImageUrl, isLoading: nutritionImageLoading } =
+  const { mealDetails, isPending: mealDetailsPending } = useGetMealById(mealId);
+  const { nutritionImageUrl, isPending: nutritionImagePending } =
     useGetNutritionImage(mealId);
-  const { recipeUrl, isLoading: recipeImageLoading } =
+  const { recipeUrl, isPending: recipeImagePending } =
     useGetRecipeImage(mealId);
 
-  if (mealDetailsLoading || nutritionImageLoading || recipeImageLoading) {
+  if (mealDetailsPending || nutritionImagePending || recipeImagePending) {
     return <div>Loading</div>;
   }
   return (
