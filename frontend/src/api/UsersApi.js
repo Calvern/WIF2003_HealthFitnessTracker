@@ -121,3 +121,38 @@ export const useCreatePhysicalInfo = () => {
     error,
   };
 };
+
+export const useGetProfile = () => {
+  const { showToast } = useAppContext();
+
+  const getProfile = async () => {
+    const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch user info");
+    }
+    return response.json();
+  };
+
+  const {
+    data: user,
+    isLoading,
+    isSuccess,
+    error,
+  } = useQuery({
+    queryKey: ["userInfo"],
+    queryFn: getProfile,
+    onError: (error) => {
+      showToast(error.message);
+    },
+  });
+
+  return {
+    user,
+    isLoading,
+    isSuccess,
+    error,
+  };
+};

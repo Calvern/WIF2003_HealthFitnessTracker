@@ -2,7 +2,7 @@ import express from "express";
 import userController from "../controllers/userController.js";
 import { validateUserRegisterRequest } from "../middlewares/validation.js";
 import { verifyToken } from "../middlewares/auth.js";
-import multer from "multer"
+import multer from "multer";
 
 const router = express.Router();
 
@@ -31,5 +31,6 @@ router.put(
   verifyToken,
   userController.registerMyUserPhysicalInfo
 );
+router.get("/profile", verifyToken, userController.getMyUserInfo);
 
 export default router;
