@@ -1,25 +1,49 @@
+import { useState } from "react";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useSignInUser } from "../api/AuthApi";
+import { Modal } from "react-bootstrap";
 
 const SignInPage = () => {
   const { signIn } = useSignInUser();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = handleSubmit((data) => {
-    signIn(data);
-  });
+  const [showModal, setShowModal] = useState(false);
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [loginError, setLoginError] = useState("");
+
+  const handleLogin = async (data, reactivate = false) => {
+    setCredentials(data);
+    try {
+      await signIn({ ...data, reactivate });
+    } catch (error) {
+      if (error.message.toLowerCase().includes("deactivated")) {
+        setShowModal(true);
+      } else {
+        setLoginError(error.message);
+      }
+    }
+  };
+
+  const onSubmit = handleSubmit((data) => handleLogin(data));
+
+  const handleReactivate = () => {
+    setShowModal(false);
+    handleLogin(credentials, true);
+  };
+
   return (
     <Container className="mt-5 d-flex flex-column justify-content-center align-items-center">
       <div
-        className="border p-5 rounded-4 w-100 shadow "
+        className="border p-5 rounded-4 w-100 shadow"
         style={{ maxWidth: "450px" }}
       >
         <h1 className="fw-bold text-center mb-5">Sign In</h1>
@@ -71,13 +95,31 @@ const SignInPage = () => {
             Sign In
           </Button>
         </Form>
-        <span className="text-center ">
-          Don't have an account?{" "}
+        <span className="text-center">
+          Don’t have an account?{" "}
           <Link to="/register" className="link-style">
             Register
           </Link>
         </span>
       </div>
+
+      {/* 🔔 Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Reactivate Account</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Your account is deactivated. Would you like to reactivate it now?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleReactivate}>
+            Reactivate
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

@@ -21,7 +21,7 @@ const ChangePasswordPage = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const { currentPassword, newPassword, confirmPassword } = data;
+    const { currentPassword, newPassword } = data;
 
     try {
       await changeUserPassword({ currentPassword, newPassword });

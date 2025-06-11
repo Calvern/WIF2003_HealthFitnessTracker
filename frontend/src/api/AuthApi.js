@@ -40,10 +40,12 @@ export const useSignInUser = () => {
       body: JSON.stringify(formData),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error("Invalid credentials");
+      throw new Error(data.message || "Invalid credentials");
     }
-    return response.json();
+    return data;
   };
 
   const { mutateAsync: signIn } = useMutation({
