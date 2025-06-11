@@ -166,7 +166,7 @@ export const deactivateMyAccount = async (req, res) => {
 
     res.cookie("auth_token", "", {
       httpOnly: true,
-      expires: new Date(0), // Expire now
+      expires: new Date(0),
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
     });
@@ -213,6 +213,33 @@ const reactivateMyAccount = async (req, res) => {
   }
 };
 
+const deleteMyAccount = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { password } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(401).json({ message: "Incorrect password" });
+
+    await User.findByIdAndDelete(userId);
+
+    res.cookie("auth_token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+    return res.status(200).json({ message: "Account deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 export default {
   registerMyUser,
   registerMyUserProfile,
@@ -222,6 +249,7 @@ export default {
   changeMyUserPassword,
   deactivateMyAccount,
   reactivateMyAccount,
+  deleteMyAccount,
 };
 
 async function uploadImagesToCloudinary(imageFile) {

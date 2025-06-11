@@ -241,7 +241,6 @@ export const useChangePassword = () => {
 export const useDeactivateAccount = () => {
   const queryClient = useQueryClient();
   const { showToast } = useAppContext();
-  const navigate = useNavigate();
 
   const deactivateAccountRequest = async (formData) => {
     const respond = await fetch(
@@ -324,6 +323,49 @@ export const useReactivateAccount = () => {
 
   return {
     reactivateUser,
+    isLoading,
+    isSuccess,
+    error,
+  };
+};
+
+export const useDeleteAccount = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useAppContext();
+
+  const deleteAccountRequest = async (formData) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/delete-account`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to delete account");
+    }
+    return data;
+  };
+
+  const {
+    mutateAsync: deleteUserAccount,
+    isLoading,
+    isSuccess,
+    error,
+  } = useMutation({
+    mutationFn: deleteAccountRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["validateToken"] });
+      showToast("Account deleted successfully", "success");
+    },
+    onError: (error) => {
+      showToast(error.message, "danger");
+    },
+  });
+
+  return {
+    deleteUserAccount,
     isLoading,
     isSuccess,
     error,

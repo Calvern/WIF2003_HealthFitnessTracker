@@ -67,6 +67,8 @@ router.put(
 router.put("/deactivate", verifyToken, userController.deactivateMyAccount);
 router.put("/reactivate", userController.reactivateMyAccount);
 
+router.delete("/delete-account", verifyToken, userController.deleteMyAccount);
+
 router.get("/goals", verifyToken, getUserGoals);
 
 export default router;
