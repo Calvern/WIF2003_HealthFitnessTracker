@@ -41,15 +41,11 @@ const ProfilePage = () => {
 
   const formValues = watch();
 
-  const toggleEdit = (e) => {
-    e.preventDefault();
-    if (isEditing) {
-      handleSubmit(onSubmit)();
+  const onSubmit = (data) => {
+    if (!isEditing) {
+      setIsEditing(true); // Just toggle to edit mode
+      return;
     }
-    setIsEditing(!isEditing);
-  };
-
-  const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
     for (const key in data) {
       if (key !== "imageFile") {
@@ -60,14 +56,15 @@ const ProfilePage = () => {
       formData.append("imageFile", data.imageFile[0]);
     }
     updateUserProfile(formData);
-  });
+    setIsEditing(false);
+  };
 
   if (isLoading) return <div>Loading...</div>;
 
   return (
     <Container className="py-5">
       <h2 className="fw-bold">Profile</h2>
-      <Form onSubmit={toggleEdit}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <ProfileCard
           imagePreview={imagePreview}
           setImagePreview={setImagePreview}
@@ -85,18 +82,28 @@ const ProfilePage = () => {
             <Form.Group controlId="formFirstName">
               <Form.Label>First Name</Form.Label>
               <Form.Control
-                {...register("firstName", { required: true })}
+                {...register("firstName", {
+                  required: "This field is required",
+                })}
                 disabled={!isEditing}
               />
+              {errors.firstName && (
+                <span className="text-danger">{errors.firstName.message}</span>
+              )}
             </Form.Group>
           </Col>
           <Col md={6}>
             <Form.Group controlId="formLastName">
               <Form.Label>Last Name</Form.Label>
               <Form.Control
-                {...register("lastName", { required: true })}
+                {...register("lastName", {
+                  required: "This field is required",
+                })}
                 disabled={!isEditing}
               />
+              {errors.lastName && (
+                <span className="text-danger">{errors.lastName.message}</span>
+              )}
             </Form.Group>
           </Col>
         </Row>
@@ -107,9 +114,12 @@ const ProfilePage = () => {
               <Form.Label>Email</Form.Label>
               <Form.Control
                 type="email"
-                {...register("email", { required: true })}
+                {...register("email", { required: "This field is required" })}
                 disabled={!isEditing}
               />
+              {errors.email && (
+                <span className="text-danger">{errors.email.message}</span>
+              )}
             </Form.Group>
           </Col>
           <Col md={6}>
@@ -117,9 +127,12 @@ const ProfilePage = () => {
               <Form.Label>Date of Birth</Form.Label>
               <Form.Control
                 type="date"
-                {...register("dob", { required: true })}
+                {...register("dob", { required: "This field is required" })}
                 disabled={!isEditing}
               />
+              {errors.email && (
+                <span className="text-danger">{errors.email.message}</span>
+              )}
             </Form.Group>
           </Col>
         </Row>
@@ -129,12 +142,15 @@ const ProfilePage = () => {
             <Form.Group controlId="formGender">
               <Form.Label>Gender</Form.Label>
               <Form.Select
-                {...register("gender", { required: true })}
+                {...register("gender", { required: "This field is required" })}
                 disabled={!isEditing}
               >
                 <option value="Female">Female</option>
                 <option value="Male">Male</option>
               </Form.Select>
+              {errors.gender && (
+                <span className="text-danger">{errors.gender.message}</span>
+              )}
             </Form.Group>
           </Col>
           <Col md={3}>
@@ -144,11 +160,16 @@ const ProfilePage = () => {
                 <Form.Control
                   type="number"
                   min={0}
-                  {...register("weight", { required: true })}
+                  {...register("weight", {
+                    required: "This field is required",
+                  })}
                   disabled={!isEditing}
                 />
                 <InputGroup.Text>kg</InputGroup.Text>
               </InputGroup>
+              {errors.weight && (
+                <span className="text-danger">{errors.weight.message}</span>
+              )}
             </Form.Group>
           </Col>
           <Col md={3}>
@@ -158,11 +179,16 @@ const ProfilePage = () => {
                 <Form.Control
                   type="number"
                   min={0}
-                  {...register("height", { required: true })}
+                  {...register("height", {
+                    required: "This field is required",
+                  })}
                   disabled={!isEditing}
                 />
                 <InputGroup.Text>cm</InputGroup.Text>
               </InputGroup>
+              {errors.height && (
+                <span className="text-danger">{errors.height.message}</span>
+              )}
             </Form.Group>
           </Col>
         </Row>
@@ -172,7 +198,9 @@ const ProfilePage = () => {
             <Form.Group controlId="formActivityLevel">
               <Form.Label>Activity Level</Form.Label>
               <Form.Select
-                {...register("activityLevel", { required: true })}
+                {...register("activityLevel", {
+                  required: "This field is required",
+                })}
                 disabled={!isEditing}
               >
                 <option value={1.2}>Sedentary (little/no exercise)</option>
@@ -180,19 +208,29 @@ const ProfilePage = () => {
                 <option value={1.55}>Moderately Active (3-5 days/week)</option>
                 <option value={1.725}>Very Active (6-7 days/week)</option>
               </Form.Select>
+              {errors.activityLevel && (
+                <span className="text-danger">
+                  {errors.activityLevel.message}
+                </span>
+              )}
             </Form.Group>
           </Col>
           <Col md={6}>
             <Form.Group controlId="formWeightGoal">
               <Form.Label>Weight Goal</Form.Label>
               <Form.Select
-                {...register("weightGoal", { required: true })}
+                {...register("weightGoal", {
+                  required: "This field is required",
+                })}
                 disabled={!isEditing}
               >
                 <option value={-500}>Lose Weight</option>
                 <option value={0}>Maintain Weight</option>
                 <option value={500}>Gain Weight</option>
               </Form.Select>
+              {errors.weightGoal && (
+                <span className="text-danger">{errors.weightGoal.message}</span>
+              )}
             </Form.Group>
           </Col>
         </Row>

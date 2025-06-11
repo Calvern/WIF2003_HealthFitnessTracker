@@ -58,3 +58,13 @@ export const validateUserEditProfileRequest = [
   body("weightGoal").isInt().notEmpty().withMessage("Weight Goal is required"),
   handleValidationErrors,
 ];
+
+export const validateUserChangePasswordRequest = [
+  body("currentPassword")
+    .notEmpty()
+    .withMessage("Current password is required"),
+  body("newPassword")
+    .isLength({ min: 6 })
+    .withMessage("Password with 6 or more characters required"),
+  handleValidationErrors,
+];

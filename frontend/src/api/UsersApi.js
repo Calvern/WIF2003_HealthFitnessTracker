@@ -37,7 +37,7 @@ export const useRegister = () => {
       navigate("/create-profile");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -74,7 +74,7 @@ export const useCreateProfile = () => {
       navigate("/calorie-calculator");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -111,7 +111,7 @@ export const useCreatePhysicalInfo = () => {
   } = useMutation({
     mutationFn: createPhysicalInfoRequest,
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -146,7 +146,7 @@ export const useGetProfile = () => {
     queryKey: ["userInfo"],
     queryFn: getProfile,
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -184,12 +184,54 @@ export const useUpdateProfile = () => {
       showToast("Profile updated successfully!");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
   return {
     updateUserProfile,
+    isLoading,
+    isSuccess,
+    error,
+  };
+};
+
+export const useChangePassword = () => {
+  const { showToast } = useAppContext();
+
+  const changePasswordRequest = async (formData) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/change-password`, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || "Failed to change password");
+    }
+    return response.json();
+  };
+
+  const {
+    mutateAsync: changeUserPassword,
+    isLoading,
+    isSuccess,
+    error,
+  } = useMutation({
+    mutationFn: changePasswordRequest,
+    onSuccess: async () => {
+      showToast("Password changed successfully!");
+    },
+    onError: (error) => {
+      showToast(error.message, "danger");
+    },
+  });
+
+  return {
+    changeUserPassword,
     isLoading,
     isSuccess,
     error,

@@ -54,7 +54,7 @@ export const useSignInUser = () => {
       showToast("Sign in successful!");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -83,7 +83,7 @@ export const useSignOutUser = () => {
       showToast("Signed out");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 

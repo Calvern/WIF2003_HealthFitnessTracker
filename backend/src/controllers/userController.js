@@ -2,6 +2,7 @@ import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 import calculateAge from "../utilities/calculateAge.js";
 import cloudinary from "cloudinary";
+import bcrypt from "bcryptjs";
 
 const registerMyUser = async (req, res) => {
   try {
@@ -89,7 +90,7 @@ const getMyUserInfo = async (req, res) => {
     const userId = req.userId;
     const user = await User.findById(userId).select("-password");
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User does not exist" });
     }
     return res.status(200).json(user);
   } catch (error) {
@@ -124,12 +125,40 @@ const updateMyUserProfile = async (req, res) => {
   }
 };
 
+const changeMyUserPassword = async (req, res) => {
+  try {
+    console.log("🔧 req.body:", req.body);
+    console.log("🔧 userId:", req.userId);
+
+    const userId = req.userId;
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User does not exist" });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch)
+      return res.status(401).json({ message: "Incorrect current password" });
+
+    user.password = newPassword;
+    await user.save();
+
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 export default {
   registerMyUser,
   registerMyUserProfile,
   registerMyUserPhysicalInfo,
   getMyUserInfo,
   updateMyUserProfile,
+  changeMyUserPassword,
 };
 
 async function uploadImagesToCloudinary(imageFile) {
