@@ -141,3 +141,31 @@ export const useRemoveFoodFromDiary = () => {
     isPending,
   };
 };
+
+export const useGetCaloriesSummaryByDay = (params) => {
+  const searchParams = new URLSearchParams();
+  searchParams.append("date", params.date);
+
+  const getCalorieSummaryByDayRequest = async () => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/food-diary/calorie-summary-day?${searchParams}`,
+      {
+        credentials: "include",
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to get calorie summary");
+    }
+    return response.json();
+  };
+
+  const { data: calorieSummary, isPending } = useQuery({
+    queryKey: ["getCalorieSummaryByDay", params],
+    queryFn: getCalorieSummaryByDayRequest,
+  });
+
+  return {
+    calorieSummary,
+    isPending,
+  };
+};

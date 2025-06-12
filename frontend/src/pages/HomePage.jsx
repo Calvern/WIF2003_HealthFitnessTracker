@@ -11,8 +11,12 @@ import BarChartCard from "../components/Home/BarChartCard";
 import LineChartCard from "../components/Home/LineChartCard";
 import ActivitiesDoneCard from "../components/Home/ActivitiesDoneList";
 import UpcomingRemindersCard from "../components/Home/UpcomingRemindersCard";
+import { useGetCaloriesSummaryByDay } from "../api/FoodDiaryApi";
 
 const HomePage = () => {
+  const formatDate = (date) => {
+    return date.toISOString().split("T")[0]; // yyyy-mm-dd
+  };
   const chartData = {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     datasets: [
@@ -82,7 +86,14 @@ const HomePage = () => {
     { title: "Grocery shopping", date: "2025-05-18", time: "5:00 PM" },
     { title: "Gym session", date: "2025-05-19", time: "7:00 PM" },
   ];
+  const { calorieSummary, isPending: caloriePending } =
+    useGetCaloriesSummaryByDay({
+      date: formatDate(new Date()),
+    });
 
+  if (caloriePending) {
+    return <div>Loading</div>;
+  }
   return (
     <Container className="py-5">
       <Row className="mb-5 gy-5 justify-content-center">
@@ -111,7 +122,7 @@ const HomePage = () => {
           {
             icon: <BsCupStraw size={20} />,
             title: "Calories Intake",
-            value: "1,450 kcal",
+            value: `${calorieSummary.totalCalories} kcal`,
             percentageText: "72% of daily goal",
             iconBgColor: "#fd7e14",
           },
@@ -167,8 +178,7 @@ const HomePage = () => {
 
       <Row className="mb-5 justify-content-center">
         <Col className="mt-5" xs={12} md={6} lg={7}>
-          <ActivitiesDoneCard
-          />
+          <ActivitiesDoneCard />
         </Col>
         <Col xs={12} md={6} lg={5}>
           <UpcomingRemindersCard reminders={reminders} />
