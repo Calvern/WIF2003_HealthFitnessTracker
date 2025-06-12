@@ -8,14 +8,13 @@ import { useCreateReminder } from "../api/ReminderApi";
 
 const CreateReminderPage = () => {
   const [reminder, setReminder] = useState({
-    title: "",
-    date: "",
-    time: "",
-    category: "",
-    leadTime: "",
-    recurring: "",
-    notificationMethod: "",
-    notes: "",
+  title: "",
+  date: "",
+  time: "",
+  category: "",
+  leadTime: "",
+  recurring: "",
+  notes: "",  // Remove notificationMethod from here
   });
 
   const navigate = useNavigate();
@@ -33,7 +32,7 @@ const CreateReminderPage = () => {
     try {
       // Sending form data to backend via the useCreateReminder hook
       console.log("Form Data:", data); // Debugging log
-      await createReminder(data); 
+      await createReminder(data); // This triggers the mutation in the hook
     } catch (err) {
       console.log(err);
     }
