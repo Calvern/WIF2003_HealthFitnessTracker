@@ -134,7 +134,7 @@ export const useAddMealToFavourite = () => {
       showToast("Added meal to favourites successfully");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -169,7 +169,7 @@ export const useDeleteMealFromFavourite = () => {
       showToast("Meal successfully removed from favourites");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 

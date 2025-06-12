@@ -6,6 +6,7 @@ import {
   validateUserCreateProfileRequest,
   validateUserEditProfileRequest,
   validateUserRegisterRequest,
+  validateUserChangePasswordRequest,
 } from "../middlewares/validation.js";
 import { verifyToken } from "../middlewares/auth.js";
 import multer from "multer";
@@ -49,6 +50,24 @@ router.put(
   verifyToken,
   userController.updateMyUserProfile
 );
+
+router.put(
+  "/change-password",
+  validateUserChangePasswordRequest,
+  verifyToken,
+  userController.changeMyUserPassword
+);
+
+router.put(
+  "/deactivate-account",
+  verifyToken,
+  userController.deactivateMyAccount
+);
+
+router.put("/deactivate", verifyToken, userController.deactivateMyAccount);
+router.put("/reactivate", userController.reactivateMyAccount);
+
+router.delete("/delete-account", verifyToken, userController.deleteMyAccount);
 
 router.get("/goals", verifyToken, getUserGoals);
 

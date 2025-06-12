@@ -37,7 +37,7 @@ export const useRegister = () => {
       navigate("/create-profile");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -74,7 +74,7 @@ export const useCreateProfile = () => {
       navigate("/calorie-calculator");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -111,7 +111,7 @@ export const useCreatePhysicalInfo = () => {
   } = useMutation({
     mutationFn: createPhysicalInfoRequest,
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -146,7 +146,7 @@ export const useGetProfile = () => {
     queryKey: ["userInfo"],
     queryFn: getProfile,
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -184,12 +184,188 @@ export const useUpdateProfile = () => {
       showToast("Profile updated successfully!");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
   return {
     updateUserProfile,
+    isLoading,
+    isSuccess,
+    error,
+  };
+};
+
+export const useChangePassword = () => {
+  const { showToast } = useAppContext();
+
+  const changePasswordRequest = async (formData) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/change-password`, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || "Failed to change password");
+    }
+    return response.json();
+  };
+
+  const {
+    mutateAsync: changeUserPassword,
+    isLoading,
+    isSuccess,
+    error,
+  } = useMutation({
+    mutationFn: changePasswordRequest,
+    onSuccess: async () => {
+      showToast("Password changed successfully!");
+    },
+    onError: (error) => {
+      showToast(error.message, "danger");
+    },
+  });
+
+  return {
+    changeUserPassword,
+    isLoading,
+    isSuccess,
+    error,
+  };
+};
+
+export const useDeactivateAccount = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useAppContext();
+
+  const deactivateAccountRequest = async (formData) => {
+    const respond = await fetch(
+      `${API_BASE_URL}/api/users/deactivate-account`,
+      {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    const data = await respond.json();
+    if (!respond.ok) throw new Error(data.message);
+    return data;
+  };
+
+  const {
+    mutateAsync: deactivateUserAccount,
+    isLoading,
+    isSuccess,
+    error,
+  } = useMutation({
+    mutationFn: deactivateAccountRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["validateToken"] });
+      showToast("Account deactivated successfully!");
+    },
+    onError: (error) => showToast(error.message, "danger"),
+  });
+
+  return {
+    deactivateUserAccount,
+    isLoading,
+    isSuccess,
+    error,
+  };
+};
+
+export const useReactivateAccount = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useAppContext();
+  const navigate = useNavigate();
+
+  const reactivateRequest = async ({ email, password }) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/reactivate`, {
+      method: "PUT",
+      credentials: "include", // ensure cookie is set
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to reactivate account");
+    }
+
+    return data;
+  };
+
+  const {
+    mutateAsync: reactivateUser,
+    isLoading,
+    isSuccess,
+    error,
+  } = useMutation({
+    mutationFn: reactivateRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries("validateToken");
+      showToast("Account reactivated and signed in!");
+      navigate("/home");
+    },
+    onError: (error) => {
+      showToast(error.message, "danger");
+    },
+  });
+
+  return {
+    reactivateUser,
+    isLoading,
+    isSuccess,
+    error,
+  };
+};
+
+export const useDeleteAccount = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useAppContext();
+
+  const deleteAccountRequest = async (formData) => {
+    const response = await fetch(`${API_BASE_URL}/api/users/delete-account`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to delete account");
+    }
+    return data;
+  };
+
+  const {
+    mutateAsync: deleteUserAccount,
+    isLoading,
+    isSuccess,
+    error,
+  } = useMutation({
+    mutationFn: deleteAccountRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["validateToken"] });
+      showToast("Account deleted successfully", "success");
+    },
+    onError: (error) => {
+      showToast(error.message, "danger");
+    },
+  });
+
+  return {
+    deleteUserAccount,
     isLoading,
     isSuccess,
     error,

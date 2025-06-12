@@ -40,10 +40,12 @@ export const useSignInUser = () => {
       body: JSON.stringify(formData),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error("Invalid credentials");
+      throw new Error(data.message || "Invalid credentials");
     }
-    return response.json();
+    return data;
   };
 
   const { mutateAsync: signIn } = useMutation({
@@ -54,7 +56,7 @@ export const useSignInUser = () => {
       showToast("Sign in successful!");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -83,7 +85,7 @@ export const useSignOutUser = () => {
       showToast("Signed out");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 

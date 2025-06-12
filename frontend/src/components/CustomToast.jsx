@@ -1,12 +1,12 @@
 import { Toast } from "react-bootstrap";
 
-const CustomToast = ({ message, onClose }) => {
+const CustomToast = ({ message, onClose, variant = "success" }) => {
   return (
     <Toast
       onClose={onClose}
       autohide
       delay={1000}
-      bg="success"
+      bg={variant}
       style={{ width: "200px" }}
     >
       <Toast.Body className=" text-white">

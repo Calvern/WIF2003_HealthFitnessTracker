@@ -30,7 +30,7 @@ export const useRecommendMeals = () => {
       showToast("Meals are recommended");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -98,7 +98,7 @@ export const useRemoveFoodFromDiary = () => {
       showToast("Succesfully removed meal from diary");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 

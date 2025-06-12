@@ -2,6 +2,7 @@ import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 import calculateAge from "../utilities/calculateAge.js";
 import cloudinary from "cloudinary";
+import bcrypt from "bcryptjs";
 
 const registerMyUser = async (req, res) => {
   try {
@@ -89,7 +90,7 @@ const getMyUserInfo = async (req, res) => {
     const userId = req.userId;
     const user = await User.findById(userId).select("-password");
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User does not exist" });
     }
     return res.status(200).json(user);
   } catch (error) {
@@ -124,12 +125,131 @@ const updateMyUserProfile = async (req, res) => {
   }
 };
 
+const changeMyUserPassword = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User does not exist" });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch)
+      return res.status(401).json({ message: "Incorrect current password" });
+
+    user.password = newPassword;
+    await user.save();
+
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+export const deactivateMyAccount = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { password } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(401).json({ message: "Incorrect password" });
+
+    user.deactivated = true;
+    await user.save();
+
+    res.cookie("auth_token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    res.status(200).json({ message: "Account deactivated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const reactivateMyAccount = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(401).json({ message: "Incorrect password" });
+
+    if (!user.deactivated)
+      return res.status(400).json({ message: "Account is already active" });
+
+    user.deactivated = false;
+    await user.save();
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: "1d",
+    });
+
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      maxAge: 86400000,
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Account reactivated and signed in" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const deleteMyAccount = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { password } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(401).json({ message: "Incorrect password" });
+
+    await User.findByIdAndDelete(userId);
+
+    res.cookie("auth_token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+    return res.status(200).json({ message: "Account deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 export default {
   registerMyUser,
   registerMyUserProfile,
   registerMyUserPhysicalInfo,
   getMyUserInfo,
   updateMyUserProfile,
+  changeMyUserPassword,
+  deactivateMyAccount,
+  reactivateMyAccount,
+  deleteMyAccount,
 };
 
 async function uploadImagesToCloudinary(imageFile) {

@@ -1,12 +1,22 @@
 import { useState } from "react";
 import { Button, Container, Form, InputGroup } from "react-bootstrap";
 import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { useDeleteAccount } from "../api/UsersApi";
 
 const DeleteAccountPage = () => {
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
+
+  const { deleteUserAccount, isLoading } = useDeleteAccount();
+
+  const handleDelete = async () => {
+    try {
+      await deleteUserAccount({ password });
+    } catch (error) {
+      showToast(error.message, "danger");
+    }
+  };
 
   return (
     <Container className="py-5 d-flex flex-column justify-content-center align-items-center">
@@ -24,6 +34,8 @@ const DeleteAccountPage = () => {
             <Form.Control
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
               variant="outline-secondary"
@@ -35,11 +47,16 @@ const DeleteAccountPage = () => {
         </Form.Group>
 
         <Button
-          style={{ backgroundColor: "#FF0000" }}
+          variant="danger"
           className="w-100 mt-3 rounded-3 mb-2"
-          onClick={() => navigate("/profile")}
+          onClick={handleDelete}
+          disabled={isLoading || !password}
         >
-          Delete Account
+          {isLoading ? (
+            <Spinner animation="border" size="sm" />
+          ) : (
+            "Delete Account"
+          )}
         </Button>
       </div>
     </Container>
