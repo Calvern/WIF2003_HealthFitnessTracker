@@ -40,13 +40,19 @@ const BarChart = ({ mode, dateIndex }) => {
 
   // Generate all keys to always show full range
   const getWeeklyDateKeys = (startDateStr) => {
-    const startDate = new Date(startDateStr);
-    return [...Array(7)].map((_, i) =>
-      new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i)
-        .toISOString()
-        .split("T")[0]
-    );
+  const startDate = new Date(startDateStr);
+  const mondayOffset = (startDate.getDay() === 0 ? -6 : 1) - startDate.getDay(); // shift Sunday
+  const monday = new Date(startDate);
+  monday.setDate(monday.getDate() + mondayOffset);
+
+
+  return [...Array(7)].map((_, i) => {
+    const d = new Date(startDate);
+    d.setDate(startDate.getDate() + i);
+    return d.toISOString().split("T")[0]; // format: 'YYYY-MM-DD'
+  });
   };
+
 
   const getMonthWeekKeys = (year, month) => {
     const keys = new Set();
