@@ -6,7 +6,7 @@ const SPOON_API_KEY = process.env.SPOONACULAR_API_KEY;
 const recommendMeal = async (req, res) => {
   try {
     const { targetCalories, date } = req.body;
-    console.log(targetCalories)
+    console.log(targetCalories);
     const { data: mealPlan } = await axios.get(
       "https://api.spoonacular.com/mealplanner/generate",
       {
@@ -177,37 +177,98 @@ const fetchNutrition = async (id) => {
   };
 };
 
-const getCalorieSummary = async (req, res) => {
+const getCalorieSummaryByDay = async (req, res) => {
   try {
-    const { mode } = req.query;
+    const { date } = req.query;
     const userId = req.userId;
 
-    const pipeline = [
-      { $match: { user: userId } },
-      {
-        $project: {
-          calories: { $sum: "$meals.calories" },
-          date: 1,
-        },
+    const targetDate = new Date(date); // e.g., "2025-06-12"
+    const nextDate = new Date(targetDate);
+    nextDate.setDate(nextDate.getDate() + 1);
+
+    const diaryEntry = await FoodDiary.findOne({
+      user: userId,
+      date: {
+        $gte: targetDate,
+        $lt: nextDate,
       },
+    });
+
+    if (!diaryEntry) {
+      return res.json({ totalCalories: 0 });
+    }
+
+    const totalCalories = diaryEntry.meals.reduce(
+      (sum, meal) => sum + meal.calories,
+      0
+    );
+
+    res.json({ totalCalories });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const getCalorieSummary = async (req, res) => {
+  try {
+    const { mode, startDate, endDate, month, year } = req.query;
+    const userId = req.userId;
+
+    const matchStage = {
+      user: new mongoose.Types.ObjectId(userId),
+    };
+
+    // --- DAILY MODE: group by day ---
+    if (mode === "daily" && startDate && endDate) {
+      const from = new Date(startDate);
+      const to = new Date(endDate);
+      to.setDate(to.getDate() + 1); // exclusive end
+
+      matchStage.date = {
+        $gte: from,
+        $lt: to,
+      };
+    }
+
+    // --- WEEKLY MODE: group by week ---
+    if (mode === "weekly" && month && year) {
+      const startOfMonth = new Date(Date.UTC(year, month - 1, 1));
+      const endOfMonth = new Date(Date.UTC(year, month, 1));
+
+      matchStage.date = {
+        $gte: startOfMonth,
+        $lt: endOfMonth,
+      };
+    }
+
+    const pipeline = [
+      { $match: matchStage },
+      { $unwind: "$meals" },
       {
         $group: {
-          _id: mode === "weekly"
-            ? { $week: "$date" }
-            : { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
-          totalCalories: { $sum: "$calories" },
+          _id:
+            mode === "weekly"
+              ? {
+                  week: { $isoWeek: "$date" },
+                  year: { $isoWeekYear: "$date" },
+                }
+              : {
+                  date: {
+                    $dateToString: { format: "%Y-%m-%d", date: "$date" },
+                  },
+                },
+          totalCalories: { $sum: "$meals.calories" },
         },
       },
-      {
-        $sort: { _id: 1 },
-      },
+      { $sort: { "_id.date": 1, "_id.week": 1 } },
     ];
 
     const result = await FoodDiary.aggregate(pipeline);
     res.json(result);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to summarize calories" });
+    res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -217,4 +278,5 @@ export default {
   addFoodToDiary,
   removeFoodFromDiary,
   getCalorieSummary,
+  getCalorieSummaryByDay,
 };
