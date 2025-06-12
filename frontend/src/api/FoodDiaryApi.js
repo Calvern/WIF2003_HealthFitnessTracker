@@ -69,6 +69,39 @@ export const useGetDiaryByDate = (selectedDate) => {
   };
 };
 
+export const useAddFoodToDiary = () => {
+  const { showToast } = useAppContext();
+  const addFoodToDiaryRequest = async (formData) => {
+    const response = await fetch(`${API_BASE_URL}/api/food-diary`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to add food to diary");
+    }
+    return response.json();
+  };
+  const { mutateAsync: addFoodToDiary, isPending } = useMutation({
+    mutationFn: addFoodToDiaryRequest,
+    onSuccess: () => {
+      showToast("Meal successfully added to diary");
+    },
+    onError: (error) => {
+      showToast(error.message, "danger");
+    },
+  });
+
+  return {
+    addFoodToDiary,
+    isPending,
+  };
+};
+
 export const useRemoveFoodFromDiary = () => {
   const queryClient = useQueryClient();
   const { showToast } = useAppContext();

@@ -7,9 +7,14 @@ import MealCard from "../components/Nutrition/MealCard";
 import { useSearchMeal } from "../api/MealApi.js";
 
 const SearchMeal = () => {
+  const [selectedMeal, setSelectedMeal] = useState(null);
   const [showAddDiary, setShowDiary] = useState(false);
+
   const handleCloseAddDiary = () => setShowDiary(false);
-  const handleShowAddDiary = () => setShowDiary(true);
+  const handleShowAddDiary = (meal) => {
+    setSelectedMeal(meal);
+    setShowDiary(true);
+  };
 
   const [searchParams, setSearchParams] = useState({
     query: "",
@@ -43,12 +48,17 @@ const SearchMeal = () => {
   for (let number = 1; number <= searchResults?.pagination.pages; number++) {
     items.push(number);
   }
+
   if (isPending) {
     return <div>Loading</div>;
   }
   return (
     <Container className="py-5">
-      <AddMealModal show={showAddDiary} handleClose={handleCloseAddDiary} />
+      <AddMealModal
+        show={showAddDiary}
+        meal={selectedMeal}
+        handleClose={handleCloseAddDiary}
+      />
       <h2 className="fw-bold">Search for your desired meals</h2>
       <SearchBar
         width="100"
@@ -57,15 +67,15 @@ const SearchMeal = () => {
         resetSearch={resetSearch}
       />
       <h2 className="fw-bold mt-5">Matching Results</h2>
-      {searchResults.data.length === 0 ? (
+      {searchResults?.data.length === 0 ? (
         <h3 className="mt-5 fw-medium">No Results Found</h3>
       ) : (
         <div className="responsive-grid">
-          {searchResults.data.map((meal, index) => (
+          {searchResults?.data.map((meal, index) => (
             <MealCard
               key={index}
               meal={meal}
-              handleShowAddDiary={handleShowAddDiary}
+              handleShowAddDiary={() => handleShowAddDiary(meal)}
             />
           ))}
         </div>
