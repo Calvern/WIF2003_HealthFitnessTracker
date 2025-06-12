@@ -63,16 +63,21 @@ const getNutritionImage = async (req, res) => {
 const getMealbyId = async (req, res) => {
   try {
     const mealId = Number(req.params.mealId);
-    const foodDiary = await FoodDiary.findOne({
-      user: req.userId,
-      "meals.mealId": mealId,
-    });
-    if (!foodDiary) {
-      return res.status(404).json({ message: "Meal not found" });
-    }
-
-    const matchedMeal = foodDiary.meals.find((meal) => meal.mealId === mealId);
-    return res.json(matchedMeal);
+    const result = await axios.get(
+      `https://api.spoonacular.com/recipes/${mealId}/information?includeNutrition=false`,
+      {
+        params: {
+          apiKey: process.env.SPOONACULAR_API_KEY,
+        },
+      }
+    );
+    const data = result.data;
+    const mealDetails = {
+      mealId: data.id,
+      foodName: data.title,
+      imageUrl: `https://img.spoonacular.com/recipes/${mealId}-312x231.jpg`,
+    };
+    return res.json(mealDetails);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Something went wrong" });
