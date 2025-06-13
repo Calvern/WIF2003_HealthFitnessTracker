@@ -6,13 +6,25 @@ import CalorieBarChart from "../components/Performance/CalorieBarChart"
 import TopMoodToggle from "../components/Performance/TopMoodToggle";
 
 const CaloriePage = () => {
-  const [dateIndex, setDateIndex] = useState(0);
   const [mode, setMode] = useState("daily");
+  const [dailyIndex, setDailyIndex] = useState(0);
+  const [weeklyIndex, setWeeklyIndex] = useState(0);
+
+  const currentIndex = mode === "daily" ? dailyIndex : weeklyIndex;
+
+  const handleModeChange = (newMode) => {
+    setMode(newMode);
+  };
+
 
   return (
     <Container className="py-3">
-      <TopMoodToggle mode={mode} setMode={setMode} dateIndex={dateIndex} setDateIndex={setDateIndex}/>
-      <CalorieBarChart mode={mode} dateIndex={dateIndex} />
+      <TopMoodToggle mode={mode} setMode={handleModeChange} dateIndex={currentIndex}
+  setDateIndex={(newIndex) => {
+    if (mode === "daily") setDailyIndex(newIndex);
+    else setWeeklyIndex(newIndex);}}
+    />
+      <CalorieBarChart mode={mode} dateIndex={currentIndex} />
     </Container>
   );
 };

@@ -1,4 +1,4 @@
-// src/pages/HomePage.js
+import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import {
   BsPersonWalking,
@@ -12,17 +12,79 @@ import LineChartCard from "../components/Home/LineChartCard";
 import ActivitiesDoneCard from "../components/Home/ActivitiesDoneList";
 import UpcomingRemindersCard from "../components/Home/UpcomingRemindersCard";
 import { useGetCaloriesSummaryByDay } from "../api/FoodDiaryApi";
+import { useFetchCalorieStats } from "../api/HomeStatsApi";
+import { useWeeklyCaloriesSummary } from "../hooks/useWeeklyCaloriesSummary";
 
 const HomePage = () => {
-  const formatDate = (date) => {
-    return date.toISOString().split("T")[0]; // yyyy-mm-dd
-  };
-  const chartData = {
+  const formatDate = (date) => date.toISOString().split("T")[0];
+
+  const { calorieSummary, isPending: caloriePending } =
+    useGetCaloriesSummaryByDay({ date: formatDate(new Date()) });
+
+  const [calorieInData, setCalorieInData] = useState([]);
+  const [calorieOutData, setCalorieOutData] = useState([]);
+  const [avgCalIn, setAvgCalIn] = useState(0);
+  const [avgCalOut, setAvgCalOut] = useState(0);
+  const {
+    inData,
+    outData,
+    labels,
+    avgIn,
+    avgOut,
+    isLoading,
+  } = useWeeklyCaloriesSummary();
+
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const { consumed, burned } = await useFetchCalorieStats();
+
+        const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        const labelIndex = (dateStr) => {
+          const date = new Date(dateStr);
+          return date.getDay() === 0 ? 6 : date.getDay() - 1;
+        };
+
+        const calInArr = Array(7).fill(0);
+        const calOutArr = Array(7).fill(0);
+
+        consumed.forEach(item => {
+          const i = labelIndex(item._id.date);
+          calInArr[i] += item.totalCalories;
+        });
+
+        burned.forEach(item => {
+          const i = labelIndex(item._id.date);
+          calOutArr[i] += item.totalCaloriesOut;
+        });
+
+        setCalorieInData(calInArr);
+        setCalorieOutData(calOutArr);
+        setAvgCalIn(Math.round(calInArr.reduce((a, b) => a + b, 0) / 7));
+        setAvgCalOut(Math.round(calOutArr.reduce((a, b) => a + b, 0) / 7));
+      } catch (err) {
+        console.error("Error loading calorie stats", err);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  const reminders = [
+    { title: "Project meeting", date: "2025-05-15", time: "10:00 AM" },
+    { title: "Submit report", date: "2025-05-16", time: "2:00 PM" },
+    { title: "Doctor's appointment", date: "2025-05-17", time: "11:30 AM" },
+    { title: "Grocery shopping", date: "2025-05-18", time: "5:00 PM" },
+    { title: "Gym session", date: "2025-05-19", time: "7:00 PM" },
+  ];
+
+  const ChartData = {
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     datasets: [
       {
-        label: "Calories Burnt",
-        data: [220, 310, 280, 400, 500, 460, 490],
+        label: "Steps",
+        data: [2200, 3100, 2800, 4000, 5000, 4600, 4900],
         backgroundColor: [
           "#176087",
           "#1E7BA6",
@@ -38,11 +100,11 @@ const HomePage = () => {
     ],
   };
 
-  const chartOptions = {
+  const Options = {
     scales: {
       y: {
         beginAtZero: true,
-        ticks: { stepSize: 100 },
+        ticks: { stepSize: 1000 },
       },
     },
     plugins: {
@@ -52,48 +114,8 @@ const HomePage = () => {
     maintainAspectRatio: false,
   };
 
-  const activitiesData = [
-    {
-      activity: "Running",
-      category: "Cardiovascular",
-      minCal: "30 min / 300 cal",
-      setsReps: null,
-    },
-    {
-      activity: "Push-ups",
-      category: "Workout",
-      minCal: null,
-      setsReps: "5 sets",
-    },
-    {
-      activity: "Cycling",
-      category: "Cardiovascular",
-      minCal: "25 min / 250 cal",
-      setsReps: null,
-    },
-    {
-      activity: "Squats",
-      category: "Workout",
-      minCal: null,
-      setsReps: "4 sets",
-    },
-  ];
+  if (caloriePending) return <div>Loading...</div>;
 
-  const reminders = [
-    { title: "Project meeting", date: "2025-05-15", time: "10:00 AM" },
-    { title: "Submit report", date: "2025-05-16", time: "2:00 PM" },
-    { title: "Doctor's appointment", date: "2025-05-17", time: "11:30 AM" },
-    { title: "Grocery shopping", date: "2025-05-18", time: "5:00 PM" },
-    { title: "Gym session", date: "2025-05-19", time: "7:00 PM" },
-  ];
-  const { calorieSummary, isPending: caloriePending } =
-    useGetCaloriesSummaryByDay({
-      date: formatDate(new Date()),
-    });
-
-  if (caloriePending) {
-    return <div>Loading</div>;
-  }
   return (
     <Container className="py-5">
       <Row className="mb-5 gy-5 justify-content-center">
@@ -111,7 +133,7 @@ const HomePage = () => {
           {
             icon: <BsFire size={20} />,
             title: "Calories Burnt",
-            value: "680 kcal",
+            value: `${avgCalOut} kcal`,
             percentageText: (
               <>
                 <strong>+20%</strong> from yesterday
@@ -149,31 +171,81 @@ const HomePage = () => {
           <BarChartCard
             title="Steps This Week"
             description="Track your weekly steps input."
-            summaryText="Avg: 1000 steps/day"
-            chartData={chartData}
-            chartOptions={chartOptions}
+            summaryText="Avg: 3,700 steps/day"
+            chartData={ChartData}
+            chartOptions={Options}
           />
         </Col>
 
         <Col xs={12} md={6} lg={4}>
-          <LineChartCard
-            title="Calories Burnt This Week"
-            description="Track your weekly energy output."
-            summaryText="Avg: 380 kcal/day"
-            chartData={chartData}
-            chartOptions={chartOptions}
-          />
-        </Col>
+        <LineChartCard
+          title="Calories Burnt This Week"
+          description="Track your weekly energy output."
+          summaryText={`Avg: ${avgOut} kcal/day`}
+          chartData={{
+            labels,
+            datasets: [
+              {
+                label: "Calories Out",
+                data: outData,
+                borderColor: "#E98580",
+                backgroundColor: "#E9858055",
+                fill: true,
+                tension: 0,
+              },
+            ],
+          }}
+          chartOptions={{
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true},
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => `${ctx.parsed.y} kcal`,
+                },
+              },
+            },
+          }}
+        />
+      </Col>
 
-        <Col xs={12} md={6} lg={4}>
-          <LineChartCard
-            title="Calories Intake This Week"
-            description="Track your weekly energy input."
-            summaryText="Avg: 380 kcal/day"
-            chartData={chartData}
-            chartOptions={chartOptions}
-          />
-        </Col>
+      <Col xs={12} md={6} lg={4}>
+        <LineChartCard
+          title="Calories Intake This Week"
+          description="Track your weekly energy input."
+          summaryText={`Avg: ${avgIn} kcal/day`}
+          chartData={{
+            labels,
+            datasets: [
+              {
+                label: "Calories In",
+                data: inData,
+                borderColor: "#80B5E9",
+                backgroundColor: "#80B5E955",
+                fill: true,
+                tension: 0,
+              },
+            ],
+          }}
+          chartOptions={{
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true},
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => `${ctx.parsed.y} kcal`,
+                },
+              },
+            },
+          }}
+        />
+      </Col>
       </Row>
 
       <Row className="mb-5 justify-content-center">

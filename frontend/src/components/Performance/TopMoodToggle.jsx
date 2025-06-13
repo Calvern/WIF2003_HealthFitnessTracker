@@ -34,8 +34,8 @@ const getCurrentLabel = (mode, index) => {
 };
 
 const TopMoodToggle = ({ mode, setMode, dateIndex, setDateIndex }) => {
-  const handlePrev = () => setDateIndex(dateIndex - 1);
-  const handleNext = () => setDateIndex(dateIndex + 1);
+  const handlePrev = () => setDateIndex((prev) => prev - 1);
+  const handleNext = () => setDateIndex((prev) => prev + 1);
 
   return (
     <Row className="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-4">
@@ -49,7 +49,10 @@ const TopMoodToggle = ({ mode, setMode, dateIndex, setDateIndex }) => {
         <div className="d-flex gap-4">
           <span
             role="button"
-            onClick={() => setMode("daily")}
+            onClick={() => {
+              setMode("daily");
+              setDateIndex(0);
+            }}
             style={{
               fontSize: "20px",
               fontWeight: mode === "daily" ? "bold" : "normal",
@@ -63,7 +66,10 @@ const TopMoodToggle = ({ mode, setMode, dateIndex, setDateIndex }) => {
           </span>
           <span
             role="button"
-            onClick={() => setMode("weekly")}
+            onClick={() => {
+              setMode("weekly");
+              setDateIndex(0); // reset to current month
+            }}
             style={{
               fontSize: "20px",
               fontWeight: mode === "weekly" ? "bold" : "normal",
