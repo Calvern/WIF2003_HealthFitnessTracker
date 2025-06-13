@@ -10,6 +10,8 @@ const reminderSchema = new mongoose.Schema(
     leadTime: { type: String, required: true },
     recurring: { type: String, required: true },
     notes: { type: String, required: true },
+    readStatus: { type: Boolean, default: false }, 
+    type: { type: String, default: "reminder" },
   },
   { timestamps: true } // To keep track of creation time
 );

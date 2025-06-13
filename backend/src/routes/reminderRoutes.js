@@ -8,6 +8,11 @@ const router = express.Router();
 router.post("/create", verifyToken, reminderController.createReminder);
 
 // GET request to fetch all reminders
-router.get("/", verifyToken, reminderController.getAllReminders);
+router.get("/get-reminders", verifyToken, reminderController.getReminderById);
+
+router.get("/get-notifications", verifyToken, reminderController.getNotifications);
+
+
+router.delete("/:id", verifyToken, reminderController.deleteReminder);
 
 export default router;
