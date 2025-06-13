@@ -12,8 +12,8 @@ export const AppContextProvider = ({ children }) => {
     <AppContext.Provider
       value={{
         isLoggedIn: !isError,
-        showToast: (toastMessage) => {
-          setToast(toastMessage);
+        showToast: (toastMessage, variant = "success") => {
+          setToast({ message: toastMessage, variant });
         },
       }}
     >
@@ -29,7 +29,8 @@ export const AppContextProvider = ({ children }) => {
           }}
         >
           <CustomToast
-            message={toast}
+            message={toast.message}
+            variant={toast.variant}
             onClose={() => setToast(undefined)}
           ></CustomToast>{" "}
         </ToastContainer>

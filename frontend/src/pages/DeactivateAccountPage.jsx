@@ -1,21 +1,33 @@
 import { useState } from "react";
 import { Button, Container, Form, InputGroup } from "react-bootstrap";
 import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { useDeactivateAccount } from "../api/UsersApi";
+import { useAppContext } from "../contexts/AppContext";
 
 const DeactivateAccountPage = () => {
-  const navigate = useNavigate();
+  const { showToast } = useAppContext();
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
+  const { deactivateUserAccount, isLoading } = useDeactivateAccount();
+
+  const handleDeactivate = async () => {
+    try {
+      await deactivateUserAccount({ password });
+    } catch (error) {
+      showToast(error.message, "danger");
+    }
+  };
+
   return (
     <Container className="py-5 d-flex flex-column justify-content-center align-items-center">
-      <div className="w-100 " style={{ maxWidth: "450px" }}>
+      <div className="w-100" style={{ maxWidth: "450px" }}>
         <h1 className="fw-bold text-center mb-4">Deactivate Account</h1>
         <p>
           Are you sure you want to deactivate your account? Your account will be
-          temporarily disabled until you reactivate it by logging in to your
-          account. To deactivate your account, please enter your password below
+          temporarily disabled until you reactivate it by logging in. Please
+          enter your password below to confirm.
         </p>
         <Form.Group controlId="formConfirmPassword" className="mb-4">
           <Form.Label>Password</Form.Label>
@@ -23,6 +35,8 @@ const DeactivateAccountPage = () => {
             <Form.Control
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
               variant="outline-secondary"
@@ -35,10 +49,15 @@ const DeactivateAccountPage = () => {
 
         <Button
           style={{ backgroundColor: "#507DBC" }}
-          onClick={() => navigate("/profile")}
+          onClick={handleDeactivate}
           className="w-100 mt-3 rounded-3 mb-2"
+          disabled={isLoading}
         >
-          Deactivate Account
+          {isLoading ? (
+            <Spinner animation="border" size="sm" />
+          ) : (
+            "Deactivate Account"
+          )}
         </Button>
       </div>
     </Container>

@@ -30,7 +30,7 @@ export const useRecommendMeals = () => {
       showToast("Meals are recommended");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
@@ -69,6 +69,39 @@ export const useGetDiaryByDate = (selectedDate) => {
   };
 };
 
+export const useAddFoodToDiary = () => {
+  const { showToast } = useAppContext();
+  const addFoodToDiaryRequest = async (formData) => {
+    const response = await fetch(`${API_BASE_URL}/api/food-diary`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to add food to diary");
+    }
+    return response.json();
+  };
+  const { mutateAsync: addFoodToDiary, isPending } = useMutation({
+    mutationFn: addFoodToDiaryRequest,
+    onSuccess: () => {
+      showToast("Meal successfully added to diary");
+    },
+    onError: (error) => {
+      showToast(error.message, "danger");
+    },
+  });
+
+  return {
+    addFoodToDiary,
+    isPending,
+  };
+};
+
 export const useRemoveFoodFromDiary = () => {
   const queryClient = useQueryClient();
   const { showToast } = useAppContext();
@@ -98,13 +131,41 @@ export const useRemoveFoodFromDiary = () => {
       showToast("Succesfully removed meal from diary");
     },
     onError: (error) => {
-      showToast(error.message);
+      showToast(error.message, "danger");
     },
   });
 
   return {
     removeFoodFromDiary,
     isError,
+    isPending,
+  };
+};
+
+export const useGetCaloriesSummaryByDay = (params) => {
+  const searchParams = new URLSearchParams();
+  searchParams.append("date", params.date);
+
+  const getCalorieSummaryByDayRequest = async () => {
+    const response = await fetch(
+      `${API_BASE_URL}/api/food-diary/calorie-summary-day?${searchParams}`,
+      {
+        credentials: "include",
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to get calorie summary");
+    }
+    return response.json();
+  };
+
+  const { data: calorieSummary, isPending } = useQuery({
+    queryKey: ["getCalorieSummaryByDay", params],
+    queryFn: getCalorieSummaryByDayRequest,
+  });
+
+  return {
+    calorieSummary,
     isPending,
   };
 };

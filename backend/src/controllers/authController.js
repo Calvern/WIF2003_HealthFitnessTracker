@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import User from "../models/user.js";
 
 const logIn = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, reactivate } = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -13,6 +13,17 @@ const logIn = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(404).json({ message: "Invalid Credentials" });
+    }
+
+    if (user.deactivated) {
+      if (reactivate) {
+        user.deactivated = false;
+        await user.save();
+      } else {
+        return res.status(403).json({
+          message: "Account is deactivated. Please reactivate to continue.",
+        });
+      }
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
