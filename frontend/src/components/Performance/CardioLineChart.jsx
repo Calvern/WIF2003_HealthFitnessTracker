@@ -1,105 +1,96 @@
-import React, { useEffect, useRef } from "react";
-import { Line } from "react-chartjs-2";
-import {Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend,} from "chart.js";
+import React, { useEffect, useRef, useState } from "react";
+import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
+import axios from "axios";
 
-ChartJS.register(
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-export const CardioLineChart = ({ mode }) => {
+const CardioLineChart = ({ mode, dateRange }) => {
   const chartRef = useRef(null);
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [],
+  });
 
-  const labels =
-    mode === "daily"
-      ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-      : ["Apr 1–7", "Apr 8–14", "Apr 15–21", "Apr 22–28"];
+  useEffect(() => {
+    const fetchAndSetChart = async () => {
+      try {
+        const res = await axios.get("/api/exercises/cardio-vs-workout-summary", {
+          params: {
+            mode,
+            startDate: dateRange.start,
+            endDate: dateRange.end,
+          },
+          withCredentials: true,
+        });
 
-  const data = {
-    labels,
-    datasets: [
-      {
-        data:
-          mode === "daily"
-            ? [30, 45, 35, 50, 40, 60, 25]
-            : [200, 150, 180, 170],
-        borderColor: (context) => {
-          const chart = context.chart;
-          const { ctx, chartArea } = chart;
+        const data = res.data;
 
-          if (!chartArea) return "#507DBC";
+        if (!Array.isArray(data)) {
+          console.error("Unexpected cardio response format:", data);
+          return;
+        }
+        
+        const values = data.map((entry) => entry.totalMinutes || 0);
+        const labels = data.map((entry) =>
+          mode === "daily" ? entry._id.date.slice(5) : `W${entry._id.week}`
+        );
 
-          const gradient = ctx.createLinearGradient(
-            chartArea.left,
-            0,
-            chartArea.right,
-            0
-          );
-          gradient.addColorStop(0, "#176087");
-          gradient.addColorStop(0.2, "#1E7BA6");
-          gradient.addColorStop(0.4, "#29A0B1");
-          gradient.addColorStop(0.6, "#37B5A0");
-          gradient.addColorStop(0.8, "#6EDAA3");
-          gradient.addColorStop(1, "#90EE90");
-          return gradient;
-        },
-        backgroundColor: (context) => {
-          const chart = context.chart;
-          const { ctx, chartArea } = chart;
+        const chart = chartRef.current;
+        if (!chart) return;
+        const ctx = chart.ctx;
+        const chartArea = chart.chartArea;
+        if (!chartArea) return;
 
-          if (!chartArea) return "rgba(80, 125, 188, 0.2)";
+        const gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
+        gradient.addColorStop(0, "#176087");
+        gradient.addColorStop(0.2, "#1E7BA6");
+        gradient.addColorStop(0.4, "#29A0B1");
+        gradient.addColorStop(0.6, "#37B5A0");
+        gradient.addColorStop(0.8, "#6EDAA3");
+        gradient.addColorStop(1, "#90EE90");
 
-          const gradient = ctx.createLinearGradient(
-            chartArea.left,
-            0,
-            chartArea.right,
-            0
-          );
-          gradient.addColorStop(0, "rgba(23, 96, 135, 0.2)");
-          gradient.addColorStop(1, "rgba(144, 238, 144, 0.2)");
-          return gradient;
-        },
-        tension: 0,
-        fill: true,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-      },
-    ],
-  };
+        setChartData({
+          labels,
+          datasets: [
+            {
+              label: "Total Minutes",
+              data: values,
+              backgroundColor: gradient,
+              borderRadius: 100,
+            },
+          ],
+        });
+      } catch (error) {
+        console.error("Failed to load cardio data:", error);
+      }
+    };
+
+    setTimeout(fetchAndSetChart, 200); // slight delay to ensure chart is mounted
+  }, [mode]);
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: { enabled: true },
-    },
+    plugins: { legend: { display: false }, tooltip: { enabled: true } },
     scales: {
       y: {
         beginAtZero: true,
         title: {
           display: true,
           text: "Total Minutes",
-          position: "top",
           font: { size: 16, weight: "bold" },
-          padding: { top: 10 },
         },
       },
     },
   };
 
   return (
-    <div
-      className="d-flex flex-column align-items-center w-100"
-      style={{ height: "550px", maxHeight: "600px" }}
-    >
-      <Line ref={chartRef} data={data} options={options} />
+    <div style={{ height: "500px" }}>
+      <Bar ref={chartRef} data={chartData} options={options} />
     </div>
   );
 };
 
 export default CardioLineChart;
+
