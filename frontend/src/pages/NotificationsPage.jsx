@@ -1,16 +1,19 @@
+// In NotificationsPage.js
+
 import { Container, CardTitle, Card, Form, Button } from "react-bootstrap";
 import { useEffect, useState, Fragment } from "react";
 import { Bell, ChevronLeft, ChevronRight } from "react-bootstrap-icons";
-import { Link, useNavigate } from "react-router-dom";
-import { useGetNotifications } from "../api/ReminderApi";
+import { useNavigate } from "react-router-dom";
+import { useGetNotifications } from "../api/ReminderApi"; // Import the hook for fetching notifications
+import { useHandleShowNotifications } from "../api/ReminderApi"; // Import the handler for notification click
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
   const [isEnabled, setIsEnabled] = useState(false);
   const [filter, setFilter] = useState("all");
   const navigate = useNavigate();
-
   const { notifications: fetchedNotifications, isLoading, error, refetch } = useGetNotifications();
+  const handleShowNotifications = useHandleShowNotifications();  // Use the imported handler
 
   useEffect(() => {
     if (fetchedNotifications) {
@@ -43,20 +46,12 @@ const NotificationsPage = () => {
     setFilter(value);
   };
 
-  
   const filteredNotifications = notifications.filter((notification) => {
     return (
-      filter === "all" || 
+      filter === "all" ||
       (filter === "unread" && notification.readStatus === false)  // Only show unread notifications
     );
   });
-
-
-  const handleShowNotifications = (notification) => {
-    navigate(`/notifications/show-notification/${notification._id}`, {
-      state: { notification },
-    });
-  };
 
   const renderEmptyMessage = () => (
     <Container className="d-flex flex-column align-items-center py-5 mt-5 vh-100">
@@ -99,40 +94,38 @@ const NotificationsPage = () => {
             <div
               className="reminder-status"
               style={{
-                backgroundColor: notification.readStatus ? "#808080" : "#FF0000",  // Green if read, red if not
+                backgroundColor: notification.readStatus ? "#808080" : "#FF0000",  // Grey if read, red if not
                 width: "10px",
                 height: "10px",
                 borderRadius: "50%",
               }}
             ></div>
 
-            <div style={{ flex:1, marginLeft:"30px"}}>
-             <small style={{ cursor: "pointer", fontWeight: notification.readStatus ? "normal" : "bold" }}>
-              {notification.date} {notification.time}
-            </small> 
-            </div>
-            
-            <div style={{ flex:2 }}>
+            <div style={{ flex: 1, marginLeft: "30px" }}>
               <small style={{ cursor: "pointer", fontWeight: notification.readStatus ? "normal" : "bold" }}>
-              {notification.title}
-            </small>
+                {notification.date} {notification.time}
+              </small>
             </div>
 
-            <div style={{ justifyContent: 'end'}}>
-              <small
-              onClick={() => handleShowNotifications(notification)}
-              style={{
-                cursor: "pointer",
-                fontStyle: "italic",
-                textDecoration: "underline",
-                color: notification.readStatus ? "#6c757d" : "#507DBC",
-              }}
-            >
-              See more
-            </small>
+            <div style={{ flex: 2 }}>
+              <small style={{ cursor: "pointer", fontWeight: notification.readStatus ? "normal" : "bold" }}>
+                {notification.title}
+              </small>
             </div>
-            
-            
+
+            <div style={{ justifyContent: 'end' }}>
+              <small
+                onClick={() => handleShowNotifications(notification)}
+                style={{
+                  cursor: "pointer",
+                  fontStyle: "italic",
+                  textDecoration: "underline",
+                  color: notification.readStatus ? "#6c757d" : "#507DBC",
+                }}
+              >
+                See more
+              </small>
+            </div>
           </div>
           {index < filteredNotifications.length - 1 && (
             <hr style={{ width: "80%", margin: "10px auto", border: "1px solid #ccc" }} />
@@ -148,7 +141,7 @@ const NotificationsPage = () => {
         <Button
           className="border border-0"
           style={{ backgroundColor: "transparent", color: "black" }}
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/home')}
         >
           <ChevronLeft size={30} />
         </Button>
@@ -205,7 +198,9 @@ const NotificationsPage = () => {
         <div className="d-flex justify-content-end align-items-center gap-3 px-5">
           <div
             className={`d-flex align-items-center px-4 py-1 rounded-pill border ${
-              filter === "all" ? "bg-success-subtle text-success fw-bold border-success" : "bg-success-subtle border-success"
+              filter === "all"
+                ? "bg-success-subtle text-success fw-bold border-success"
+                : "bg-success-subtle border-success"
             }`}
             style={{ cursor: "pointer" }}
             onClick={() => handleFilterChange("all")}
@@ -224,7 +219,9 @@ const NotificationsPage = () => {
 
           <div
             className={`d-flex align-items-center px-4 py-1 rounded-pill border ${
-              filter === "unread" ? "bg-danger-subtle text-danger fw-bold border-danger" : "bg-danger-subtle border-danger"
+              filter === "unread"
+                ? "bg-danger-subtle text-danger fw-bold border-danger"
+                : "bg-danger-subtle border-danger"
             }`}
             style={{ cursor: "pointer" }}
             onClick={() => handleFilterChange("unread")}

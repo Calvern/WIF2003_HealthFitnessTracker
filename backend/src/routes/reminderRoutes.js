@@ -12,7 +12,13 @@ router.get("/get-reminders", verifyToken, reminderController.getReminderById);
 
 router.get("/get-notifications", verifyToken, reminderController.getNotifications);
 
+router.put("/:id/read", verifyToken, reminderController.updateReadStatus);
+
+
+
 
 router.delete("/:id", verifyToken, reminderController.deleteReminder);
+
+router.put("/:id", verifyToken, reminderController.updateReminder);
 
 export default router;

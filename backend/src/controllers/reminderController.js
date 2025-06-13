@@ -19,7 +19,7 @@ const createReminder = async (req, res) => {
       leadTime,
       recurring,
       notes,
-      type: "reminder",  
+      type: "reminder",
     });
 
     const savedReminder = await newReminder.save();
@@ -41,8 +41,8 @@ const getReminderById = async (req, res) => {
     const userId = req.userId;
 
     // Fetch only reminders (exclude notifications)
-    const reminders = await Reminder.find({ 
-      user: userId, 
+    const reminders = await Reminder.find({
+      user: userId,
       type: "reminder" // Ensure type is "reminder"
     })
       .sort({ createdAt: -1 });  // Sort by creation date, most recent first
@@ -77,11 +77,11 @@ const deleteReminder = async (req, res) => {
 const getNotifications = async (req, res) => {
   try {
     // Fetch notifications based on the userId and type: "notification"
-    const notifications = await Reminder.find({ 
-      user: req.userId, 
-      type: "notification" 
+    const notifications = await Reminder.find({
+      user: req.userId,
+      type: "notification"
     })
-    .sort({ date: 1, time: 1 });  // Sort by date and time in ascending order
+      .sort({ date: 1, time: 1 });  // Sort by date and time in ascending order
 
     res.status(200).json(notifications);
   } catch (error) {
@@ -90,10 +90,76 @@ const getNotifications = async (req, res) => {
   }
 };
 
+// Update readStatus of a notification
+const updateReadStatus = async (req, res) => {
+  try {
+    const notificationId = req.params.id;
+
+    const updatedNotification = await Reminder.findByIdAndUpdate(
+      notificationId,
+      { readStatus: true }, // Set readStatus to true
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedNotification) {
+      return res.status(404).json({ error: "Notification not found" });
+    }
+
+    res.status(200).json(updatedNotification);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update readStatus" });
+  }
+};
+
+// Function to handle updating an existing reminder
+const updateReminder = async (req, res) => {
+  try {
+    const { reminderId, title, date, time, category, leadTime, recurring, notes } = req.body;
+
+    // Check if all required fields are provided
+    if (!reminderId || !title || !date || !time || !category || !leadTime || !recurring || !notes) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    // Find the reminder by its ID
+    const reminder = await Reminder.findById(reminderId);
+
+    if (!reminder) {
+      return res.status(404).json({ error: "Reminder not found" });
+    }
+
+    // Update the reminder fields
+    reminder.title = title;
+    reminder.date = date;
+    reminder.time = time;
+    reminder.category = category;
+    reminder.leadTime = leadTime;
+    reminder.recurring = recurring;
+    reminder.notes = notes;
+
+    // Save the updated reminder
+    const updatedReminder = await reminder.save();
+
+    res.status(200).json({
+      message: "Reminder updated successfully!",
+      reminder: updatedReminder,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update reminder" });
+  }
+};
+
+
+
 
 export default {
-  createReminder, 
+  createReminder,
   getReminderById,
   deleteReminder,
-  getNotifications
+  getNotifications,
+  updateReadStatus,
+  updateReminder
 };
