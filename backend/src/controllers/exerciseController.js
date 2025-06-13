@@ -1,21 +1,24 @@
 import Exercise from "../models/exercise.js";
 import User from "../models/user.js";
 import exerciseList from "../../../frontend/src/data/exerciseList.js";
+import mongoose from "mongoose";
 
 export const createExercise = async (req, res) => {
   const { date, steps = 0, workout = [], cardio = [] } = req.body;
   const userId = req.userId;
 
   try {
-    // Fetch user weight from database
     const user = await User.findById(userId);
-    const weight = user?.weight || 0;
+    const weight = user?.weight || 70;
 
-    // Process cardio array to calculate calories burned
     const processedCardio = cardio.map((item) => {
       const exerciseMeta = exerciseList.find(
         (ex) => ex.name.toLowerCase() === item.name.toLowerCase()
       );
+
+      if (!exerciseMeta) {
+        console.warn("Unknown cardio activity:", item.name);
+      }
 
       const MET = exerciseMeta?.met || 0;
       const duration = item.duration || 0;
@@ -39,6 +42,7 @@ export const createExercise = async (req, res) => {
       { upsert: true, new: true }
     );
 
+    console.log("Exercise saved:", log);
     res.status(200).json(log);
   } catch (error) {
     console.error("Log exercise error:", error);
@@ -325,30 +329,133 @@ export const getCalorieOutSummary = async (req, res) => {
     const userId = req.userId;
 
     const pipeline = [
-      { $match: { user: userId } },
       {
-        $project: {
-          caloriesBurned: "$calories", // adjust based on your model
-          date: 1,
+        $match: {
+          userId: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $unwind: "$cardio",
+      },
+      {
+        $addFields: {
+          parsedDate: { $toDate: "$date" }, // ✅ convert string to Date
         },
       },
       {
         $group: {
-          _id: mode === "weekly"
-            ? { $week: "$date" }
-            : { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
-          totalCaloriesOut: { $sum: "$caloriesBurned" },
+          _id:
+            mode === "weekly"
+              ? {
+                  week: { $isoWeek: "$parsedDate" },
+                  year: { $isoWeekYear: "$parsedDate" },
+                }
+              : {
+                  date: {
+                    $dateToString: { format: "%Y-%m-%d", date: "$parsedDate" },
+                  },
+                },
+          totalCaloriesOut: { $sum: "$cardio.caloriesBurned" },
         },
       },
       {
-        $sort: { _id: 1 },
+        $sort: { "_id.date": 1, "_id.week": 1 },
       },
     ];
 
     const result = await Exercise.aggregate(pipeline);
     res.json(result);
   } catch (err) {
-    console.error(err);
+    console.error("Calorie Out Error:", err.message);
+    console.error(err.stack);
     res.status(500).json({ message: "Failed to summarize calories out" });
+  }
+};
+
+export const getStepSummary = async (req, res) => {
+  try {
+    const { mode, startDate, endDate, year } = req.query;
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const matchStage = {
+      userId: new mongoose.Types.ObjectId(userId),
+    };
+
+    const pipeline = [];
+
+    pipeline.push({
+      $addFields: {
+        parsedDate: { $toDate: "$date" },
+      },
+    });
+
+    if (mode === "daily" && startDate && endDate) {
+      matchStage.date = {
+        $gte: startDate,
+        $lte: endDate,
+      };
+      pipeline.push({ $match: matchStage });
+    }
+
+    if ((mode === "weekly" || mode === "monthly") && year) {
+      pipeline.push({ $match: matchStage });
+
+      
+      pipeline.push({
+        $match: {
+          $expr: {
+            $eq: [{ $year: "$parsedDate" }, parseInt(year)],
+          },
+        },
+      });
+    }
+
+    
+    const groupStage =
+      mode === "monthly"
+        ? {
+            _id: {
+              month: { $month: "$parsedDate" },
+              year: { $year: "$parsedDate" },
+            },
+            totalSteps: { $sum: "$steps" },
+          }
+        : mode === "weekly"
+        ? {
+            _id: {
+              week: { $isoWeek: "$parsedDate" },
+              year: { $isoWeekYear: "$parsedDate" },
+            },
+            totalSteps: { $sum: "$steps" },
+          }
+        : {
+            _id: {
+              date: {
+                $dateToString: { format: "%Y-%m-%d", date: "$parsedDate" },
+              },
+            },
+            totalSteps: { $sum: "$steps" },
+          };
+
+    pipeline.push({ $group: groupStage });
+
+    // === Step 4: Sort for display
+    pipeline.push({
+      $sort: {
+        "_id.date": 1,
+        "_id.week": 1,
+        "_id.month": 1,
+      },
+    });
+
+    const result = await Exercise.aggregate(pipeline);
+    res.json(result);
+  } catch (error) {
+    console.error("Step summary error:", error.message);
+    res.status(500).json({ message: "Failed to summarize steps" });
   }
 };
