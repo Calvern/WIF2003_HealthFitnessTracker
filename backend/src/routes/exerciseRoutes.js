@@ -13,7 +13,8 @@ import {
   deleteCardioExercise,
   deleteWorkoutExercise,
   getCalorieOutSummary,
-  getStepSummary
+  getStepSummary,
+  getCardioVsWorkoutSummary
 } from "../controllers/exerciseController.js";
 import { verifyToken } from "../middlewares/auth.js";
 
@@ -29,6 +30,7 @@ router.get("/calories/burned", verifyToken, fetchCaloriesBurned);
 router.get("/summary/weekly", verifyToken, fetchWeeklySummary);
 router.get("/calorie-out-summary", verifyToken, getCalorieOutSummary);
 router.get("/steps/summary", verifyToken, getStepSummary);
+router.get("/cardio-vs-workout-summary", verifyToken, getCardioVsWorkoutSummary);
 router.put("/update/cardio/:id", verifyToken, updateCardioExercise);
 router.put("/update/workout/:id", verifyToken, updateWorkoutExercise);
 router.delete("/delete/cardio/:id", verifyToken, deleteCardioExercise);

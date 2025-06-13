@@ -377,34 +377,19 @@ export const getStepSummary = async (req, res) => {
     const { mode, startDate, endDate, year } = req.query;
     const userId = req.userId;
 
-    if (!userId) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
     const matchStage = {
       userId: new mongoose.Types.ObjectId(userId),
     };
 
-    const pipeline = [];
-
-    pipeline.push({
-      $addFields: {
-        parsedDate: { $toDate: "$date" },
-      },
-    });
+    const pipeline = [
+      { $addFields: { parsedDate: { $toDate: "$date" } } },
+    ];
 
     if (mode === "daily" && startDate && endDate) {
-      matchStage.date = {
-        $gte: startDate,
-        $lte: endDate,
-      };
+      matchStage.date = { $gte: startDate, $lte: endDate };
       pipeline.push({ $match: matchStage });
-    }
-
-    if ((mode === "weekly" || mode === "monthly") && year) {
+    } else if ((mode === "weekly" || mode === "monthly") && year) {
       pipeline.push({ $match: matchStage });
-
-      
       pipeline.push({
         $match: {
           $expr: {
@@ -412,9 +397,10 @@ export const getStepSummary = async (req, res) => {
           },
         },
       });
+    } else {
+      return res.status(400).json({ message: "Invalid request" });
     }
 
-    
     const groupStage =
       mode === "monthly"
         ? {
@@ -442,20 +428,71 @@ export const getStepSummary = async (req, res) => {
           };
 
     pipeline.push({ $group: groupStage });
-
-    // === Step 4: Sort for display
-    pipeline.push({
-      $sort: {
-        "_id.date": 1,
-        "_id.week": 1,
-        "_id.month": 1,
-      },
-    });
+    pipeline.push({ $sort: { "_id.date": 1, "_id.week": 1, "_id.month": 1 } });
 
     const result = await Exercise.aggregate(pipeline);
     res.json(result);
   } catch (error) {
     console.error("Step summary error:", error.message);
     res.status(500).json({ message: "Failed to summarize steps" });
+  }
+};
+
+export const getCardioVsWorkoutSummary = async (req, res) => {
+  try {
+    const { mode, startDate, endDate } = req.query;
+    const userId = req.userId;
+
+    if (!mode || !startDate || !endDate) {
+      return res.status(400).json({ message: "Missing query parameters" });
+    }
+
+    const pipeline = [
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(userId),
+          date: { $gte: startDate, $lte: endDate },
+        },
+      },
+      {
+        $addFields: { parsedDate: { $toDate: "$date" } },
+      },
+      {
+        $group: {
+          _id:
+            mode === "weekly"
+              ? {
+                  week: { $isoWeek: "$parsedDate" },
+                  year: { $isoWeekYear: "$parsedDate" },
+                }
+              : {
+                  date: {
+                    $dateToString: { format: "%Y-%m-%d", date: "$parsedDate" },
+                  },
+                },
+          totalMinutes: { $sum: { $sum: "$cardio.duration" } },
+          totalReps: {
+            $sum: {
+              $sum: {
+                $map: {
+                  input: "$workout",
+                  as: "w",
+                  in: { $multiply: ["$$w.sets", "$$w.reps"] },
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        $sort: mode === "weekly" ? { "_id.week": 1 } : { "_id.date": 1 },
+      },
+    ];
+
+    const summary = await Exercise.aggregate(pipeline);
+    res.json(summary);
+  } catch (error) {
+    console.error("Cardio vs Workout summary error:", error);
+    res.status(500).json({ message: "Failed to fetch summary" });
   }
 };
