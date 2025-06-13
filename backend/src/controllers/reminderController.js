@@ -115,7 +115,8 @@ const updateReadStatus = async (req, res) => {
 // Function to handle updating an existing reminder
 const updateReminder = async (req, res) => {
   try {
-    const { reminderId, title, date, time, category, leadTime, recurring, notes } = req.body;
+    const { title, date, time, category, leadTime, recurring, notes } = req.body;
+    const reminderId = req?.body?._id;
 
     // Check if all required fields are provided
     if (!reminderId || !title || !date || !time || !category || !leadTime || !recurring || !notes) {

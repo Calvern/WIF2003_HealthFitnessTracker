@@ -10,7 +10,7 @@ const EditReminderPage = () => {
   const { state } = useLocation(); // Access the passed state
   const [editReminder, setEditReminder] = useState(null);
   const navigate = useNavigate();
-  const { mutateAsync: updateReminder, isLoading, error } = useUpdateReminder();
+  const { updateReminder, isLoading, error } = useUpdateReminder();
 
   const {
     register,
@@ -31,16 +31,26 @@ const EditReminderPage = () => {
         leadTime: state.reminder.leadTime,
         recurring: state.reminder.recurring,
         notes: state.reminder.notes,
+        remainderId: state.reminder._id
       });
     }
   }, [state, reset]);
 
+  console.log("state:", state)
+
   const handleReminderUpdate = async (data) => {
     try {
-      // Update the reminder using the API
-      await updateReminder({ ...data, _id: editReminder._id });
-      navigate("/reminders"); // Go back to reminders list after successful update
+      // Ensure that we pass the correct reminder data with the _id
+      const updatedReminder = { ...data, _id: editReminder._id };
+      console.log(updatedReminder);
+
+      // Now calling updateReminder to trigger the mutation with the updated data
+      await updateReminder(updatedReminder);
+
+      // Redirect to the reminders list page after successful update
+      navigate("/reminders");
     } catch (error) {
+      // Catch any errors during the update process
       console.error("Error updating reminder:", error);
     }
   };
@@ -58,7 +68,7 @@ const EditReminderPage = () => {
         Edit Reminder
       </div>
 
-      {console.log(editReminder)}
+      {/* {console.log(editReminder)} */}
 
       <ReminderForm
         reminder={editReminder}

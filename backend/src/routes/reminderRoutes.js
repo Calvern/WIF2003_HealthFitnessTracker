@@ -19,6 +19,6 @@ router.put("/:id/read", verifyToken, reminderController.updateReadStatus);
 
 router.delete("/:id", verifyToken, reminderController.deleteReminder);
 
-router.put("/:id", verifyToken, reminderController.updateReminder);
+router.put("/update/:id", verifyToken, reminderController.updateReminder);
 
 export default router;

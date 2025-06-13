@@ -182,12 +182,13 @@ export const useUpdateReminder = () => {
 
   // Mutation hook to handle the update request
   const updateReminderRequest = async (reminderData) => {
-    const response = await fetch(`${API_BASE_URL}/api/reminders/${reminderData._id}`, {
+    const response = await fetch(`${API_BASE_URL}/api/reminders/update/${reminderData._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(reminderData),
+      credentials: 'include', // Include cookies in the request
     });
 
     if (!response.ok) {
