@@ -5,6 +5,7 @@ import userRoutes from "./routes/userRoutes.js";
 import exerciseRoutes from "./routes/exerciseRoutes.js";
 import foodDiaryRoutes from "./routes/foodDiaryRoutes.js";
 import mealRoutes from "./routes/mealRoutes.js"
+import reminderRoutes from "./routes/reminderRoutes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
@@ -39,6 +40,7 @@ app.use("/api/exercises", exerciseRoutes);
 
 app.use("/api/food-diary", foodDiaryRoutes);
 app.use("/api/meal", mealRoutes);
+app.use("/api/reminders", reminderRoutes);
 
 app.listen(7001, () => {
   console.log("Server is running on localhost:7001");

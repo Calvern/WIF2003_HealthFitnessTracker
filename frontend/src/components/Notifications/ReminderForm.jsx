@@ -1,20 +1,9 @@
 import React from "react";
-import {
-  Form,
-  Button,
-  Row,
-  Col,
-  FormControl,
-  FormLabel,
-} from "react-bootstrap";
+import { Form, Button, Row, Col, FormControl, FormLabel } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
+const ReminderForm = ({ reminder, setReminder, handleSubmit, register, errors, mode }) => {
   const navigate = useNavigate();
-
-  const handleNavigateToReminders = () => {
-    navigate("/reminders");
-  };
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -23,14 +12,12 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
           <Form.Group controlId="formTitle">
             <FormLabel>Reminder Title</FormLabel>
             <FormControl
+              {...register("title", { required: "Title is required" })}
               type="text"
               placeholder="Enter title"
-              value={reminder.title}
-              onChange={(e) =>
-                setReminder({ ...reminder, title: e.target.value })
-              }
-              required
+              defaultValue={reminder.title} // Set default value if editing
             />
+            {errors.title && <span className="text-danger">{errors.title.message}</span>}
           </Form.Group>
         </Col>
       </Row>
@@ -40,26 +27,22 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
           <Form.Group controlId="formDate">
             <FormLabel>Date</FormLabel>
             <FormControl
+              {...register("date", { required: "Date is required" })}
               type="date"
-              value={reminder.date}
-              onChange={(e) =>
-                setReminder({ ...reminder, date: e.target.value })
-              }
-              required
+              defaultValue={reminder.date} // Set default value if editing
             />
+            {errors.date && <span className="text-danger">{errors.date.message}</span>}
           </Form.Group>
         </Col>
         <Col md="6">
           <Form.Group controlId="formTime">
             <FormLabel>Time</FormLabel>
             <FormControl
+              {...register("time", { required: "Time is required" })}
               type="time"
-              value={reminder.time}
-              onChange={(e) =>
-                setReminder({ ...reminder, time: e.target.value })
-              }
-              required
+              defaultValue={reminder.time} // Set default value if editing
             />
+            {errors.time && <span className="text-danger">{errors.time.message}</span>}
           </Form.Group>
         </Col>
       </Row>
@@ -68,42 +51,28 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
         <Col md="6">
           <Form.Group controlId="formCategory">
             <FormLabel>Category</FormLabel>
-            <Form.Select
-              value={reminder.category}
-              onChange={(e) =>
-                setReminder({ ...reminder, category: e.target.value })
-              }
-              required
-            >
-              <option value="" disabled>
-                Select Category
-              </option>
+            <Form.Select {...register("category", { required: "Category is required" })}>
+              <option value="" disabled>Select Category</option>
               <option value="General">General</option>
               <option value="Work">Work</option>
               <option value="Personal">Personal</option>
               <option value="Health">Health</option>
               <option value="Other">Other</option>
             </Form.Select>
+            {errors.category && <span className="text-danger">{errors.category.message}</span>}
           </Form.Group>
         </Col>
         <Col md="6">
           <Form.Group controlId="formLeadTime">
             <FormLabel>Lead Time</FormLabel>
-            <Form.Select
-              value={reminder.leadTime}
-              onChange={(e) =>
-                setReminder({ ...reminder, leadTime: e.target.value })
-              }
-              required
-            >
-              <option value="" disabled>
-                Select Lead Time
-              </option>
+            <Form.Select {...register("leadTime", { required: "Lead time is required" })}>
+              <option value="" disabled>Select Lead Time</option>
               <option value="5">5 minutes before</option>
               <option value="10">10 minutes before</option>
               <option value="15">15 minutes before</option>
               <option value="20">20 minutes before</option>
             </Form.Select>
+            {errors.leadTime && <span className="text-danger">{errors.leadTime.message}</span>}
           </Form.Group>
         </Col>
       </Row>
@@ -112,16 +81,8 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
         <Col md="12">
           <Form.Group controlId="formRecurring">
             <FormLabel>Recurring</FormLabel>
-            <Form.Select
-              value={reminder.recurring}
-              onChange={(e) =>
-                setReminder({ ...reminder, recurring: e.target.value })
-              }
-              required
-            >
-              <option value="" disabled>
-                Select One
-              </option>
+            <Form.Select {...register("recurring", { required: "Recurring option is required" })}>
+              <option value="" disabled>Select One</option>
               <option value="Everyday">Everyday</option>
               <option value="Monday">Every Monday</option>
               <option value="Tuesday">Every Tuesday</option>
@@ -131,9 +92,9 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
               <option value="Saturday">Every Saturday</option>
               <option value="Sunday">Every Sunday</option>
             </Form.Select>
+            {errors.recurring && <span className="text-danger">{errors.recurring.message}</span>}
           </Form.Group>
         </Col>
-
       </Row>
 
       <Row className="mb-2">
@@ -144,12 +105,9 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
               as="textarea"
               rows={3}
               placeholder="Enter message"
-              value={reminder.notes}
-              onChange={(e) =>
-                setReminder({ ...reminder, notes: e.target.value })
-              }
-              required
+              {...register("notes", { required: "Notes are required" })}
             />
+            {errors.notes && <span className="text-danger">{errors.notes.message}</span>}
           </Form.Group>
         </Col>
       </Row>
@@ -160,12 +118,7 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
             <Button
               variant="primary"
               type="submit"
-              style={{
-                width: "150px",
-                height: "50px",
-                fontSize: "16px",
-                backgroundColor: "#507DBC",
-              }}
+              style={{ width: "150px", height: "50px", fontSize: "16px", backgroundColor: "#507DBC" }}
             >
               {mode === "edit" ? "Save Changes" : "Create Reminder"}
             </Button>
@@ -173,7 +126,7 @@ const ReminderForm = ({ reminder, setReminder, handleSubmit, mode }) => {
             <Button
               variant="danger"
               type="button"
-              onClick={handleNavigateToReminders}
+              onClick={() => navigate("/reminders")}
               style={{ width: "150px", height: "50px", fontSize: "16px" }}
             >
               Cancel
