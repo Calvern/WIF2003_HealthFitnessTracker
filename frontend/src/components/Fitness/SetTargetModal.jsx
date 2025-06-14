@@ -15,21 +15,21 @@ const SetTargetModal = ({ show, onClose }) => {
 
   const mutation = useMutation({
     mutationFn: setDailyTarget,
-    onSuccess: () => {
+    onSuccess: async () => {
       showToast("Daily target saved!");
-      queryClient.invalidateQueries(["fetchUser"]);
+      await queryClient.invalidateQueries(["fetchUser"]);
       onClose();
     },
     onError: (error) => {
-      showToast(error.message || "Failed to update target");
+      showToast(error.message || "Failed to update target", danger);
     },
   });
 
   const handleSave = (e) => {
     e.preventDefault();
     mutation.mutate({
-      targetSteps: Number(target.steps),
-      workoutMinutes: Number(target.workoutMinutes),
+      targetSteps: Number(target.steps) || 0,
+      workoutMinutes: Number(target.workoutMinutes) || 0,
     });
   };
 

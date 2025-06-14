@@ -30,7 +30,9 @@ const EditableProfileImage = ({
             alt="Profile"
           />
         ) : (
-          <CameraFill size={40} />
+          <div className="w-100 h-100 d-flex align-items-center justify-content-center">
+            <CameraFill size={40} />
+          </div>
         )}
 
         {isEditing && imagePreview && (

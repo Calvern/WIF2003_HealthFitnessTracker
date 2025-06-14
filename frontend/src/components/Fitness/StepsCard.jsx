@@ -12,6 +12,7 @@ import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
 import SetTargetModal from "./SetTargetModal";
 import LogStepsModal from "./LogStepsModal";
 import { ButtonGroup, ToggleButton } from "react-bootstrap";
+import { useAppContext } from "../../contexts/AppContext";
 
 ChartJS.register(ArcElement, Tooltip);
 

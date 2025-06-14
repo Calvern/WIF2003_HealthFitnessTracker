@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateCardioExercise, deleteCardioExercise } from "../../api/ExerciseApi";
+import {
+  updateCardioExercise,
+  deleteCardioExercise,
+} from "../../api/ExerciseApi";
 import { useAppContext } from "../../contexts/AppContext";
 
 const CardioDetailsModal = ({

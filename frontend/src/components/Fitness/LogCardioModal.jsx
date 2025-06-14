@@ -2,14 +2,13 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { useAppContext } from "../../contexts/AppContext";
 import { useQueryClient } from "@tanstack/react-query";
 
-
 const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
   const { showToast } = useAppContext();
   const queryClient = useQueryClient();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    await onSubmit({
+    onSubmit({
       date: log.date,
       cardio: [
         {
@@ -20,7 +19,9 @@ const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
       ],
       workout: [],
     });
-    queryClient.invalidateQueries(["weeklyAverages"]); 
+    queryClient.invalidateQueries(["weeklyAverages"]);
+    queryClient.invalidateQueries(["cardioDuration"]);
+    queryClient.invalidateQueries(["fetchUser"]);
     onClose();
   };
 

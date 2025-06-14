@@ -132,6 +132,10 @@ const HomePage = () => {
   if ((caloriePending || stepsPending || goalsPending, calorieBurnPending))
     return <div>Loading...</div>;
 
+  if (!calorieSummary || !userGoals || caloriesBurnt == null || !todaySteps) {
+    return <div>Loading summary...</div>;
+  }
+
   return (
     <Container className="py-5">
       <Row className="mb-5 gy-5 justify-content-center">
@@ -139,7 +143,7 @@ const HomePage = () => {
           {
             icon: <Bullseye size={20} />,
             title: "Target Calorie",
-            value: `${calorieSummary.totalCalories - caloriesBurnt}/${
+            value: `${calorieSummary?.totalCalories - caloriesBurnt}/${
               userGoals.calories
             }`,
           },
@@ -153,13 +157,13 @@ const HomePage = () => {
           {
             icon: <BsCupStraw size={20} />,
             title: "Calories Intake",
-            value: `${calorieSummary.totalCalories} kcal`,
+            value: `${calorieSummary?.totalCalories} kcal`,
             iconBgColor: "#fd7e14",
           },
           {
             icon: <BsPersonWalking size={20} />,
             title: "Today's Steps",
-            value: `${todaySteps.steps}`,
+            value: `${todaySteps?.steps}`,
           },
         ].map((card, index) => (
           <Col key={index} xs={12} sm={6} lg={3}>

@@ -18,8 +18,8 @@ const WorkoutDetailsModal = ({
 
   const { mutate: editExercise } = useMutation({
     mutationFn: updateWorkoutExercise,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["exercises"]);
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["exercises"] });
       showToast("Workout exercise updated successfully!");
     },
     onError: (err) => {
