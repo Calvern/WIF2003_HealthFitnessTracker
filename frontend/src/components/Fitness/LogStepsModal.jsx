@@ -8,7 +8,10 @@ const LogStepsModal = ({ show, onClose, steps, log, setLog, onSubmit }) => {
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     try {
-      await logDailySteps(log);
+      await logDailySteps({
+        ...log,
+        steps: Number(log.steps),
+      });
       onClose();
       queryClient.invalidateQueries(["exercises"]);
     } catch (err) {
@@ -43,9 +46,7 @@ const LogStepsModal = ({ show, onClose, steps, log, setLog, onSubmit }) => {
               placeholder="e.g., 300"
               min={0}
               value={log.steps}
-              onChange={(e) =>
-                setLog({ ...log, steps: Number(e.target.value) })
-              }
+              onChange={(e) => setLog({ ...log, steps: e.target.value })}
               required
             />
           </Form.Group>

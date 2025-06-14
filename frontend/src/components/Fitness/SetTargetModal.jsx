@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { setDailyTarget } from "../../api/ExerciseApi";
+import { useAppContext } from "../../contexts/AppContext";
 
 const SetTargetModal = ({ show, onClose }) => {
+  const { showToast } = useAppContext();
   const [target, setTarget] = useState({
     steps: 0,
     workoutMinutes: 0,
@@ -13,21 +15,21 @@ const SetTargetModal = ({ show, onClose }) => {
 
   const mutation = useMutation({
     mutationFn: setDailyTarget,
-    onSuccess: () => {
-      alert("Daily target saved!");
-      queryClient.invalidateQueries(["fetchUser"]);
+    onSuccess: async () => {
+      showToast("Daily target saved!");
+      await queryClient.invalidateQueries(["fetchUser"]);
       onClose();
     },
     onError: (error) => {
-      alert(error.message || "Failed to update target");
+      showToast(error.message || "Failed to update target", danger);
     },
   });
 
   const handleSave = (e) => {
     e.preventDefault();
     mutation.mutate({
-      targetSteps: Number(target.steps),
-      workoutMinutes: Number(target.workoutMinutes),
+      targetSteps: Number(target.steps) || 0,
+      workoutMinutes: Number(target.workoutMinutes) || 0,
     });
   };
 
@@ -50,7 +52,7 @@ const SetTargetModal = ({ show, onClose }) => {
               onChange={(e) =>
                 setTarget({
                   ...target,
-                  steps: parseInt(e.target.value) || 0,
+                  steps: e.target.value,
                 })
               }
               required
@@ -66,7 +68,7 @@ const SetTargetModal = ({ show, onClose }) => {
               onChange={(e) =>
                 setTarget({
                   ...target,
-                  workoutMinutes: parseInt(e.target.value) || 0,
+                  workoutMinutes: e.target.value,
                 })
               }
               required

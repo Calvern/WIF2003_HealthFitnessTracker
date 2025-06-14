@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateCardioExercise, deleteCardioExercise } from "../../api/ExerciseApi";
+import {
+  updateCardioExercise,
+  deleteCardioExercise,
+} from "../../api/ExerciseApi";
 
 const CardioDetailsModal = ({
   show,
@@ -16,8 +19,11 @@ const CardioDetailsModal = ({
 
   const { mutate: editExercise } = useMutation({
     mutationFn: updateCardioExercise,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["exercises"]);
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["exercises"] });
+      await queryClient.invalidateQueries({ queryKey: ["cardioDuration"] });
+      await queryClient.invalidateQueries({ queryKey: ["caloriesBurned"] });
+
       onClose();
     },
     onError: (err) => {
@@ -42,8 +48,10 @@ const CardioDetailsModal = ({
 
   const { mutate: removeExercise } = useMutation({
     mutationFn: deleteCardioExercise,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["exercises"]);
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["exercises"]);
+      await queryClient.invalidateQueries({ queryKey: ["cardioDuration"] });
+      await queryClient.invalidateQueries({ queryKey: ["caloriesBurned"] });
     },
     onError: (err) => {
       console.error("Delete failed:", err.message);

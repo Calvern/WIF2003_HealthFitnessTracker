@@ -117,6 +117,14 @@ const updateMyUserProfile = async (req, res) => {
       user.profilePictureUrl = imageUrl;
     }
     console.log("Received profile data:", user.profilePictureUrl);
+    const age = calculateAge(user.dob);
+    const bmr =
+      10 * user.weight +
+      6.25 * user.height -
+      5 * age +
+      (user.gender == "Male" ? 5 : -161);
+    const targetCalorie = bmr * user.activityLevel + user.weightGoal;
+    user.dailyTargetCalorie = targetCalorie;
     await user.save();
     res.status(200).json(user);
   } catch (error) {
