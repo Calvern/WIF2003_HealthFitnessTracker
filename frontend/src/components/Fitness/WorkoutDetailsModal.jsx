@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateWorkoutExercise, deleteWorkoutExercise } from "../../api/ExerciseApi";
+import {
+  updateWorkoutExercise,
+  deleteWorkoutExercise,
+} from "../../api/ExerciseApi";
 
 const WorkoutDetailsModal = ({
   show,
@@ -16,8 +19,8 @@ const WorkoutDetailsModal = ({
 
   const { mutate: editExercise } = useMutation({
     mutationFn: updateWorkoutExercise,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["exercises"]);
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["exercises"] });
     },
     onError: (err) => {
       console.error("Update failed:", err.message);

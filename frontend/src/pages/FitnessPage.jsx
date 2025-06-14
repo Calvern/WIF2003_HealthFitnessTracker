@@ -38,6 +38,8 @@ const FitnessPage = () => {
     mutationFn: logExercise,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["exercises"] });
+      await queryClient.invalidateQueries({ queryKey: ["cardioDuration"] });
+      await queryClient.invalidateQueries({ queryKey: ["caloriesBurned"] });
       showToast("Exercise logged!");
     },
     onError: (error) => {
