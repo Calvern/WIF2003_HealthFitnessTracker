@@ -14,26 +14,41 @@ import UpcomingRemindersCard from "../components/Home/UpcomingRemindersCard";
 import { useGetCaloriesSummaryByDay } from "../api/FoodDiaryApi";
 import { useFetchCalorieStats } from "../api/HomeStatsApi";
 import { useWeeklyCaloriesSummary } from "../hooks/useWeeklyCaloriesSummary";
+import { Bullseye } from "react-bootstrap-icons";
+import { fetchSteps, fetchCaloriesBurned } from "../api/ExerciseApi";
+import { useQuery } from "@tanstack/react-query";
+import { getUserGoals } from "../api/UsersApi";
 
 const HomePage = () => {
   const formatDate = (date) => date.toISOString().split("T")[0];
 
   const { calorieSummary, isPending: caloriePending } =
     useGetCaloriesSummaryByDay({ date: formatDate(new Date()) });
+  const {
+    data: todaySteps,
+    isPending: stepsPending,
+    error,
+  } = useQuery({
+    queryKey: ["steps"],
+    queryFn: fetchSteps,
+  });
+
+  const { data: userGoals, isPending: goalsPending } = useQuery({
+    queryKey: ["userGoals"],
+    queryFn: getUserGoals,
+  });
+
+  const { data: caloriesBurnt, isPending: calorieBurnPending } = useQuery({
+    queryKey: ["caloriesBurned"],
+    queryFn: fetchCaloriesBurned,
+  });
 
   const [calorieInData, setCalorieInData] = useState([]);
   const [calorieOutData, setCalorieOutData] = useState([]);
   const [avgCalIn, setAvgCalIn] = useState(0);
   const [avgCalOut, setAvgCalOut] = useState(0);
-  const {
-    inData,
-    outData,
-    labels,
-    avgIn,
-    avgOut,
-    isLoading,
-  } = useWeeklyCaloriesSummary();
-
+  const { inData, outData, labels, avgIn, avgOut, isLoading } =
+    useWeeklyCaloriesSummary();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -49,12 +64,12 @@ const HomePage = () => {
         const calInArr = Array(7).fill(0);
         const calOutArr = Array(7).fill(0);
 
-        consumed.forEach(item => {
+        consumed.forEach((item) => {
           const i = labelIndex(item._id.date);
           calInArr[i] += item.totalCalories;
         });
 
-        burned.forEach(item => {
+        burned.forEach((item) => {
           const i = labelIndex(item._id.date);
           calOutArr[i] += item.totalCaloriesOut;
         });
@@ -114,50 +129,37 @@ const HomePage = () => {
     maintainAspectRatio: false,
   };
 
-  if (caloriePending) return <div>Loading...</div>;
+  if ((caloriePending || stepsPending || goalsPending, calorieBurnPending))
+    return <div>Loading...</div>;
 
   return (
     <Container className="py-5">
       <Row className="mb-5 gy-5 justify-content-center">
         {[
           {
-            icon: <BsPersonWalking size={20} />,
-            title: "Today's Steps",
-            value: "281",
-            percentageText: (
-              <>
-                <strong>+55%</strong> than average
-              </>
-            ),
+            icon: <Bullseye size={20} />,
+            title: "Target Calorie",
+            value: `${calorieSummary.totalCalories - caloriesBurnt}/${
+              userGoals.calories
+            }`,
           },
+
           {
             icon: <BsFire size={20} />,
             title: "Calories Burnt",
-            value: `${avgCalOut} kcal`,
-            percentageText: (
-              <>
-                <strong>+20%</strong> from yesterday
-              </>
-            ),
+            value: `${caloriesBurnt} kcal`,
             iconBgColor: "#dc3545",
           },
           {
             icon: <BsCupStraw size={20} />,
             title: "Calories Intake",
             value: `${calorieSummary.totalCalories} kcal`,
-            percentageText: "72% of daily goal",
             iconBgColor: "#fd7e14",
           },
           {
-            icon: <BsClockHistory size={20} />,
-            title: "Active Minutes",
-            value: "45 min",
-            percentageText: (
-              <>
-                <strong>+5%</strong> today
-              </>
-            ),
-            iconBgColor: "#20c997",
+            icon: <BsPersonWalking size={20} />,
+            title: "Today's Steps",
+            value: `${todaySteps.steps}`,
           },
         ].map((card, index) => (
           <Col key={index} xs={12} sm={6} lg={3}>
@@ -178,74 +180,74 @@ const HomePage = () => {
         </Col>
 
         <Col xs={12} md={6} lg={4}>
-        <LineChartCard
-          title="Calories Burnt This Week"
-          description="Track your weekly energy output."
-          summaryText={`Avg: ${avgOut} kcal/day`}
-          chartData={{
-            labels,
-            datasets: [
-              {
-                label: "Calories Out",
-                data: outData,
-                borderColor: "#E98580",
-                backgroundColor: "#E9858055",
-                fill: true,
-                tension: 0,
+          <LineChartCard
+            title="Calories Burnt This Week"
+            description="Track your weekly energy output."
+            summaryText={`Avg: ${avgOut} kcal/day`}
+            chartData={{
+              labels,
+              datasets: [
+                {
+                  label: "Calories Out",
+                  data: outData,
+                  borderColor: "#E98580",
+                  backgroundColor: "#E9858055",
+                  fill: true,
+                  tension: 0,
+                },
+              ],
+            }}
+            chartOptions={{
+              responsive: true,
+              scales: {
+                y: { beginAtZero: true },
               },
-            ],
-          }}
-          chartOptions={{
-            responsive: true,
-            scales: {
-              y: { beginAtZero: true},
-            },
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                callbacks: {
-                  label: ctx => `${ctx.parsed.y} kcal`,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: (ctx) => `${ctx.parsed.y} kcal`,
+                  },
                 },
               },
-            },
-          }}
-        />
-      </Col>
+            }}
+          />
+        </Col>
 
-      <Col xs={12} md={6} lg={4}>
-        <LineChartCard
-          title="Calories Intake This Week"
-          description="Track your weekly energy input."
-          summaryText={`Avg: ${avgIn} kcal/day`}
-          chartData={{
-            labels,
-            datasets: [
-              {
-                label: "Calories In",
-                data: inData,
-                borderColor: "#80B5E9",
-                backgroundColor: "#80B5E955",
-                fill: true,
-                tension: 0,
+        <Col xs={12} md={6} lg={4}>
+          <LineChartCard
+            title="Calories Intake This Week"
+            description="Track your weekly energy input."
+            summaryText={`Avg: ${avgIn} kcal/day`}
+            chartData={{
+              labels,
+              datasets: [
+                {
+                  label: "Calories In",
+                  data: inData,
+                  borderColor: "#80B5E9",
+                  backgroundColor: "#80B5E955",
+                  fill: true,
+                  tension: 0,
+                },
+              ],
+            }}
+            chartOptions={{
+              responsive: true,
+              scales: {
+                y: { beginAtZero: true },
               },
-            ],
-          }}
-          chartOptions={{
-            responsive: true,
-            scales: {
-              y: { beginAtZero: true},
-            },
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                callbacks: {
-                  label: ctx => `${ctx.parsed.y} kcal`,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: (ctx) => `${ctx.parsed.y} kcal`,
+                  },
                 },
               },
-            },
-          }}
-        />
-      </Col>
+            }}
+          />
+        </Col>
       </Row>
 
       <Row className="mb-5 justify-content-center">

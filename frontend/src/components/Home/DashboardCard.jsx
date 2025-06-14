@@ -51,12 +51,6 @@ const DashboardCard = ({
         <Card.Text className="text-end" style={{ marginBottom: "0.5rem" }}>
           <h2 className="fw-bold">{value}</h2>
         </Card.Text>
-
-        <hr style={{ borderColor: "#e0e0e0", margin: "1rem 0" }} />
-
-        <Card.Text style={{ fontSize: "0.9rem", color: "#28a745" }}>
-          {percentageText}
-        </Card.Text>
       </Card.Body>
     </Card>
   );
