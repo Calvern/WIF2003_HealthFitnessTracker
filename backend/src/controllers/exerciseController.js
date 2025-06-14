@@ -389,9 +389,9 @@ export const getStepSummary = async (req, res) => {
       matchStage.date = { $gte: startDate, $lte: endDate };
       pipeline.push({ $match: matchStage });
     } else if ((mode === "weekly" || mode === "monthly") && year) {
-      pipeline.push({ $match: matchStage });
       pipeline.push({
         $match: {
+          ...matchStage,
           $expr: {
             $eq: [{ $year: "$parsedDate" }, parseInt(year)],
           },
@@ -428,15 +428,25 @@ export const getStepSummary = async (req, res) => {
           };
 
     pipeline.push({ $group: groupStage });
-    pipeline.push({ $sort: { "_id.date": 1, "_id.week": 1, "_id.month": 1 } });
+
+    pipeline.push({
+      $sort:
+        mode === "monthly"
+          ? { "_id.month": 1 }
+          : mode === "weekly"
+          ? { "_id.week": 1 }
+          : { "_id.date": 1 },
+    });
 
     const result = await Exercise.aggregate(pipeline);
+    console.log("🚀 Step summary result:", result);
     res.json(result);
   } catch (error) {
     console.error("Step summary error:", error.message);
     res.status(500).json({ message: "Failed to summarize steps" });
   }
 };
+
 
 export const getCardioVsWorkoutSummary = async (req, res) => {
   try {

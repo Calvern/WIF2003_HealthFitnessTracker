@@ -12,7 +12,7 @@ export const useStepSummary = (mode, dateIndex = 0) => {
 
     if (mode === "daily") {
       const base = new Date(today);
-      const day = base.getDay(); // 0 = Sunday, 1 = Monday
+      const day = base.getDay();
       const mondayOffset = (day === 0 ? -6 : 1) - day;
 
       const monday = new Date(base);
