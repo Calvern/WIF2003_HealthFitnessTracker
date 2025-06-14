@@ -30,17 +30,24 @@ export const createExercise = async (req, res) => {
       };
     });
 
+    const update = {
+      $push: {
+        workout: { $each: workout },
+        cardio: { $each: processedCardio },
+      },
+    };
+
+    // Only overwrite steps if passed (avoid resetting to 0)
+    if (typeof steps === "number") {
+      update.$set = { steps };
+    }
+
     const log = await Exercise.findOneAndUpdate(
       { userId, date },
-      {
-        $set: { steps },
-        $push: {
-          workout: { $each: workout },
-          cardio: { $each: processedCardio },
-        },
-      },
+      update,
       { upsert: true, new: true }
     );
+
 
     console.log("Exercise saved:", log);
     res.status(200).json(log);
@@ -439,7 +446,6 @@ export const getStepSummary = async (req, res) => {
     });
 
     const result = await Exercise.aggregate(pipeline);
-    console.log("🚀 Step summary result:", result);
     res.json(result);
   } catch (error) {
     console.error("Step summary error:", error.message);
