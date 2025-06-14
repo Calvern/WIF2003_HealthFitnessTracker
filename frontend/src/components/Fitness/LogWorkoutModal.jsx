@@ -6,7 +6,6 @@ const LogWorkoutModal = ({ show, onClose, workout, log, setLog, onSubmit }) => {
     e.preventDefault();
     await onSubmit({
       date: log.date,
-      steps: 0,
       workout: [
         {
           name: workout,
@@ -37,6 +36,7 @@ const LogWorkoutModal = ({ show, onClose, workout, log, setLog, onSubmit }) => {
               placeholder="e.g., 2023-10-01"
               value={log.date}
               onChange={(e) => setLog({ ...log, date: e.target.value })}
+              max={new Date().toISOString().split("T")[0]}
               required
             />
           </Form.Group>
@@ -56,7 +56,7 @@ const LogWorkoutModal = ({ show, onClose, workout, log, setLog, onSubmit }) => {
             <Form.Label>Number of Sets</Form.Label>
             <Form.Control
               type="number"
-              placeholder="e.g., 3"
+              placeholder="Sets"
               min={0}
               value={log.sets}
               onChange={(e) => setLog({ ...log, sets: e.target.value })}
@@ -68,7 +68,7 @@ const LogWorkoutModal = ({ show, onClose, workout, log, setLog, onSubmit }) => {
             <Form.Label>Number of Reps</Form.Label>
             <Form.Control
               type="number"
-              placeholder="e.g., 12"
+              placeholder="Reps"
               min={0}
               value={log.reps}
               onChange={(e) => setLog({ ...log, reps: e.target.value })}
