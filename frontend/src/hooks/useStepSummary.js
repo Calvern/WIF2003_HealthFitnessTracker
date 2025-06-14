@@ -1,6 +1,7 @@
-// src/hooks/useStepSummary.js
 import { useEffect, useState } from "react";
 import axios from "axios";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const useStepSummary = (mode, dateIndex = 0) => {
   const [data, setData] = useState([]);
@@ -16,7 +17,7 @@ export const useStepSummary = (mode, dateIndex = 0) => {
       const mondayOffset = (day === 0 ? -6 : 1) - day;
 
       const monday = new Date(base);
-      monday.setDate(base.getDate() + mondayOffset + (dateIndex * 7));
+      monday.setDate(base.getDate() + mondayOffset + dateIndex * 7);
 
       const sunday = new Date(monday);
       sunday.setDate(monday.getDate() + 6);
@@ -50,29 +51,31 @@ export const useStepSummary = (mode, dateIndex = 0) => {
   useEffect(() => {
     const fetchSteps = async () => {
       setIsLoading(true);
-      
-      const r = getDateRange(); // ✅ you were missing this!
+
+      const r = getDateRange();
       setRange(r);
 
       try {
-        let url = "/api/exercises/steps/summary";
+        let url = `${API_BASE_URL}/api/exercises/steps/summary`;
         const params = { mode };
 
         if (mode === "daily") {
           params.startDate = r.startDate;
           params.endDate = r.endDate;
-        }
-        if (mode === "weekly" || mode === "monthly") {
+        } else if (mode === "weekly" || mode === "monthly") {
           params.year = r.year;
         }
 
         const res = await axios.get(url, {
           params,
-          headers: { 'Cache-Control': 'no-cache' }
+          withCredentials: true,
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
         });
 
         console.log("✅ Step Summary API response:", res.data);
-        setData(res.data);
+        setData(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         console.error("❌ Error fetching step summary:", err.response?.data || err.message);
         setData([]);
@@ -84,7 +87,5 @@ export const useStepSummary = (mode, dateIndex = 0) => {
     fetchSteps();
   }, [mode, dateIndex]);
 
-
   return { data, isLoading, range };
 };
-

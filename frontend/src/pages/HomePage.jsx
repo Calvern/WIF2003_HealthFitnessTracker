@@ -14,6 +14,7 @@ import UpcomingRemindersCard from "../components/Home/UpcomingRemindersCard";
 import { useGetCaloriesSummaryByDay } from "../api/FoodDiaryApi";
 import { useFetchCalorieStats } from "../api/HomeStatsApi";
 import { useWeeklyCaloriesSummary } from "../hooks/useWeeklyCaloriesSummary";
+import { useStepSummaryForHome } from "../hooks/useStepSummaryForHome";
 import { Bullseye } from "react-bootstrap-icons";
 import { fetchSteps, fetchCaloriesBurned } from "../api/ExerciseApi";
 import { useQuery } from "@tanstack/react-query";

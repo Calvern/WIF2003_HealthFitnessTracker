@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const useStepSummaryForHome = () => {
   const [data, setData] = useState([]);
   const [avg, setAvg] = useState(0);
@@ -11,6 +13,7 @@ export const useStepSummaryForHome = () => {
     const fetchSteps = async () => {
       try {
         setIsLoading(true);
+
         const today = new Date();
         const start = new Date(today);
         const end = new Date(today);
@@ -24,11 +27,15 @@ export const useStepSummaryForHome = () => {
         const startDate = start.toISOString().split("T")[0];
         const endDate = end.toISOString().split("T")[0];
 
-        const res = await axios.get("/api/exercises/steps/summary", {
+        const res = await axios.get(`${API_BASE_URL}/api/exercises/steps/summary`, {
           params: {
             mode: "daily",
             startDate,
             endDate,
+          },
+          withCredentials: true,
+          headers: {
+            "Cache-Control": "no-cache",
           },
         });
 
