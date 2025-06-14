@@ -7,8 +7,8 @@ import { useAppContext } from "../../contexts/AppContext";
 const SetTargetModal = ({ show, onClose }) => {
   const { showToast } = useAppContext();
   const [target, setTarget] = useState({
-    steps: 0,
-    workoutMinutes: 0,
+    steps: "",
+    workoutMinutes: "",
   });
 
   const queryClient = useQueryClient();
@@ -47,6 +47,7 @@ const SetTargetModal = ({ show, onClose }) => {
             <Form.Label>Daily Step Target</Form.Label>
             <Form.Control
               type="number"
+              placeholder="Enter target"
               min="0"
               value={target.steps}
               onChange={(e) =>
@@ -63,6 +64,7 @@ const SetTargetModal = ({ show, onClose }) => {
             <Form.Label>Daily Workout Minutes Target</Form.Label>
             <Form.Control
               type="number"
+              placeholder="Enter target"
               min="0"
               value={target.workoutMinutes}
               onChange={(e) =>

@@ -89,6 +89,7 @@ const FitnessPage = () => {
         id: activity._id,
         cardio: activity.name,
         duration: activity.duration,
+        caloriesBurned: activity.caloriesBurned,
         ...commonData,
       });
       setShowCardioModal(true);
