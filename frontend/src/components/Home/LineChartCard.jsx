@@ -21,7 +21,7 @@ const LineChartCard = ({ title, description, summaryText, chartData, chartOption
     const chart = chartRef.current;
     const ctx = chart.ctx;
 
-    // Create horizontal gradient from left to right
+    
     const gradient = ctx.createLinearGradient(0, 0, ctx.canvas.width, 0);
 
     const colors = [

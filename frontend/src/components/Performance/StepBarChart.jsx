@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -15,23 +15,39 @@ const StepBarChart = ({ mode, dateIndex }) => {
   const { data, isLoading, range } = useStepSummary(mode, dateIndex);
   const chartRef = useRef(null);
 
-  if (isLoading || !range) return <p>Loading chart...</p>;
 
-  // === Step 1: Convert backend _id to string keys
-  const getKey = (id) => {
-      if (!id) return "";
+  useEffect(() => {
+    const handleResize = () => {
+      if (!chartRef.current) return;
+      const canvas = chartRef.current.canvas;
+      const ctx = chartRef.current.ctx;
 
-      if (id.date) {
-        return id.date.toString().substring(0, 10); // safest option
-      }
+      if (!canvas || !ctx) return;
 
-      if (id.week && id.year) return `${id.week}-${id.year}`;
-      if (id.month && id.year) return `${id.month}-${id.year}`;
-      return JSON.stringify(id);
+      const width = canvas.offsetWidth;
+      const g = ctx.createLinearGradient(0, 0, width, 0);
+      colors.forEach((color, i) => {
+        g.addColorStop(i / (colors.length - 1), color);
+      });
+
+      setGradient(g);
     };
 
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  // === Step 2: Generate full key list based on current range
+
+  if (isLoading || !range) return <p>Loading chart...</p>;
+
+  const getKey = (id) => {
+    if (!id) return "";
+    if (id.date) return id.date.toString().substring(0, 10);
+    if (id.week && id.year) return `${id.week}-${id.year}`;
+    if (id.month && id.year) return `${id.month}-${id.year}`;
+    return JSON.stringify(id);
+  };
+
   const getWeeklyDateKeys = (startDateStr) => {
     const start = new Date(startDateStr);
     const mondayOffset = (start.getDay() === 0 ? -6 : 1) - start.getDay();
@@ -40,24 +56,8 @@ const StepBarChart = ({ mode, dateIndex }) => {
     return [...Array(7)].map((_, i) => {
       const d = new Date(monday);
       d.setDate(monday.getDate() + i);
-      return d.toISOString().split("T")[0]; // YYYY-MM-DD
+      return d.toISOString().split("T")[0];
     });
-  };
-
-  const getWeekKeysInMonth = (year, month) => {
-    const keys = new Set();
-    const current = new Date(year, month - 1, 1);
-    while (current.getMonth() === month - 1) {
-      const week = getISOWeek(current);
-      const yearNum = current.getFullYear();
-      keys.add(`${week}-${yearNum}`);
-      current.setDate(current.getDate() + 1);
-    }
-    return [...keys];
-  };
-
-  const getMonthKeysInYear = (year) => {
-    return [...Array(12)].map((_, i) => `${i + 1}-${year}`);
   };
 
   const getISOWeek = (date) => {
@@ -67,6 +67,20 @@ const StepBarChart = ({ mode, dateIndex }) => {
     return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
   };
 
+  const getWeekKeysInMonth = (year, month) => {
+    const keys = new Set();
+    const current = new Date(year, month - 1, 1);
+    while (current.getMonth() === month - 1) {
+      keys.add(`${getISOWeek(current)}-${current.getFullYear()}`);
+      current.setDate(current.getDate() + 1);
+    }
+    return [...keys];
+  };
+
+  const getMonthKeysInYear = (year) => {
+    return [...Array(12)].map((_, i) => `${i + 1}-${year}`);
+  };
+
   const keys =
     mode === "daily"
       ? getWeeklyDateKeys(range.startDate)
@@ -74,41 +88,29 @@ const StepBarChart = ({ mode, dateIndex }) => {
       ? getWeekKeysInMonth(range.year, range.month)
       : getMonthKeysInYear(range.year);
 
-  // === Step 3: Build map of backend results
   const stepArray = Array.isArray(data) ? data : [];
   const stepMap = new Map(stepArray.map(item => [getKey(item._id), item.totalSteps || 0]));
-
-
-  // === Step 4: Create labels & values
-  const labels = keys.map(key => {
-  if (mode === "daily") {
-    const d = new Date(key);
-    return d.toLocaleDateString("en-GB", { weekday: "short" }); // e.g., Mon, Tue
-  }
-  if (mode === "weekly" && key.includes("-")) {
-    const [week, year] = key.split("-");
-    return `Week ${week}`;
-  }
-  if (mode === "monthly" && key.includes("-")) {
-    const [month, year] = key.split("-");
-    return new Date(year, month - 1).toLocaleString("en-GB", { month: "short" });
-  }
-  return key;
-});
-
-
   const stepData = keys.map(k => stepMap.get(k) ?? 0);
 
-  // === Step 5: Chart config
+  const labels = keys.map(key => {
+    if (mode === "daily") return new Date(key).toLocaleDateString("en-GB", { weekday: "short" });
+    if (mode === "weekly") return `Week ${key.split("-")[0]}`;
+    if (mode === "monthly") {
+      const [month, year] = key.split("-");
+      return new Date(year, month - 1).toLocaleString("en-GB", { month: "short" });
+    }
+    return key;
+  });
+
   const chartData = {
     labels,
     datasets: [
       {
         label: "Steps",
         data: stepData,
-        backgroundColor: stepData.map(steps => steps > 0 ? "#69B3E7" : "#e0e0e0"),
+        backgroundColor: "#176087",
         borderRadius: 50,
-        barThickness: 28,
+        barThickness: 60,
       },
     ],
   };
@@ -116,15 +118,13 @@ const StepBarChart = ({ mode, dateIndex }) => {
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      duration: 800,
+      easing: 'easeOutQuart', 
+    },
     scales: {
-      x: {
-        grid: { display: false },
-        ticks: { font: { size: 12 } },
-      },
-      y: {
-        beginAtZero: true,
-        ticks: { font: { size: 12 } },
-      },
+      x: { grid: { display: false }, ticks: { font: { size: 12 } } },
+      y: { beginAtZero: true, ticks: { font: { size: 12 } } },
     },
     plugins: {
       tooltip: {
@@ -136,13 +136,10 @@ const StepBarChart = ({ mode, dateIndex }) => {
     },
   };
 
-  console.log("Expected keys:", keys);
-  console.log("Mapped stepMap keys:", [...stepMap.keys()]);
-  console.log("Final stepData:", stepData);
-
   return (
     <div style={{ height: "350px" }}>
-      <Bar ref={chartRef} data={chartData} options={chartOptions} />
+      <Bar data={chartData}options={chartOptions} 
+      ref={(chart) => {if (!chart) return; chartRef.current = chart;}}/>
     </div>
   );
 };
