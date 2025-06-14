@@ -6,10 +6,7 @@ import { GrYoga } from "react-icons/gr";
 import { format, isWithinInterval, subDays, parseISO } from "date-fns";
 import { fetchExercisesRequest } from "../../api/ExerciseApi";
 
-const ActivitiesDoneCard = ({
-  onActivityClick,
-  showToggle = true,
-}) => {
+const ActivitiesDoneCard = ({ onActivityClick, showToggle = true }) => {
   const useExercises = () => {
     return useQuery({
       queryKey: ["exercises"],

@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { setDailyTarget } from "../../api/ExerciseApi";
+import { useAppContext } from "../../contexts/AppContext";
 
 const SetTargetModal = ({ show, onClose }) => {
+  const { showToast } = useAppContext();
   const [target, setTarget] = useState({
-    steps: 0,
-    workoutMinutes: 0,
+    steps: "",
+    workoutMinutes: "",
   });
 
   const queryClient = useQueryClient();
@@ -14,12 +16,12 @@ const SetTargetModal = ({ show, onClose }) => {
   const mutation = useMutation({
     mutationFn: setDailyTarget,
     onSuccess: () => {
-      alert("Daily target saved!");
+      showToast("Daily target saved!");
       queryClient.invalidateQueries(["fetchUser"]);
       onClose();
     },
     onError: (error) => {
-      alert(error.message || "Failed to update target");
+      showToast(error.message || "Failed to update target");
     },
   });
 
@@ -45,12 +47,13 @@ const SetTargetModal = ({ show, onClose }) => {
             <Form.Label>Daily Step Target</Form.Label>
             <Form.Control
               type="number"
+              placeholder="Enter target"
               min="0"
               value={target.steps}
               onChange={(e) =>
                 setTarget({
                   ...target,
-                  steps: parseInt(e.target.value) || 0,
+                  steps: e.target.value,
                 })
               }
               required
@@ -61,12 +64,13 @@ const SetTargetModal = ({ show, onClose }) => {
             <Form.Label>Daily Workout Minutes Target</Form.Label>
             <Form.Control
               type="number"
+              placeholder="Enter target"
               min="0"
               value={target.workoutMinutes}
               onChange={(e) =>
                 setTarget({
                   ...target,
-                  workoutMinutes: parseInt(e.target.value) || 0,
+                  workoutMinutes: e.target.value,
                 })
               }
               required

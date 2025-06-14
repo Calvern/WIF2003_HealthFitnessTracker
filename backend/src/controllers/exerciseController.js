@@ -2,14 +2,16 @@ import Exercise from "../models/exercise.js";
 import User from "../models/user.js";
 import exerciseList from "../../../frontend/src/data/exerciseList.js";
 import mongoose from "mongoose";
+import { format, isWithinInterval, subDays, parseISO } from "date-fns";
+
 
 export const createExercise = async (req, res) => {
-  const { date, steps = 0, workout = [], cardio = [] } = req.body;
+  const { date, steps, workout = [], cardio = [] } = req.body;
   const userId = req.userId;
 
   try {
     const user = await User.findById(userId);
-    const weight = user?.weight || 70;
+    const weight = user?.weight;
 
     const processedCardio = cardio.map((item) => {
       const exerciseMeta = exerciseList.find(
@@ -33,7 +35,9 @@ export const createExercise = async (req, res) => {
     const log = await Exercise.findOneAndUpdate(
       { userId, date },
       {
-        $set: { steps },
+        $set: {
+          ...(steps !== undefined ? { steps } : {}),
+        },
         $push: {
           workout: { $each: workout },
           cardio: { $each: processedCardio },
@@ -41,8 +45,6 @@ export const createExercise = async (req, res) => {
       },
       { upsert: true, new: true }
     );
-
-    console.log("Exercise saved:", log);
     res.status(200).json(log);
   } catch (error) {
     console.error("Log exercise error:", error);
@@ -170,45 +172,40 @@ export const fetchCaloriesBurned = async (req, res) => {
 export const fetchWeeklySummary = async (req, res) => {
   try {
     const userId = req.userId;
-    const dates = req.query.dates?.split(",") || [];
+
+    const now = new Date();
+    const startDate = subDays(now, 5);
 
     const logs = await Exercise.find({
       userId,
-      date: { $in: dates },
+      date: { $gte: startDate.toISOString().split("T")[0], $lte: now.toISOString().split("T")[0] },
     });
 
     let totalSteps = 0;
     let totalMinutes = 0;
     let totalCalories = 0;
-    let daysWithData = 0;
 
     logs.forEach((log) => {
-      const hasSteps = log.steps > 0;
-      const hasCardio = Array.isArray(log.cardio) && log.cardio.length > 0;
+      totalSteps += log.steps || 0;
 
-      if (hasSteps || hasCardio) {
-        totalSteps += log.steps || 0;
+      const cardioMinutes =
+        log.cardio?.reduce((sum, entry) => sum + (entry.duration || 0), 0) || 0;
+      totalMinutes += cardioMinutes;
 
-        const cardioMinutes =
-          log.cardio?.reduce((sum, entry) => sum + (entry.duration || 0), 0) ||
-          0;
-        totalMinutes += cardioMinutes;
-
-        const dailyCalories =
-          log.cardio?.reduce(
-            (sum, entry) => sum + (entry.caloriesBurned || 0),
-            0
-          ) || 0;
-        totalCalories += dailyCalories;
-
-        daysWithData += 1;
-      }
+      const dailyCalories =
+        log.cardio?.reduce(
+          (sum, entry) => sum + (entry.caloriesBurned || 0),
+          0
+        ) || 0;
+      totalCalories += dailyCalories;
     });
 
+    const daysCount = 7;
+
     const avg = {
-      averageSteps: Math.round(totalSteps / (daysWithData || 1)),
-      averageMinutes: Math.round(totalMinutes / (daysWithData || 1)),
-      averageCalories: Math.round(totalCalories / (daysWithData || 1)),
+      averageSteps: Math.round(totalSteps / daysCount),
+      averageMinutes: Math.round(totalMinutes / daysCount),
+      averageCalories: Math.round(totalCalories / daysCount),
     };
 
     res.json(avg);
@@ -222,6 +219,33 @@ export const updateCardioExercise = async (req, res) => {
   try {
     const { id } = req.params;
     const updatedData = req.body;
+    const userId = req.userId;
+
+    const user = await User.findById(userId);
+    const weight = user?.weight || 70;
+
+    // Retrieve the existing exercise document to get the name
+    const exerciseDoc = await Exercise.findOne({ "cardio._id": id });
+    if (!exerciseDoc) {
+      return res.status(404).json({ message: "Cardio exercise not found" });
+    }
+
+    // Find the cardio item by ID
+    const cardioItem = exerciseDoc.cardio.find(
+      (item) => item._id.toString() === id
+    );
+    if (!cardioItem) {
+      return res.status(404).json({ message: "Cardio entry not found in document" });
+    }
+
+    const name = cardioItem.name;
+    const exerciseMeta = exerciseList.find(
+      (ex) => ex.name.toLowerCase() === name.toLowerCase()
+    );
+    const MET = exerciseMeta?.met || 0;
+
+    const duration = updatedData.duration || 0;
+    const caloriesBurned = Math.round((MET * 3.5 * weight * duration) / 200);
 
     const updatedExercise = await Exercise.findOneAndUpdate(
       { "cardio._id": id },
@@ -229,17 +253,14 @@ export const updateCardioExercise = async (req, res) => {
         $set: {
           "cardio.$.date": updatedData.date,
           "cardio.$.startTime": updatedData.startTime,
-          "cardio.$.duration": updatedData.duration,
+          "cardio.$.duration": duration,
+          "cardio.$.caloriesBurned": caloriesBurned,
         },
       },
       { new: true }
     );
 
-    if (!updatedExercise) {
-      return res.status(404).json({ message: "Cardio exercise not found" });
-    }
-
-    res.json(updatedExercise);
+    res.status(200).json(updatedExercise);
   } catch (error) {
     console.error("Error updating cardio exercise:", error);
     res.status(500).json({ message: "Server error" });
@@ -381,9 +402,7 @@ export const getStepSummary = async (req, res) => {
       userId: new mongoose.Types.ObjectId(userId),
     };
 
-    const pipeline = [
-      { $addFields: { parsedDate: { $toDate: "$date" } } },
-    ];
+    const pipeline = [{ $addFields: { parsedDate: { $toDate: "$date" } } }];
 
     if (mode === "daily" && startDate && endDate) {
       matchStage.date = { $gte: startDate, $lte: endDate };

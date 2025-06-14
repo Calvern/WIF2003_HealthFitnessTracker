@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -17,11 +17,8 @@ ChartJS.register(ArcElement, Tooltip);
 
 const StepsCard = () => {
   const queryClient = useQueryClient();
-  const {
-    data: todaySteps,
-    isPending,
-    error,
-  } = useQuery({
+
+  const { data: todaySteps, isPending, error } = useQuery({
     queryKey: ["steps"],
     queryFn: fetchSteps,
   });
@@ -40,44 +37,27 @@ const StepsCard = () => {
     queryKey: ["caloriesBurned"],
     queryFn: fetchCaloriesBurned,
   });
-  const [showSetTargetModal, setShowSetTargetModal] = useState(false);
-  const [showLogStepsModal, setShowLogStepsModal] = useState(false);
-  const [log, setLog] = useState({ date: "", steps: 0 });
-  const [goal, setGoal] = useState();
-  const [steps, setSteps] = useState();
-  const [activeMinutes, setActiveMinutes] = useState();
-  const [minutesGoal, setMinutesGoal] = useState();
-  const [calories, setCalories] = useState();
-  const [caloriesGoal, setCaloriesGoal] = useState();
-  const [summary, setSummary] = useState({
+
+  const { data: summary = {
     averageSteps: 0,
     averageMinutes: 0,
     averageCalories: 0,
+  }} = useQuery({
+    queryKey: ["weeklyAverages"],
+    queryFn: fetchWeeklyAverages,
   });
+
+  const [showSetTargetModal, setShowSetTargetModal] = useState(false);
+  const [showLogStepsModal, setShowLogStepsModal] = useState(false);
+  const [log, setLog] = useState({ date: "", steps: 0 });
   const [selectedTab, setSelectedTab] = useState("steps");
 
-  useEffect(() => {
-    const loadSummary = async () => {
-      const data = await fetchWeeklyAverages();
-      setSummary(data);
-    };
-
-    if (
-      todaySteps &&
-      userGoals &&
-      typeof cardioData !== "undefined" &&
-      typeof caloriesData !== "undefined"
-    ) {
-      setSteps(todaySteps.steps || 0);
-      setGoal(userGoals.steps);
-      setMinutesGoal(userGoals.activity);
-      setCaloriesGoal(userGoals.calories);
-      setActiveMinutes(cardioData);
-      setCalories(caloriesData);
-
-      loadSummary();
-    }
-  }, [todaySteps, userGoals, cardioData, caloriesData]);
+  const steps = todaySteps?.steps ?? 0;
+  const goal = userGoals?.steps ?? 1;
+  const minutesGoal = userGoals?.activity ?? 1;
+  const caloriesGoal = userGoals?.calories ?? 1;
+  const activeMinutes = cardioData ?? 0;
+  const calories = caloriesData ?? 0;
 
   const chartMap = {
     steps: {
@@ -100,7 +80,7 @@ const StepsCard = () => {
     },
   };
 
-  const chartData = chartMap[selectedTab] || chartMap["steps"];
+  const chartData = chartMap[selectedTab];
 
   const doughnutData = {
     labels: ["Progress", "Remaining"],
@@ -119,21 +99,19 @@ const StepsCard = () => {
   };
 
   const handleTargetSave = (target) => {
-    setGoal(Number(target.steps));
-    setMinutesGoal(Number(target.workoutMinutes));
-    setCaloriesGoal(Number(target.calories));
+    queryClient.invalidateQueries(["userGoals"]);
+    queryClient.invalidateQueries(["weeklyAverages"]);
   };
 
-  const handleLogSubmit = async (e) => {
-    // e.preventDefault();
+  const handleLogSubmit = async () => {
     const stepsLogged = parseInt(log.steps);
     if (!isNaN(stepsLogged) && stepsLogged >= 0) {
-      setSteps(stepsLogged);
       setShowLogStepsModal(false);
-
-      await queryClient.invalidateQueries(["steps"]);
-      await queryClient.invalidateQueries(["userGoals"]);
-      await queryClient.invalidateQueries(["cardioDuration"]);
+      await Promise.all([
+        queryClient.invalidateQueries(["steps"]),
+        queryClient.invalidateQueries(["weeklyAverages"]),
+        queryClient.invalidateQueries(["cardioDuration"]),
+      ]);
     }
   };
 
@@ -144,25 +122,21 @@ const StepsCard = () => {
   return (
     <div className="p-4 mb-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h5 className="fw-bold">Progress Overview</h5>
+        <h5 className="fw-bold">Today's Progress Overview</h5>
         <ButtonGroup>
-          {[
-            { label: "Steps", value: "steps" },
-            { label: "Minutes", value: "minutes" },
-            { label: "Calories", value: "calories" },
-          ].map((tab) => (
+          {["steps", "minutes", "calories"].map((tab) => (
             <ToggleButton
-              key={tab.value}
-              id={`tab-${tab.value}`}
+              key={tab}
+              id={`tab-${tab}`}
               type="radio"
               variant="outline-primary"
               name="progress-tab"
               className="btn-sm px-2 py-1"
-              value={tab.value}
-              checked={selectedTab === tab.value}
+              value={tab}
+              checked={selectedTab === tab}
               onChange={(e) => setSelectedTab(e.currentTarget.value)}
             >
-              {tab.label}
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </ToggleButton>
           ))}
         </ButtonGroup>
@@ -199,24 +173,7 @@ const StepsCard = () => {
             {selectedTab === "calories" && `${summary.averageCalories} kcal`}
           </div>
           <div className="mt-3 d-flex justify-content-center gap-2 flex-wrap">
-            {selectedTab === "steps" && (
-              <>
-                <button
-                  className="btn btn-outline-primary"
-                  onClick={() => setShowSetTargetModal(true)}
-                >
-                  Set Target
-                </button>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => setShowLogStepsModal(true)}
-                >
-                  Log Steps
-                </button>
-              </>
-            )}
-
-            {selectedTab === "minutes" && (
+            {["steps", "minutes"].includes(selectedTab) && (
               <button
                 className="btn btn-outline-primary"
                 onClick={() => setShowSetTargetModal(true)}
@@ -224,7 +181,14 @@ const StepsCard = () => {
                 Set Target
               </button>
             )}
-            {/* No buttons for calories tab */}
+            {selectedTab === "steps" && (
+              <button
+                className="btn btn-primary"
+                onClick={() => setShowLogStepsModal(true)}
+              >
+                Log Steps
+              </button>
+            )}
           </div>
         </div>
       </div>

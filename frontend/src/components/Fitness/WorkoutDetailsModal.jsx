@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateWorkoutExercise, deleteWorkoutExercise } from "../../api/ExerciseApi";
+import { useAppContext } from "../../contexts/AppContext";
 
 const WorkoutDetailsModal = ({
   show,
@@ -13,11 +14,13 @@ const WorkoutDetailsModal = ({
 }) => {
   const queryClient = useQueryClient();
   const [editMode, setEditMode] = useState(false);
+  const { showToast } = useAppContext();
 
   const { mutate: editExercise } = useMutation({
     mutationFn: updateWorkoutExercise,
     onSuccess: () => {
       queryClient.invalidateQueries(["exercises"]);
+      showToast("Workout exercise updated successfully!");
     },
     onError: (err) => {
       console.error("Update failed:", err.message);
@@ -43,7 +46,8 @@ const WorkoutDetailsModal = ({
   const { mutate: removeExercise } = useMutation({
     mutationFn: deleteWorkoutExercise,
     onSuccess: () => {
-      queryClient.invalidateQueries(["exercises"]); // Refresh the list
+      queryClient.invalidateQueries(["exercises"]);
+      showToast("Workout exercise deleted successfully!");
     },
     onError: (err) => {
       console.error("Delete failed:", err.message);

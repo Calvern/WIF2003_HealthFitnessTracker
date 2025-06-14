@@ -1,12 +1,16 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import { useAppContext } from "../../contexts/AppContext";
+import { useQueryClient } from "@tanstack/react-query";
+
 
 const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
+  const { showToast } = useAppContext();
+  const queryClient = useQueryClient();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     await onSubmit({
       date: log.date,
-      steps: 0,
       cardio: [
         {
           name: cardio,
@@ -16,7 +20,7 @@ const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
       ],
       workout: [],
     });
-
+    queryClient.invalidateQueries(["weeklyAverages"]); 
     onClose();
   };
 
@@ -33,9 +37,10 @@ const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
             <Form.Label>Date</Form.Label>
             <Form.Control
               type="date"
-              placeholder="e.g., 2023-10-01"
+              placeholder="Date"
               value={log.date}
               onChange={(e) => setLog({ ...log, date: e.target.value })}
+              max={new Date().toISOString().split("T")[0]}
               required
             />
           </Form.Group>
@@ -44,7 +49,7 @@ const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
             <Form.Label>Start Time</Form.Label>
             <Form.Control
               type="time"
-              placeholder="e.g., 14:30"
+              placeholder="Time"
               value={log.time}
               onChange={(e) => setLog({ ...log, time: e.target.value })}
               required
@@ -55,7 +60,7 @@ const LogCardioModal = ({ show, onClose, cardio, log, setLog, onSubmit }) => {
             <Form.Label>Duration (minutes)</Form.Label>
             <Form.Control
               type="number"
-              placeholder="e.g., 30"
+              placeholder="Enter duration"
               min={0}
               value={log.duration}
               onChange={(e) => setLog({ ...log, duration: e.target.value })}

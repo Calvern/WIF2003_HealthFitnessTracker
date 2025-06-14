@@ -38,6 +38,7 @@ const FitnessPage = () => {
     mutationFn: logExercise,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["exercises"] });
+      await queryClient.invalidateQueries({ queryKey: ["cardioDuration"] });
       showToast("Exercise logged!");
     },
     onError: (error) => {
@@ -87,6 +88,7 @@ const FitnessPage = () => {
         id: activity._id,
         cardio: activity.name,
         duration: activity.duration,
+        caloriesBurned: activity.caloriesBurned,
         ...commonData,
       });
       setShowCardioModal(true);
