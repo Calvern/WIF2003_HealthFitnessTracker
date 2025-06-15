@@ -1,236 +1,126 @@
-import { useState, Fragment, use } from "react";
-import {
-  Button,
-  Nav,
-  OverlayTrigger,
-  Popover,
-  Container,
-  Row,
-  Col,
-} from "react-bootstrap";
-import { Bell, GearFill, Plus, Book } from "react-bootstrap-icons";
+import { useState, Fragment, useEffect } from "react";
+import { Button, Nav, OverlayTrigger, Popover, Container } from "react-bootstrap";
+import { Bell, Plus, Book } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
+import { useGetReminders, useGetNotifications, useHandleShowNotifications } from "../../api/ReminderApi";
 
 const NotificationsPopover = () => {
   const [activeTab, setActiveTab] = useState("notifications");
   const [showPopover, setShowPopover] = useState(false);
   const navigate = useNavigate();
 
-  const notifications = [
-    {
-      id: 1,
-      title: "Notification 1",
-      date: "2023-10-01",
-      time: "10:00 AM",
-      category: "General",
-      leadTime: "5 minutes",
-      recurring: "Every Monday",
-      notificationMethod: "Browser",
-      notes: "This is the first notification.",
-      reminderStatus: "Active",
-    },
-    {
-      id: 2,
-      title: "Notification 2",
-      date: "2023-4-01",
-      time: "12:00 AM",
-      category: "General",
-      leadTime: "10 minutes",
-      recurring: "Every Monday",
-      notificationMethod: "Email",
-      notes:
-        "lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
-      reminderStatus: "Not Active",
-    },
-    {
-      id: 3,
-      title: "Notification 3",
-      date: "2023-10-01",
-      time: "11:00 AM",
-      category: "General",
-      leadTime: "5 minutes",
-      recurring: "Every Monday",
-      notificationMethod: "Email",
-      notes: "This is the first notification.",
-      reminderStatus: "Not Active",
-    },
-    {
-      id: 4,
-      title: "Notification 4",
-      date: "2023-10-01",
-      time: "08:00 AM",
-      category: "General",
-      leadTime: "10 minutes",
-      recurring: "Every Monday",
-      notificationMethod: "Browser",
-      notes: "This is the first notification.",
-      reminderStatus: "Not Active",
-    },
-  ];
+  const { reminders: fetchedReminders, isLoading: remindersLoading } = useGetReminders();
+  const { notifications: fetchedNotifications, isLoading: notificationsLoading, refetch: refetchNotifications } = useGetNotifications();
+  const handleShowNotifications = useHandleShowNotifications();
 
-  const reminderssss = [
-    { id: 1, title: "Gym Day", time: "10:00 am", unread: true },
-    { id: 2, title: "PushUp x 10 reps", time: "7:00 am", unread: false },
-    { id: 3, title: "PushUp x 200 reps", time: "3:00 am", unread: false },
-    { id: 4, title: "Swimming Day", time: "2:00 am", unread: true },
-    { id: 5, title: "Gym Day", time: "1:00 am", unread: true },
-    { id: 6, title: "PullUp", time: "8:00 am", unread: true },
-    // Add more notifications as needed
-  ];
-
-  const reminders = [
-    {
-      id: 1,
-      title: "Gym Day",
-      date: "2023-10-01",
-      time: "10:00 AM",
-      category: "General",
-      leadTime: "5 minutes",
-      recurring: "Every Monday",
-      notificationMethod: "Browser",
-      notes: "This is the first notification.",
-      reminderStatus: "Active",
-    },
-    {
-      id: 2,
-      title: "PushUp x 10 reps",
-      date: "2023-4-01",
-      time: "12:00 AM",
-      category: "General",
-      leadTime: "10 minutes",
-      recurring: "Every Monday",
-      notificationMethod: "Email",
-      notes:
-        "lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in, molestias eligendi dicta id officiis iusto eveniet, consequuntur incidunt voluptatem omnis? Molestiae sit alias veritatis esse atque, iure facilis temporibus?.",
-      reminderStatus: "Not Active",
-    },
-    {
-      id: 3,
-      title: "PushUp x 200 reps",
-      date: "2023-10-01",
-      time: "11:00 AM",
-      category: "General",
-      leadTime: "5 minutes",
-      recurring: "Every Monday",
-      notificationMethod: "Email",
-      notes: "This is the first notification.",
-      reminderStatus: "Not Active",
-    },
-    {
-      id: 4,
-      title: "Swimming Day",
-      date: "2023-10-01",
-      time: "08:00 AM",
-      category: "General",
-      leadTime: "10 minutes",
-      recurring: "Every Monday",
-      notificationMethod: "Browser",
-      notes: "This is the first notification.",
-      reminderStatus: "Not Active",
-    },
-  ];
-
-  const handleShowNotifications = (notification) => {
-    console.log(notification);
-    navigate(`/notifications/show-notification/${notification.id}`, {
+  const handleNotificationClick = async (notification) => {
+    if (!notification.readStatus) {
+      await handleShowNotifications(notification);
+      await refetchNotifications();
+    }
+    navigate(`/notifications/show-notification/${notification._id}`, {
       state: { notification },
     });
   };
 
   const renderContent = () => {
     if (activeTab === "notifications") {
+      // Filter unread notifications and sort by date and time
+      const unreadNotifications = [...(fetchedNotifications || [])]
+        .filter(notification => !notification.readStatus)
+        .sort((a, b) => {
+          // Combine date and time for more accurate sorting
+          const dateTimeA = new Date(`${a.date} ${a.time}`);
+          const dateTimeB = new Date(`${b.date} ${b.time}`);
+          return dateTimeB - dateTimeA;
+        });
+
       return (
         <Container>
           <div className="d-flex flex-column">
-            {notifications.slice(0, 3).map(
-              (
-                notification,
-                index //--> Edit length here
-              ) => (
-                <Fragment key={notification.id}>
-                  <div
-                    className="notification-popover-item d-flex align-items-center  mb-2 position-relative"
-                    onClick={() => handleShowNotifications(notification)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <Bell size={20} />
-                    <p className="mb-0" style={{ marginLeft: "60px" }}>
+            {unreadNotifications.slice(0, 3).map((notification, index) => (
+              <Fragment key={notification._id}>
+                <div
+                  className="notification-popover-item d-flex align-items-center mb-2 position-relative"
+                  onClick={() => handleNotificationClick(notification)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <Bell size={20} />
+                  <div style={{ marginLeft: "60px" }}>
+                    <p className="mb-0">
                       {notification.title.length > 10
                         ? `${notification.title.slice(0, 25)}...`
                         : notification.title}
                     </p>
-                    {notification.reminderStatus === "Active" && (
-                      <span
-                        style={{
-                          backgroundColor: "red",
-                          color: "white",
-                          borderRadius: "50%",
-                          width: "10px",
-                          height: "10px",
-                          display: "inline-block",
-                          marginLeft: "8px",
-                        }}
-                      ></span>
-                    )}
+                    <small className="text-muted">
+                      {notification.date} at {notification.time}
+                    </small>
                   </div>
-                  {index < notifications.length - 1 && (
-                    <hr
-                      style={{
-                        width: "100%",
-                        margin: "10px auto",
-                        border: "1px solid #ccc",
-                      }}
-                    />
-                  )}
-                </Fragment>
-              )
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      right: "10px",
+                      transform: "translateY(-50%)",
+                      backgroundColor: "red",
+                      borderRadius: "50%",
+                      width: "8px",
+                      height: "8px",
+                    }}
+                  />
+                </div>
+                {index < Math.min(2, (unreadNotifications.length || 0) - 1) && (
+                  <hr
+                    style={{
+                      margin: "8px 0",
+                      border: "none",
+                      borderTop: "1px solid #ddd",
+                    }}
+                  />
+                )}
+              </Fragment>
+            ))}
+            {(!unreadNotifications || unreadNotifications.length === 0) && (
+              <p className="text-center">No new notifications</p>
             )}
           </div>
         </Container>
       );
     } else if (activeTab === "reminders") {
+      // Filter actual reminders
+      const reminders = fetchedReminders?.filter(reminder => reminder.type === "reminder") || [];
+
       return (
         <Container>
           <div className="d-flex flex-column">
-            {reminders.slice(0, 3).map(
-              (
-                reminder,
-                index //--> Edit length here
-              ) => (
-                <Fragment key={reminder.id}>
-                  <div
-                    className="d-flex align-items-center  mb-2 position-relative"
-                    // onClick={() => handleShowNotifications(reminder)}
-                    // style={{ cursor: "pointer" }}
-                  >
-                    <Book size={20} />
-                    <p className="mb-0" style={{ marginLeft: "60px" }}>
+            {reminders.slice(0, 3).map((reminder, index) => (
+              <Fragment key={reminder._id}>
+                <div className="d-flex align-items-center mb-2 position-relative">
+                  <Book size={20} />
+                  <div style={{ marginLeft: "60px" }}>
+                    <p className="mb-0">
                       {reminder.title.length > 10
-                        ? `${reminder.title.slice(0, 10)}...`
+                        ? `${reminder.title.slice(0, 25)}...`
                         : reminder.title}
                     </p>
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 10,
-                        right: 0,
-                        fontSize: "10px",
-                      }}
-                    >
-                      {reminder.time}
-                    </div>
+                    <small className="text-muted">
+                      {reminder.date} at {reminder.time}
+                    </small>
                   </div>
-                  {index < reminders.length - 1 && (
-                    <hr
-                      style={{
-                        width: "100%",
-                        margin: "10px auto",
-                        border: "1px solid #ccc",
-                      }}
-                    />
-                  )}
-                </Fragment>
-              )
+                </div>
+                {index < reminders.length - 1 && (
+                  <hr
+                    style={{
+                      margin: "8px 0",
+                      border: "none",
+                      borderTop: "1px solid #ddd",
+                    }}
+                  />
+                )}
+              </Fragment>
+            ))}
+            {reminders.length === 0 && (
+              <p className="text-center">No reminders</p>
             )}
           </div>
         </Container>
@@ -290,6 +180,21 @@ const NotificationsPopover = () => {
         onClick={() => setShowPopover(!showPopover)}
       >
         <Bell color="white" size={30} />
+        {fetchedReminders?.some(
+          (reminder) => reminder.type === "notification" && !reminder.readStatus
+        ) && (
+            <span
+              style={{
+                position: "absolute",
+                top: "0",
+                right: "0",
+                width: "8px",
+                height: "8px",
+                backgroundColor: "red",
+                borderRadius: "50%",
+              }}
+            />
+          )}
       </Button>
     </OverlayTrigger>
   );

@@ -67,12 +67,12 @@ const RemindersPage = () => {
       await deleteReminder(reminderToDelete); // Delete the reminder
       setShowModal(false); // Close the modal after deletion
 
-      
-      setReminders((prevReminders) => 
+
+      setReminders((prevReminders) =>
         prevReminders.filter(reminder => reminder._id !== reminderToDelete)
       );
 
-      
+
     } catch (error) {
       console.error("Error deleting reminder:", error);
       setShowModal(false);
@@ -85,22 +85,22 @@ const RemindersPage = () => {
         {reminders.map((reminder, index) => (
           <Fragment key={reminder._id}> {/* Use reminder._id to map */}
             <div className="d-flex align-items-center mb-1" style={{ width: "100%" }}>
-              <div style={{ width: '20%'}}>
+              <div style={{ width: '20%' }}>
 
-              <small style={{ cursor: "pointer" }}>
-                {formatTime12Hour(reminder.time)}
-              </small>
+                <small style={{ cursor: "pointer" }}>
+                  {formatTime12Hour(reminder.time)}
+                </small>
               </div>
-              <div style={{ flex:1}}>
-                <small style={{ cursor: "pointer", align:"start" }}>
+              <div style={{ flex: 1 }}>
+                <small style={{ cursor: "pointer", align: "start" }}>
                   {reminder.title}
                 </small>
               </div>
-              <div className="d-flex align-items-center gap-4" style={{width: '10%', justifyContent: 'end'}}>
+              <div className="d-flex align-items-center gap-4" style={{ width: '10%', justifyContent: 'end' }}>
                 <MdDeleteForever
                   size={15}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => handleDelete(reminder._id)} // Call handleDelete and pass the reminder's _id
+                  style={{ cursor: "pointer", color: "#dc3545" }}
+                  onClick={() => handleDelete(reminder._id)}
                 />
                 <Pencil size={15} style={{ cursor: "pointer" }} onClick={() => handleEdit(reminder)} />
               </div>
@@ -119,7 +119,7 @@ const RemindersPage = () => {
   };
 
 
-  const NoReminder = ()=>{
+  const NoReminder = () => {
     return (
       <div className="d-flex flex-column align-items-center mt-5">
         <h1 className="text-center" style={{ color: "#507DBC", fontWeight: "bold" }}>
@@ -151,8 +151,8 @@ const RemindersPage = () => {
       {/* Confirmation modal */}
       <DeleteConfirmationModal
         show={showModal}
-        handleClose={() => setShowModal(false)}  
-        handleConfirm={handleConfirmDelete}  
+        handleClose={() => setShowModal(false)}
+        handleConfirm={handleConfirmDelete}
       />
     </Container>
   );

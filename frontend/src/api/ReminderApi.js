@@ -124,8 +124,7 @@ export const useDeleteReminder = () => {
   const { mutateAsync: deleteReminder, isLoading, isSuccess, error } = useMutation({
     mutationFn: deleteReminderRequest,
     onSuccess: () => {
-      showToast("Reminder deleted successfully!");
-      navigate("/reminders"); // Redirect to reminders list after deletion
+      showToast("Successfully Deleted!");
     },
     onError: (error) => {
       showToast(error.message);
@@ -217,3 +216,40 @@ export const useUpdateReminder = () => {
     error,
   };
 };
+
+export const useUpdateReminderType = () => {
+  const { showToast } = useAppContext();
+
+  const updateReminderTypeRequest = async (reminderId, type) => {
+    const response = await fetch(`${API_BASE_URL}/api/reminders/${reminderId}/type`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ type }),
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to update reminder type");
+    }
+
+    return response.json();
+  };
+
+  const { mutateAsync: updateReminderType, isLoading, isSuccess, error } = useMutation({
+    mutationFn: ({ reminderId, type }) => updateReminderTypeRequest(reminderId, type),
+    onError: (error) => {
+      showToast(error.message);
+    },
+  });
+
+  return {
+    updateReminderType,
+    isLoading,
+    isSuccess,
+    error,
+  };
+};
+
