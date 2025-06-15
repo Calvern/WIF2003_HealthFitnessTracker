@@ -5,6 +5,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import DeleteConfirmationModal from "../components/Notifications/DeleteConfirmationModal"; // Import the delete confirmation modal
 import { useGetReminders, useDeleteReminder } from "../api/ReminderApi"; // Import the updated hook
+import PushNotification from "../components/Notifications/PushNotification";
 
 const RemindersPage = () => {
   const [reminders, setReminders] = useState([]);
@@ -80,6 +81,7 @@ const RemindersPage = () => {
   };
 
   const renderReminders = () => {
+
     return (
       <div className="d-flex flex-column align-items-center mt-5" style={{ overflowY: "auto", maxHeight: "400px", width: "100%", paddingRight: "30px", scrollBehavior: "smooth" }}>
         {reminders.map((reminder, index) => (
@@ -133,28 +135,32 @@ const RemindersPage = () => {
   }
 
   return (
-    <Container className="py-5">
-      <div className="d-flex align-items-center ml-5 mt-3" style={{ fontWeight: "bold", fontSize: "20px" }}>
-        <Button className="border border-0" style={{ backgroundColor: "transparent", color: "black" }} onClick={() => navigate('/home')}>
-          <ChevronLeft size={30}></ChevronLeft>
-        </Button>
-        <div>Upcoming Reminders</div>
-        <div className="d-flex align-items-center rounded" style={{ height: "40px", width: "40px", backgroundColor: "#507DBC", marginLeft: "15px" }}>
-          <Link to={"/create-reminder"} aria-label="Create New Reminder">
-            <Plus size={40} style={{ color: "white" }} />
-          </Link>
+    <>
+      <PushNotification />
+      <Container className="py-5">
+        <div className="d-flex align-items-center ml-5 mt-3" style={{ fontWeight: "bold", fontSize: "20px" }}>
+          <Button className="border border-0" style={{ backgroundColor: "transparent", color: "black" }} onClick={() => navigate('/home')}>
+            <ChevronLeft size={30}></ChevronLeft>
+          </Button>
+          <div>Upcoming Reminders</div>
+          <div className="d-flex align-items-center rounded" style={{ height: "40px", width: "40px", backgroundColor: "#507DBC", marginLeft: "15px" }}>
+            <Link to={"/create-reminder"} aria-label="Create New Reminder">
+              <Plus size={40} style={{ color: "white" }} />
+            </Link>
+          </div>
         </div>
-      </div>
 
-      {reminders.length > 0 ? renderReminders() : NoReminder()}
+        {reminders.length > 0 ? renderReminders() : NoReminder()}
 
-      {/* Confirmation modal */}
-      <DeleteConfirmationModal
-        show={showModal}
-        handleClose={() => setShowModal(false)}
-        handleConfirm={handleConfirmDelete}
-      />
-    </Container>
+        {/* Confirmation modal */}
+        <DeleteConfirmationModal
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+          handleConfirm={handleConfirmDelete}
+        />
+      </Container>
+    </>
+
   );
 };
 
