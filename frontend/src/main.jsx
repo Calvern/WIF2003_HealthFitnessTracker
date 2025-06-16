@@ -7,6 +7,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import AppRoutes from "./AppRoutes.jsx";
 import { AppContextProvider } from "./contexts/AppContext.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import PushNotification from "./components/Notifications/PushNotification";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <AppContextProvider>
         <Router>
+          <PushNotification /> 
           <AppRoutes />
         </Router>
       </AppContextProvider>

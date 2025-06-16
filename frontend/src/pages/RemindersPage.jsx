@@ -14,7 +14,12 @@ const RemindersPage = () => {
   const navigate = useNavigate();
 
   // Use the custom hook to fetch reminders from the backend
-  const { reminders: fetchedReminders, isLoading, error, refetch } = useGetReminders(); // Fetch reminders
+  const {
+    reminders: fetchedReminders,
+    isLoading,
+    error,
+    refetch,
+  } = useGetReminders(); // Fetch reminders
   const { deleteReminder } = useDeleteReminder();
 
   // When the data is fetched, update the reminders state
@@ -30,13 +35,15 @@ const RemindersPage = () => {
 
   if (error) {
     return (
-      <h1 style={{
-        textAlign: 'center',
-        color: 'red',
-        fontWeight: 'bold',
-        backgroundColor: '#ffeeee',
-        padding: '20px 10px 10px 10px' // top, right, bottom, left
-      }}>
+      <h1
+        style={{
+          textAlign: "center",
+          color: "red",
+          fontWeight: "bold",
+          backgroundColor: "#ffeeee",
+          padding: "20px 10px 10px 10px", // top, right, bottom, left
+        }}
+      >
         Error loading reminders: {error.message}
       </h1>
     );
@@ -68,12 +75,9 @@ const RemindersPage = () => {
       await deleteReminder(reminderToDelete); // Delete the reminder
       setShowModal(false); // Close the modal after deletion
 
-
       setReminders((prevReminders) =>
-        prevReminders.filter(reminder => reminder._id !== reminderToDelete)
+        prevReminders.filter((reminder) => reminder._id !== reminderToDelete)
       );
-
-
     } catch (error) {
       console.error("Error deleting reminder:", error);
       setShowModal(false);
@@ -81,14 +85,26 @@ const RemindersPage = () => {
   };
 
   const renderReminders = () => {
-
     return (
-      <div className="d-flex flex-column align-items-center mt-5" style={{ overflowY: "auto", maxHeight: "400px", width: "100%", paddingRight: "30px", scrollBehavior: "smooth" }}>
+      <div
+        className="d-flex flex-column align-items-center mt-5"
+        style={{
+          overflowY: "auto",
+          maxHeight: "400px",
+          width: "100%",
+          paddingRight: "30px",
+          scrollBehavior: "smooth",
+        }}
+      >
         {reminders.map((reminder, index) => (
-          <Fragment key={reminder._id}> {/* Use reminder._id to map */}
-            <div className="d-flex align-items-center mb-1" style={{ width: "100%" }}>
-              <div style={{ width: '20%' }}>
-
+          <Fragment key={reminder._id}>
+            {" "}
+            {/* Use reminder._id to map */}
+            <div
+              className="d-flex align-items-center mb-1"
+              style={{ width: "100%" }}
+            >
+              <div style={{ width: "20%" }}>
                 <small style={{ cursor: "pointer" }}>
                   {formatTime12Hour(reminder.time)}
                 </small>
@@ -98,33 +114,57 @@ const RemindersPage = () => {
                   {reminder.title}
                 </small>
               </div>
-              <div className="d-flex align-items-center gap-4" style={{ width: '10%', justifyContent: 'end' }}>
+              <div
+                className="d-flex align-items-center gap-4"
+                style={{ width: "10%", justifyContent: "end" }}
+              >
                 <MdDeleteForever
                   size={15}
                   style={{ cursor: "pointer", color: "#dc3545" }}
                   onClick={() => handleDelete(reminder._id)}
                 />
-                <Pencil size={15} style={{ cursor: "pointer" }} onClick={() => handleEdit(reminder)} />
+                <Pencil
+                  size={15}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleEdit(reminder)}
+                />
               </div>
             </div>
             {index < reminders.length - 1 && (
-              <hr style={{ width: "100%", margin: "10px auto", border: "1px solid #ccc" }} />
+              <hr
+                style={{
+                  width: "100%",
+                  margin: "10px auto",
+                  border: "1px solid #ccc",
+                }}
+              />
             )}
           </Fragment>
         ))}
-        <hr style={{ width: "100%", margin: "10px auto", border: "1px solid #ccc" }} />
-        <div className="d-flex justify-content-center align-items-center mt-3" style={{ fontWeight: "bold", fontSize: "30px" }}>
+        <hr
+          style={{
+            width: "100%",
+            margin: "10px auto",
+            border: "1px solid #ccc",
+          }}
+        />
+        <div
+          className="d-flex justify-content-center align-items-center mt-3"
+          style={{ fontWeight: "bold", fontSize: "30px" }}
+        >
           No More
         </div>
       </div>
     );
   };
 
-
   const NoReminder = () => {
     return (
       <div className="d-flex flex-column align-items-center mt-5">
-        <h1 className="text-center" style={{ color: "#507DBC", fontWeight: "bold" }}>
+        <h1
+          className="text-center"
+          style={{ color: "#507DBC", fontWeight: "bold" }}
+        >
           No Reminders Yet
         </h1>
         <p className="text-center" style={{ color: "#888", fontSize: "18px" }}>
@@ -132,18 +172,32 @@ const RemindersPage = () => {
         </p>
       </div>
     );
-  }
+  };
 
   return (
     <>
-      <PushNotification />
       <Container className="py-5">
-        <div className="d-flex align-items-center ml-5 mt-3" style={{ fontWeight: "bold", fontSize: "20px" }}>
-          <Button className="border border-0" style={{ backgroundColor: "transparent", color: "black" }} onClick={() => navigate('/home')}>
+        <div
+          className="d-flex align-items-center ml-5 mt-3"
+          style={{ fontWeight: "bold", fontSize: "20px" }}
+        >
+          <Button
+            className="border border-0"
+            style={{ backgroundColor: "transparent", color: "black" }}
+            onClick={() => navigate("/home")}
+          >
             <ChevronLeft size={30}></ChevronLeft>
           </Button>
           <div>Upcoming Reminders</div>
-          <div className="d-flex align-items-center rounded" style={{ height: "40px", width: "40px", backgroundColor: "#507DBC", marginLeft: "15px" }}>
+          <div
+            className="d-flex align-items-center rounded"
+            style={{
+              height: "40px",
+              width: "40px",
+              backgroundColor: "#507DBC",
+              marginLeft: "15px",
+            }}
+          >
             <Link to={"/create-reminder"} aria-label="Create New Reminder">
               <Plus size={40} style={{ color: "white" }} />
             </Link>
@@ -160,7 +214,6 @@ const RemindersPage = () => {
         />
       </Container>
     </>
-
   );
 };
 

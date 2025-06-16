@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useGetNotifications, useDeleteReminder } from "../api/ReminderApi";
 import { useHandleShowNotifications } from "../api/ReminderApi";
 import DeleteConfirmationModal from "../components/Notifications/DeleteConfirmationModal";
-import PushNotification from "../components/Notifications/PushNotification";
+
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -149,7 +149,6 @@ const NotificationsPage = () => {
 
   return (
     <Container className="py-5">
-      <PushNotification />
       <div className="d-flex align-items-center gap-2 mt-3 mb-2" style={{ marginLeft: "40px" }}>
         <Button
           className="border border-0"
