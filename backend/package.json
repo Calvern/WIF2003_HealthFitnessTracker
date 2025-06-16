@@ -11,8 +11,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "backend": "file:",
     "axios": "^1.9.0",
+    "backend": "file:",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.6.1",
     "cookie-parser": "^1.4.7",
@@ -24,6 +24,7 @@
     "mongoose": "^8.15.0",
     "multer": "^2.0.0",
     "nodemon": "^3.1.10",
+    "socket.io": "^4.8.1",
     "spoonacular": "^2.0.2"
   }
 }

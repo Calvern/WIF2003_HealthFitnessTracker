@@ -2,56 +2,64 @@
 
 import { Container, CardTitle, Card, Form, Button } from "react-bootstrap";
 import { useEffect, useState, Fragment } from "react";
-import { Bell, ChevronLeft, ChevronRight } from "react-bootstrap-icons";
+import { Bell, ChevronLeft } from "react-bootstrap-icons";
+import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { useGetNotifications } from "../api/ReminderApi"; // Import the hook for fetching notifications
-import { useHandleShowNotifications } from "../api/ReminderApi"; // Import the handler for notification click
+import { useGetNotifications, useDeleteReminder } from "../api/ReminderApi";
+import { useHandleShowNotifications } from "../api/ReminderApi";
+import DeleteConfirmationModal from "../components/Notifications/DeleteConfirmationModal";
+import PushNotification from "../components/Notifications/PushNotification";
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
-  const [isEnabled, setIsEnabled] = useState(false);
   const [filter, setFilter] = useState("all");
+  const [showModal, setShowModal] = useState(false);
+  const [notificationToDelete, setNotificationToDelete] = useState(null);
   const navigate = useNavigate();
   const { notifications: fetchedNotifications, isLoading, error, refetch } = useGetNotifications();
-  const handleShowNotifications = useHandleShowNotifications();  // Use the imported handler
+  const handleShowNotifications = useHandleShowNotifications();
+  const { deleteReminder } = useDeleteReminder();
 
   useEffect(() => {
     if (fetchedNotifications) {
-      setNotifications(fetchedNotifications); // Update state with fetched data
+      setNotifications(fetchedNotifications);
     }
   }, [fetchedNotifications]);
-
-  // Toggle notifications permission
-  const handleToggle = () => {
-    if (!isEnabled) {
-      // Ask for browser notification permission
-      if (Notification && Notification.permission !== "granted") {
-        Notification.requestPermission().then((permission) => {
-          if (permission === "granted") {
-            setIsEnabled(true);
-            new Notification("Notifications Enabled", {
-              body: "You will now receive notifications.",
-            });
-          }
-        });
-      } else {
-        setIsEnabled(true);
-      }
-    } else {
-      setIsEnabled(false);
-    }
-  };
 
   const handleFilterChange = (value) => {
     setFilter(value);
   };
 
-  const filteredNotifications = notifications.filter((notification) => {
-    return (
-      filter === "all" ||
-      (filter === "unread" && notification.readStatus === false)  // Only show unread notifications
-    );
-  });
+  const handleDelete = (id) => {
+    setNotificationToDelete(id);
+    setShowModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteReminder(notificationToDelete);
+      setShowModal(false);
+      setNotifications((prevNotifications) =>
+        prevNotifications.filter(notification => notification._id !== notificationToDelete)
+      );
+    } catch (error) {
+      console.error("Error deleting notification:", error);
+      setShowModal(false);
+    }
+  };
+
+  const filteredNotifications = notifications
+    .filter((notification) => {
+      return (
+        filter === "all" ||
+        (filter === "unread" && notification.readStatus === false)
+      );
+    })
+    .sort((a, b) => {
+      const dateA = new Date(`${a.date} ${a.time}`);
+      const dateB = new Date(`${b.date} ${b.time}`);
+      return dateB - dateA;
+    });
 
   const renderEmptyMessage = () => (
     <Container className="d-flex flex-column align-items-center py-5 mt-5 vh-100">
@@ -85,16 +93,15 @@ const NotificationsPage = () => {
     </Container>
   );
 
-  // Render notifications based on the filter
   const renderNotifications = () => (
-    <div className="d-flex flex-column align-items-center mt-5 vh-100" style={{ overflowY: "auto", maxHeight: "400px", width: "100%", paddingRight: "30px", scrollBehavior: "smooth"}}>
+    <div className="d-flex flex-column align-items-center mt-5" style={{ overflowY: "auto", maxHeight: "400px", width: "100%", paddingRight: "30px", scrollBehavior: "smooth" }}>
       {filteredNotifications.map((notification, index) => (
         <Fragment key={notification._id}>
-          <div className="d-flex justify-content-between align-items-center mb-1" style={{ width: "80%" }}>
+          <div className="d-flex justify-content-between align-items-center mb-1" style={{ width: "100%" }}>
             <div
               className="reminder-status"
               style={{
-                backgroundColor: notification.readStatus ? "#808080" : "#FF0000",  // Grey if read, red if not
+                backgroundColor: notification.readStatus ? "#808080" : "#FF0000",
                 width: "10px",
                 height: "10px",
                 borderRadius: "50%",
@@ -113,7 +120,12 @@ const NotificationsPage = () => {
               </small>
             </div>
 
-            <div style={{ justifyContent: 'end' }}>
+            <div className="d-flex align-items-center gap-4" style={{ justifyContent: 'end' }}>
+              <MdDeleteForever
+                size={15}
+                style={{ cursor: "pointer", color: "#dc3545" }}
+                onClick={() => handleDelete(notification._id)}
+              />
               <small
                 onClick={() => handleShowNotifications(notification)}
                 style={{
@@ -128,7 +140,7 @@ const NotificationsPage = () => {
             </div>
           </div>
           {index < filteredNotifications.length - 1 && (
-            <hr style={{ width: "80%", margin: "10px auto", border: "1px solid #ccc" }} />
+            <hr style={{ width: "100%", margin: "10px auto", border: "1px solid #ccc" }} />
           )}
         </Fragment>
       ))}
@@ -137,6 +149,7 @@ const NotificationsPage = () => {
 
   return (
     <Container className="py-5">
+      <PushNotification />
       <div className="d-flex align-items-center gap-2 mt-3 mb-2" style={{ marginLeft: "40px" }}>
         <Button
           className="border border-0"
@@ -171,37 +184,13 @@ const NotificationsPage = () => {
         )}
       </div>
 
-      <div className="d-flex justify-content-between align-items-center px-5">
-        <div className="d-flex justify-content-start align-items-center px-5">
-          <Form className="d-flex align-items-center gap-3 bg-light px-3 py-2 rounded-pill shadow-sm">
-            <Form.Check
-              type="switch"
-              id="notification-switch"
-              label=""
-              checked={isEnabled}
-              onChange={handleToggle}
-              className="m-0"
-              style={{ transform: "scale(1.2)" }}
-            />
-            <span
-              style={{
-                fontWeight: "bold",
-                fontSize: "16px",
-                color: isEnabled ? "#28a745" : "#6c757d",
-              }}
-            >
-              {isEnabled ? "Notifications Enabled" : "Enable Notifications"}
-            </span>
-          </Form>
-        </div>
-
-        <div className="d-flex justify-content-end align-items-center gap-3 px-5">
+      <div className="d-flex justify-content-end align-items-center px-5">
+        <div className="d-flex justify-content-end align-items-center gap-3">
           <div
-            className={`d-flex align-items-center px-4 py-1 rounded-pill border ${
-              filter === "all"
-                ? "bg-success-subtle text-success fw-bold border-success"
-                : "bg-success-subtle border-success"
-            }`}
+            className={`d-flex align-items-center px-4 py-1 rounded-pill border ${filter === "all"
+              ? "bg-success-subtle text-success fw-bold border-success"
+              : "bg-success-subtle border-success"
+              }`}
             style={{ cursor: "pointer" }}
             onClick={() => handleFilterChange("all")}
           >
@@ -218,11 +207,10 @@ const NotificationsPage = () => {
           </div>
 
           <div
-            className={`d-flex align-items-center px-4 py-1 rounded-pill border ${
-              filter === "unread"
-                ? "bg-danger-subtle text-danger fw-bold border-danger"
-                : "bg-danger-subtle border-danger"
-            }`}
+            className={`d-flex align-items-center px-4 py-1 rounded-pill border ${filter === "unread"
+              ? "bg-danger-subtle text-danger fw-bold border-danger"
+              : "bg-danger-subtle border-danger"
+              }`}
             style={{ cursor: "pointer" }}
             onClick={() => handleFilterChange("unread")}
           >
@@ -241,6 +229,12 @@ const NotificationsPage = () => {
       </div>
 
       {notifications.length === 0 ? renderEmptyMessage() : renderNotifications()}
+
+      <DeleteConfirmationModal
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+        handleConfirm={handleConfirmDelete}
+      />
     </Container>
   );
 };

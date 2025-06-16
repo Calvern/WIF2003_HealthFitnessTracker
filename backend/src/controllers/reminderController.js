@@ -155,7 +155,6 @@ const updateReminder = async (req, res) => {
 
 
 
-
 export default {
   createReminder,
   getReminderById,

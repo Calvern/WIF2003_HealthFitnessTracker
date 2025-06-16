@@ -1,6 +1,12 @@
 {
   "dependencies": {
+
+    "node-cron": "^4.1.0",
+    "react-hook-form": "^7.57.0",
+    "socket.io-client": "^4.8.1"
+
     "date-fns": "^4.1.0",
     "react-hook-form": "^7.57.0"
+
   }
 }

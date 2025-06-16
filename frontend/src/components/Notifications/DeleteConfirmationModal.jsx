@@ -7,7 +7,7 @@ const DeleteConfirmationModal = ({ show, handleClose, handleConfirm }) => {
       <Modal.Header closeButton>
         <Modal.Title>Confirm Deletion</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Are you sure you want to delete this reminder?</Modal.Body>
+      <Modal.Body>Are you sure you want to delete?</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Cancel
