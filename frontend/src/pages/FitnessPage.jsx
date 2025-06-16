@@ -9,15 +9,17 @@ import LogCardioModal from "../components/Fitness/LogCardioModal";
 import LogWorkoutModal from "../components/Fitness/LogWorkoutModal";
 import StepsCard from "../components/Fitness/StepsCard";
 import { logExercise } from "../api/ExerciseApi";
+import { useMutation } from "@tanstack/react-query";
+import { useAppContext } from "../contexts/AppContext";
 
 const FitnessPage = () => {
+  const { showToast } = useAppContext();
   const [selectedCardio, setSelectedCardio] = useState(null);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
   const [showWorkoutModal, setShowWorkoutModal] = useState(false);
   const [showCardioModal, setShowCardioModal] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  
 
   const [cardioLog, setCardioLog] = useState({
     date: "",
@@ -31,47 +33,45 @@ const FitnessPage = () => {
     sets: "",
     reps: "",
   });
-
+  const queryClient = useQueryClient();
+  const logExerciseMutation = useMutation({
+    mutationFn: logExercise,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["exercises"] });
+      await queryClient.invalidateQueries({ queryKey: ["cardioDuration"] });
+      await queryClient.invalidateQueries({ queryKey: ["caloriesBurned"] });
+      showToast("Exercise logged!");
+    },
+    onError: (error) => {
+      console.error("Failed to log exercise", error);
+      showToast(error.message, danger);
+    },
+  });
   const handleCardioSubmit = async (log) => {
     setSelectedCardio(null);
     setCardioLog({ date: "", time: "", duration: "" });
-
-    try {
-      await logExercise(log);
-      alert("Cardio logged!");
-    } catch (error) {
-      console.error("Failed to log cardio", error);
-      alert("Error logging cardio");
-    }
+    logExerciseMutation.mutate(log);
   };
 
   const handleWorkoutSubmit = async (log) => {
     setSelectedWorkout(null);
     setWorkoutLog({ date: "", time: "", sets: "", reps: "" });
-
-    try {
-      await logExercise(log);
-      alert("Workout logged!");
-    } catch (error) {
-      console.error("Failed to log workout", error);
-      alert("Error logging workout");
-    }
+    logExerciseMutation.mutate(log);
   };
 
   const handleWorkoutDelete = async () => {
-  try {
-    await deleteExercise(selectedLog.id);
-    alert("Workout removed!");
-    setShowWorkoutModal(false);
-  } catch (err) {
-    console.error("Delete error:", err);
-    alert("Failed to delete workout.");
-  }
-};
-
+    try {
+      await deleteExercise(selectedLog.id);
+      showToast("Workout removed!");
+      setShowWorkoutModal(false);
+    } catch (err) {
+      console.error("Delete error:", err);
+      showToast("Failed to delete workout.", danger);
+    }
+  };
 
   const handleActivityClick = (activity) => {
-    const date = activity.date
+    const date = activity.date;
     const time = activity.startTime;
     const commonData = { date, time };
 
@@ -89,6 +89,7 @@ const FitnessPage = () => {
         id: activity._id,
         cardio: activity.name,
         duration: activity.duration,
+        caloriesBurned: activity.caloriesBurned,
         ...commonData,
       });
       setShowCardioModal(true);
