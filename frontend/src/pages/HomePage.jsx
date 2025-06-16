@@ -19,17 +19,14 @@ import { Bullseye } from "react-bootstrap-icons";
 import { fetchSteps, fetchCaloriesBurned } from "../api/ExerciseApi";
 import { useQuery } from "@tanstack/react-query";
 import { getUserGoals } from "../api/UsersApi";
+import { useGetReminders } from "../api/ReminderApi";
 
 const HomePage = () => {
   const formatDate = (date) => date.toISOString().split("T")[0];
 
   const { calorieSummary, isPending: caloriePending } =
     useGetCaloriesSummaryByDay({ date: formatDate(new Date()) });
-  const {
-    data: todaySteps,
-    isPending: stepsPending,
-    error,
-  } = useQuery({
+  const { data: todaySteps, isPending: stepsPending } = useQuery({
     queryKey: ["steps"],
     queryFn: fetchSteps,
   });
@@ -44,6 +41,12 @@ const HomePage = () => {
     queryFn: fetchCaloriesBurned,
   });
 
+  const {
+    reminders: fetchedReminders,
+    isLoading: reminderLoading,
+    error,
+    refetch,
+  } = useGetReminders(); // Fetch reminders
   const [calorieInData, setCalorieInData] = useState([]);
   const [calorieOutData, setCalorieOutData] = useState([]);
   const [avgCalIn, setAvgCalIn] = useState(0);
@@ -87,13 +90,6 @@ const HomePage = () => {
     fetchStats();
   }, []);
 
-  const reminders = [
-    { title: "Project meeting", date: "2025-05-15", time: "10:00 AM" },
-    { title: "Submit report", date: "2025-05-16", time: "2:00 PM" },
-    { title: "Doctor's appointment", date: "2025-05-17", time: "11:30 AM" },
-    { title: "Grocery shopping", date: "2025-05-18", time: "5:00 PM" },
-    { title: "Gym session", date: "2025-05-19", time: "7:00 PM" },
-  ];
 
   const {
     data: stepData,
@@ -153,7 +149,10 @@ const HomePage = () => {
     },
   };
 
-  if ((caloriePending || stepsPending || goalsPending, calorieBurnPending))
+  if (
+    (caloriePending || stepsPending || goalsPending,
+    calorieBurnPending || reminderLoading)
+  )
     return <div>Loading...</div>;
 
   if (!calorieSummary || !userGoals || caloriesBurnt == null || !todaySteps) {
@@ -198,13 +197,13 @@ const HomePage = () => {
 
       <Row className="mb-5 gy-5 justify-content-center">
         <Col xs={12} md={6} lg={4}>
-        <BarChartCard
-          title="Steps This Week"
-          description="Track your weekly steps input."
-          summaryText={`Avg: ${avgSteps.toLocaleString()} steps/day`}
-          chartData={stepChartData}
-          chartOptions={stepChartOptions}
-        />
+          <BarChartCard
+            title="Steps This Week"
+            description="Track your weekly steps input."
+            summaryText={`Avg: ${avgSteps.toLocaleString()} steps/day`}
+            chartData={stepChartData}
+            chartOptions={stepChartOptions}
+          />
         </Col>
 
         <Col xs={12} md={6} lg={4}>
@@ -283,7 +282,7 @@ const HomePage = () => {
           <ActivitiesDoneCard />
         </Col>
         <Col xs={12} md={6} lg={5}>
-          <UpcomingRemindersCard reminders={reminders} />
+          <UpcomingRemindersCard reminders={fetchedReminders} />
         </Col>
       </Row>
     </Container>

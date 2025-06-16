@@ -5,6 +5,9 @@ import RecommendModal from "../components/Nutrition/RecommendModal";
 import CalendarForm from "../components/Nutrition/CalendarForm";
 import MealSection from "../components/Nutrition/MealSection";
 import { useGetDiaryByDate, useRecommendMeals } from "../api/FoodDiaryApi";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCaloriesBurned } from "../api/ExerciseApi";
+import { getUserGoals } from "../api/UsersApi";
 
 const FoodDiaryPage = () => {
   const [show, setShow] = useState(false);
@@ -28,7 +31,17 @@ const FoodDiaryPage = () => {
   const { foodDiary, isPending: isGetting } = useGetDiaryByDate(
     formatDate(selectedDate)
   );
-  if (isGetting) {
+
+  const { data: caloriesBurnt, isPending: calorieBurnPending } = useQuery({
+    queryKey: ["caloriesBurned"],
+    queryFn: fetchCaloriesBurned,
+  });
+
+  const { data: userGoals, isPending: goalsPending } = useQuery({
+    queryKey: ["userGoals"],
+    queryFn: getUserGoals,
+  });
+  if (isGetting || calorieBurnPending || goalsPending) {
     return <div>Loading</div>;
   }
 
@@ -148,7 +161,9 @@ const FoodDiaryPage = () => {
               style={{ backgroundColor: "#DAE3E5" }}
               className="d-flex align-foods-center justify-content-center py-2 border border-1 border-white"
             >
-              <span style={{ color: "#176087" }}>{3000}</span>
+              <span style={{ color: "#176087" }}>
+                {userGoals.calories + caloriesBurnt}
+              </span>
             </Col>
           </Row>
         </Col>
@@ -171,7 +186,9 @@ const FoodDiaryPage = () => {
               style={{ backgroundColor: "#DAE3E5" }}
               className="d-flex align-foods-center justify-content-center py-2 border border-1 border-white"
             >
-              <span style={{ color: "#176087" }}>{3000 - total.calories}</span>
+              <span style={{ color: "#176087" }}>
+                {userGoals.calories + caloriesBurnt - total.calories}
+              </span>
             </Col>
           </Row>
         </Col>
