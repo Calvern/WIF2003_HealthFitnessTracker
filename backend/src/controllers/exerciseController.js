@@ -181,16 +181,32 @@ export const fetchCaloriesBurned = async (req, res) => {
   }
 };
 
+import { startOfWeek, endOfWeek } from "date-fns";
+
 export const fetchWeeklySummary = async (req, res) => {
   try {
     const userId = req.userId;
 
-    const now = new Date();
-    const startDate = subDays(now, 5);
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const today = new Date();
+    const start = new Date(today);
+    const end = new Date(today);
+
+    const currentDay = today.getDay();
+    const mondayOffset = (currentDay === 0 ? -6 : 1) - currentDay;
+
+    start.setDate(today.getDate() + mondayOffset);
+    end.setDate(start.getDate() + 6);
 
     const logs = await Exercise.find({
       userId,
-      date: { $gte: startDate.toISOString().split("T")[0], $lte: now.toISOString().split("T")[0] },
+      date: {
+        $gte: start.toISOString().split("T")[0],
+        $lte: end.toISOString().split("T")[0],
+      },
     });
 
     let totalSteps = 0;
@@ -198,6 +214,7 @@ export const fetchWeeklySummary = async (req, res) => {
     let totalCalories = 0;
 
     logs.forEach((log) => {
+      console.log("Log Date:", log.date, "Steps:", log.steps);
       totalSteps += log.steps || 0;
 
       const cardioMinutes =
@@ -205,20 +222,20 @@ export const fetchWeeklySummary = async (req, res) => {
       totalMinutes += cardioMinutes;
 
       const dailyCalories =
-        log.cardio?.reduce(
-          (sum, entry) => sum + (entry.caloriesBurned || 0),
-          0
-        ) || 0;
+        log.cardio?.reduce((sum, entry) => sum + (entry.caloriesBurned || 0), 0) || 0;
       totalCalories += dailyCalories;
     });
 
     const daysCount = 7;
+
+    console.log("Total Steps:" + totalSteps + "Day Count: " + daysCount)
 
     const avg = {
       averageSteps: Math.round(totalSteps / daysCount),
       averageMinutes: Math.round(totalMinutes / daysCount),
       averageCalories: Math.round(totalCalories / daysCount),
     };
+    console.log(avg)
 
     res.json(avg);
   } catch (error) {
@@ -226,6 +243,7 @@ export const fetchWeeklySummary = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 export const updateCardioExercise = async (req, res) => {
   try {

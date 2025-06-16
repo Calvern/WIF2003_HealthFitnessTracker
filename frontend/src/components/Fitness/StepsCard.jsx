@@ -32,7 +32,7 @@ const StepsCard = () => {
   const { data: cardioData } = useQuery({
     queryKey: ["cardioDuration"],
     queryFn: fetchCardioDuration,
-  });
+  });//
 
   const { data: caloriesData } = useQuery({
     queryKey: ["caloriesBurned"],
