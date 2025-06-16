@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { Container } from "react-bootstrap";
+import { Container, InputGroup } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useSignInUser } from "../api/AuthApi";
 import { Modal } from "react-bootstrap";
+import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
 
 const SignInPage = () => {
   const { signIn } = useSignInUser();
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const {
     register,
@@ -69,17 +72,25 @@ const SignInPage = () => {
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
-            <Form.Control
-              {...register("password", {
-                required: "This field is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-              })}
-              type="password"
-              placeholder="Password"
-            />
+            <InputGroup>
+              <Form.Control
+                {...register("password", {
+                  required: "This field is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                })}
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <EyeSlashFill /> : <EyeFill />}
+              </Button>
+            </InputGroup>
             {errors.password && (
               <span className="text-danger">{errors.password.message}</span>
             )}

@@ -1,14 +1,16 @@
-import { Container } from "react-bootstrap";
+import { useState } from "react";
+import { Container, InputGroup } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useRegister } from "../api/UsersApi";
-
-
+import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
 
 const RegisterPage = () => {
   const { registerUser } = useRegister();
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
   const {
     register,
     watch,
@@ -47,17 +49,25 @@ const RegisterPage = () => {
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
-            <Form.Control
-              {...register("password", {
-                required: "This field is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-              })}
-              type="password"
-              placeholder="Password"
-            />
+            <InputGroup>
+              <Form.Control
+                {...register("password", {
+                  required: "This field is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                })}
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <EyeSlashFill /> : <EyeFill />}
+              </Button>
+            </InputGroup>
             {errors.password && (
               <span className="text-danger">{errors.password.message}</span>
             )}
