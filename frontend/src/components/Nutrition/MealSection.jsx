@@ -2,7 +2,7 @@ import { Col, Row } from "react-bootstrap";
 import MealEntries from "./MealEntries";
 import { Link } from "react-router-dom";
 
-const MealSection = ({ title, foodData }) => {
+const MealSection = ({ title, foodData, selectedDate }) => {
   const total = foodData.reduce(
     (acc, item) => ({
       calories: acc.calories + Number(item.calories),
@@ -18,7 +18,12 @@ const MealSection = ({ title, foodData }) => {
         {title}
       </h1>
       {foodData.map((foodItem, index) => (
-        <MealEntries key={index} {...foodItem} />
+        <MealEntries
+          key={index}
+          {...foodItem}
+          selectedDate={selectedDate}
+          mealType={title.toLowerCase()}
+        />
       ))}
       <Row className="mt-2">
         <Col xs={4} md={6}>

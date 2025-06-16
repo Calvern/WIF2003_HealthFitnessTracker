@@ -1,10 +1,7 @@
 import { Button, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useAppContext } from "../../contexts/AppContext";
-import {
-  useAddMealToFavourite,
-  useDeleteMealFromFavourite,
-} from "../../api/MealApi.js";
+import { useAddMealToFavourite } from "../../api/MealApi.js";
+import { useRemoveFoodFromDiary } from "../../api/FoodDiaryApi.js";
 
 const MealEntries = ({
   mealId,
@@ -14,10 +11,12 @@ const MealEntries = ({
   carbs,
   fat,
   protein,
+  selectedDate,
+  mealType,
 }) => {
   const { addMealToFavourite, isPending: addPending } = useAddMealToFavourite();
-  const { deleteMealFromFavourite, isPending: deletePending } =
-    useDeleteMealFromFavourite();
+  const { removeFoodFromDiary, isPending: deletePending } =
+    useRemoveFoodFromDiary();
   const mealData = {
     mealId,
     foodName,
@@ -50,7 +49,13 @@ const MealEntries = ({
 
           <Button
             className="text-center food-entry-remove-button"
-            onClick={() => deleteMealFromFavourite(mealId)}
+            onClick={() =>
+              removeFoodFromDiary({
+                date: selectedDate,
+                type: mealType,
+                mealId: mealId,
+              })
+            }
           >
             Remove
           </Button>

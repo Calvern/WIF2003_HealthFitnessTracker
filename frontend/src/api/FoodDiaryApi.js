@@ -110,10 +110,14 @@ export const useRemoveFoodFromDiary = () => {
     queryParams.append("date", searchParams.date);
     queryParams.append("type", searchParams.type);
     queryParams.append("mealId", searchParams.mealId);
-    const response = await fetch(`${API_BASE_URL}/api/food-diary`, {
-      method: "DELETE",
-      credentials: "include",
-    });
+    console.log(queryParams);
+    const response = await fetch(
+      `${API_BASE_URL}/api/food-diary?${queryParams}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      }
+    );
     if (!response.ok) {
       throw new Error("Failed to remove food from diary");
     }

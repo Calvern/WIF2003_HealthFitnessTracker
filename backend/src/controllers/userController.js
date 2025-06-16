@@ -72,7 +72,7 @@ const registerMyUserPhysicalInfo = async (req, res) => {
       6.25 * user.height -
       5 * age +
       (user.gender == "Male" ? 5 : -161);
-    const targetCalorie = bmr * user.activityLevel + user.weightGoal;
+    const targetCalorie = Math.ceil(bmr * user.activityLevel + user.weightGoal);
     user.dailyTargetCalorie = targetCalorie;
     user.dailyTargetSteps = 0;
     user.dailyTargetActivity = 0;

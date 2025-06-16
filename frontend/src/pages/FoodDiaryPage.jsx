@@ -100,9 +100,21 @@ const FoodDiaryPage = () => {
         </Col>
       </Row>
 
-      <MealSection title="Breakfast" foodData={breakfast} />
-      <MealSection title="Lunch" foodData={lunch} />
-      <MealSection title="Dinner" foodData={dinner} />
+      <MealSection
+        title="Breakfast"
+        foodData={breakfast}
+        selectedDate={formatDate(selectedDate)}
+      />
+      <MealSection
+        title="Lunch"
+        foodData={lunch}
+        selectedDate={formatDate(selectedDate)}
+      />
+      <MealSection
+        title="Dinner"
+        foodData={dinner}
+        selectedDate={formatDate(selectedDate)}
+      />
 
       <Row className="mt-5">
         <Col

@@ -70,7 +70,7 @@ const AddMealModal = ({ show, meal, handleClose }) => {
               className="rounded-4 px-4 py-2"
               style={{ backgroundColor: "#176087" }}
             >
-              {isPending ? <span>Submit </span> : <span>Adding</span>}
+              {isPending ? <span>Adding</span> : <span>Submit</span>}
             </Button>
           </div>
         </Form>
