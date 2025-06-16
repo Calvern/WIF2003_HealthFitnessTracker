@@ -14,6 +14,7 @@ import UpcomingRemindersCard from "../components/Home/UpcomingRemindersCard";
 import { useGetCaloriesSummaryByDay } from "../api/FoodDiaryApi";
 import { useFetchCalorieStats } from "../api/HomeStatsApi";
 import { useWeeklyCaloriesSummary } from "../hooks/useWeeklyCaloriesSummary";
+import { useStepSummaryForHome } from "../hooks/useStepSummaryForHome";
 import { Bullseye } from "react-bootstrap-icons";
 import { fetchSteps, fetchCaloriesBurned } from "../api/ExerciseApi";
 import { useQuery } from "@tanstack/react-query";
@@ -94,39 +95,62 @@ const HomePage = () => {
     { title: "Gym session", date: "2025-05-19", time: "7:00 PM" },
   ];
 
-  const ChartData = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  const {
+    data: stepData,
+    avg: avgSteps,
+    isLoading: stepLoading,
+  } = useStepSummaryForHome();
+
+  const stepLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+  const stepChartData = {
+    labels: stepLabels,
     datasets: [
       {
         label: "Steps",
-        data: [2200, 3100, 2800, 4000, 5000, 4600, 4900],
-        backgroundColor: [
-          "#176087",
-          "#1E7BA6",
-          "#29A0B1",
-          "#37B5A0",
-          "#55C89F",
-          "#6EDAA3",
-          "#90EE90",
-        ],
+        data: stepData,
+        backgroundColor: stepLabels.map((_, i) => {
+          const gradientColors = [
+            "#176087",
+            "#1E7BA6",
+            "#29A0B1",
+            "#37B5A0",
+            "#55C89F",
+            "#6EDAA3",
+            "#90EE90",
+          ];
+          return gradientColors[i];
+        }),
         borderRadius: 4,
-        barThickness: 16,
+        barThickness: 18,
       },
     ],
   };
 
-  const Options = {
+  const stepChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
       y: {
         beginAtZero: true,
-        ticks: { stepSize: 1000 },
+        ticks: {
+          callback: (value) => value.toLocaleString(),
+          font: { size: 11 },
+        },
+      },
+      x: {
+        ticks: { font: { size: 12 } },
+        grid: { display: false },
       },
     },
     plugins: {
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `${ctx.parsed.y.toLocaleString()} steps`,
+        },
+      },
       legend: { display: false },
     },
-    responsive: true,
-    maintainAspectRatio: false,
   };
 
   if ((caloriePending || stepsPending || goalsPending, calorieBurnPending))
@@ -174,13 +198,13 @@ const HomePage = () => {
 
       <Row className="mb-5 gy-5 justify-content-center">
         <Col xs={12} md={6} lg={4}>
-          <BarChartCard
-            title="Steps This Week"
-            description="Track your weekly steps input."
-            summaryText="Avg: 3,700 steps/day"
-            chartData={ChartData}
-            chartOptions={Options}
-          />
+        <BarChartCard
+          title="Steps This Week"
+          description="Track your weekly steps input."
+          summaryText={`Avg: ${avgSteps.toLocaleString()} steps/day`}
+          chartData={stepChartData}
+          chartOptions={stepChartOptions}
+        />
         </Col>
 
         <Col xs={12} md={6} lg={4}>
