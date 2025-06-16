@@ -9,14 +9,18 @@ import { useGetNotifications, useDeleteReminder } from "../api/ReminderApi";
 import { useHandleShowNotifications } from "../api/ReminderApi";
 import DeleteConfirmationModal from "../components/Notifications/DeleteConfirmationModal";
 
-
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
   const [filter, setFilter] = useState("all");
   const [showModal, setShowModal] = useState(false);
   const [notificationToDelete, setNotificationToDelete] = useState(null);
   const navigate = useNavigate();
-  const { notifications: fetchedNotifications, isLoading, error, refetch } = useGetNotifications();
+  const {
+    notifications: fetchedNotifications,
+    isLoading,
+    error,
+    refetch,
+  } = useGetNotifications();
   const handleShowNotifications = useHandleShowNotifications();
   const { deleteReminder } = useDeleteReminder();
 
@@ -40,7 +44,9 @@ const NotificationsPage = () => {
       await deleteReminder(notificationToDelete);
       setShowModal(false);
       setNotifications((prevNotifications) =>
-        prevNotifications.filter(notification => notification._id !== notificationToDelete)
+        prevNotifications.filter(
+          (notification) => notification._id !== notificationToDelete
+        )
       );
     } catch (error) {
       console.error("Error deleting notification:", error);
@@ -84,24 +90,44 @@ const NotificationsPage = () => {
       >
         No Notifications Yet
       </div>
-      <div className="text-center" style={{ fontWeight: "bold", fontSize: "20px", color: "#B9BFC0" }}>
+      <div
+        className="text-center"
+        style={{ fontWeight: "bold", fontSize: "20px", color: "#B9BFC0" }}
+      >
         Stay Tuned!
       </div>
-      <div className="text-center" style={{ fontWeight: "bold", fontSize: "20px", color: "#B9BFC0" }}>
+      <div
+        className="text-center"
+        style={{ fontWeight: "bold", fontSize: "20px", color: "#B9BFC0" }}
+      >
         Notifications about your activity will show up here.
       </div>
     </Container>
   );
 
   const renderNotifications = () => (
-    <div className="d-flex flex-column align-items-center mt-5" style={{ overflowY: "auto", maxHeight: "400px", width: "100%", paddingRight: "30px", scrollBehavior: "smooth" }}>
+    <div
+      className="d-flex flex-column align-items-center mt-5"
+      style={{
+        overflowY: "auto",
+        maxHeight: "400px",
+        width: "100%",
+        paddingRight: "30px",
+        scrollBehavior: "smooth",
+      }}
+    >
       {filteredNotifications.map((notification, index) => (
         <Fragment key={notification._id}>
-          <div className="d-flex justify-content-between align-items-center mb-1" style={{ width: "100%" }}>
+          <div
+            className="d-flex justify-content-between align-items-center mb-1"
+            style={{ width: "100%" }}
+          >
             <div
               className="reminder-status"
               style={{
-                backgroundColor: notification.readStatus ? "#808080" : "#FF0000",
+                backgroundColor: notification.readStatus
+                  ? "#808080"
+                  : "#FF0000",
                 width: "10px",
                 height: "10px",
                 borderRadius: "50%",
@@ -109,18 +135,31 @@ const NotificationsPage = () => {
             ></div>
 
             <div style={{ flex: 1, marginLeft: "30px" }}>
-              <small style={{ cursor: "pointer", fontWeight: notification.readStatus ? "normal" : "bold" }}>
+              <small
+                style={{
+                  cursor: "pointer",
+                  fontWeight: notification.readStatus ? "normal" : "bold",
+                }}
+              >
                 {notification.date} {notification.time}
               </small>
             </div>
 
             <div style={{ flex: 2 }}>
-              <small style={{ cursor: "pointer", fontWeight: notification.readStatus ? "normal" : "bold" }}>
+              <small
+                style={{
+                  cursor: "pointer",
+                  fontWeight: notification.readStatus ? "normal" : "bold",
+                }}
+              >
                 {notification.title}
               </small>
             </div>
 
-            <div className="d-flex align-items-center gap-4" style={{ justifyContent: 'end' }}>
+            <div
+              className="d-flex align-items-center gap-4"
+              style={{ justifyContent: "end" }}
+            >
               <MdDeleteForever
                 size={15}
                 style={{ cursor: "pointer", color: "#dc3545" }}
@@ -140,7 +179,13 @@ const NotificationsPage = () => {
             </div>
           </div>
           {index < filteredNotifications.length - 1 && (
-            <hr style={{ width: "100%", margin: "10px auto", border: "1px solid #ccc" }} />
+            <hr
+              style={{
+                width: "100%",
+                margin: "10px auto",
+                border: "1px solid #ccc",
+              }}
+            />
           )}
         </Fragment>
       ))}
@@ -149,11 +194,14 @@ const NotificationsPage = () => {
 
   return (
     <Container className="py-5">
-      <div className="d-flex align-items-center gap-2 mt-3 mb-2" style={{ marginLeft: "40px" }}>
+      <div
+        className="d-flex align-items-center gap-2 mt-3 mb-2"
+        style={{ marginLeft: "40px" }}
+      >
         <Button
           className="border border-0"
           style={{ backgroundColor: "transparent", color: "black" }}
-          onClick={() => navigate('/home')}
+          onClick={() => navigate("/home")}
         >
           <ChevronLeft size={30} />
         </Button>
@@ -176,9 +224,11 @@ const NotificationsPage = () => {
               fontWeight: "bold",
             }}
           >
-            {notifications.filter(
-              (notification) => notification.readStatus === false
-            ).length}
+            {
+              notifications.filter(
+                (notification) => notification.readStatus === false
+              ).length
+            }
           </span>
         )}
       </div>
@@ -186,10 +236,11 @@ const NotificationsPage = () => {
       <div className="d-flex justify-content-end align-items-center px-5">
         <div className="d-flex justify-content-end align-items-center gap-3">
           <div
-            className={`d-flex align-items-center px-4 py-1 rounded-pill border ${filter === "all"
-              ? "bg-success-subtle text-success fw-bold border-success"
-              : "bg-success-subtle border-success"
-              }`}
+            className={`d-flex align-items-center px-4 py-1 rounded-pill border ${
+              filter === "all"
+                ? "bg-success-subtle text-success fw-bold border-success"
+                : "bg-success-subtle border-success"
+            }`}
             style={{ cursor: "pointer" }}
             onClick={() => handleFilterChange("all")}
           >
@@ -206,10 +257,11 @@ const NotificationsPage = () => {
           </div>
 
           <div
-            className={`d-flex align-items-center px-4 py-1 rounded-pill border ${filter === "unread"
-              ? "bg-danger-subtle text-danger fw-bold border-danger"
-              : "bg-danger-subtle border-danger"
-              }`}
+            className={`d-flex align-items-center px-4 py-1 rounded-pill border ${
+              filter === "unread"
+                ? "bg-danger-subtle text-danger fw-bold border-danger"
+                : "bg-danger-subtle border-danger"
+            }`}
             style={{ cursor: "pointer" }}
             onClick={() => handleFilterChange("unread")}
           >
@@ -227,7 +279,9 @@ const NotificationsPage = () => {
         </div>
       </div>
 
-      {notifications.length === 0 ? renderEmptyMessage() : renderNotifications()}
+      {notifications.length === 0
+        ? renderEmptyMessage()
+        : renderNotifications()}
 
       <DeleteConfirmationModal
         show={showModal}

@@ -43,7 +43,7 @@ const UpcomingRemindersCard = ({ reminders }) => {
                 {/* Title & Description */}
                 <Col xs={12} md={5} className="mb-2 mb-md-0">
                   <div className="fw-semibold">{reminder.title}</div>
-                  <small className="text-muted">{reminder.description || ""}</small>
+                  <small className="text-muted">{reminder.notes || ""}</small>
                 </Col>
 
                 {/* Time */}
@@ -68,7 +68,9 @@ const UpcomingRemindersCard = ({ reminders }) => {
               </Row>
             ))
           ) : (
-            <div className="text-muted text-center py-3">No upcoming reminders.</div>
+            <div className="text-muted text-center py-3">
+              No upcoming reminders.
+            </div>
           )}
         </div>
       </ListGroup>
