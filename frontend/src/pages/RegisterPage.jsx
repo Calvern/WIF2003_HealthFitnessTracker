@@ -74,19 +74,27 @@ const RegisterPage = () => {
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Comfirm Password</Form.Label>
-            <Form.Control
-              {...register("comfirmPassword", {
-                validate: (val) => {
-                  if (!val) {
-                    return "This field is required";
-                  } else if (watch("password") !== val) {
-                    return "Your password do not match";
-                  }
-                },
-              })}
-              type="password"
-              placeholder="Password"
-            />
+            <InputGroup>
+              <Form.Control
+                {...register("comfirmPassword", {
+                  validate: (val) => {
+                    if (!val) {
+                      return "This field is required";
+                    } else if (watch("password") !== val) {
+                      return "Your password do not match";
+                    }
+                  },
+                })}
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <EyeSlashFill /> : <EyeFill />}
+              </Button>
+            </InputGroup>
             {errors.comfirmPassword && (
               <span className="text-danger">
                 {errors.comfirmPassword.message}
